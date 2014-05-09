@@ -1,0 +1,16 @@
+CC = gcc
+CFLAGS = -Wall -ansi -pedantic
+
+SELECT_PROG_NAME = testSelect
+POLL_PROG_NAME = testPoll
+
+all: $(SELECT_PROG_NAME) $(POLL_PROG_NAME)
+
+$(SELECT_PROG_NAME):
+	$(CC) $(CFLAGS) $(SELECT_PROG_NAME).c -o $(SELECT_PROG_NAME)
+
+$(POLL_PROG_NAME):
+	$(CC) $(CFLAGS) $(POLL_PROG_NAME).c -o $(POLL_PROG_NAME)
+
+clean:
+	$(RM) $(POLL_PROG_NAME) $(SELECT_PROG_NAME)
