@@ -257,8 +257,6 @@ double rangeGet (int p)
 	if (rangeOfDifference.diff == NULL)
 		return -1;
 
-	printf("try find elem with index %d\n", p);
-
 	int i = 0;
 	Difference *p_diff = rangeOfDifference.diff;
 	while (p_diff && (i != p))
@@ -266,8 +264,6 @@ double rangeGet (int p)
 		i++;
 		p_diff = p_diff->next;
 	}
-
-	printf ("rangeGet: return %f\n", p_diff->difference);
 
 	return p_diff->difference;
 }
