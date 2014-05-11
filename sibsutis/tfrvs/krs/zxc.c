@@ -148,9 +148,9 @@ double Cacl_Survivability( double timeVar)
 	double retVal;
 	double curN = numOfPC;
 
-	retVal = (repairRate/(failRate + repairRate)) +
-	         ((startPoint*failRate - (curN - startPoint)*repairRate)/(curN*(failRate + repairRate))) *
-	         exp(-(failRate + repairRate)*timeVar);
+	retVal = (repairRate / (failRate + repairRate)) +
+	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (curN * (failRate + repairRate))) *
+	         exp(-(failRate + repairRate) * timeVar);
 
 	return retVal;
 }
@@ -160,7 +160,7 @@ double Cacl_Employment(double timeVar)
 	double retVal;
 	double curN = numOfPC;
 
-	retVal = (curN*failRate / (numOfRepair * (failRate + repairRate))) -
+	retVal = (curN * failRate / (numOfRepair * (failRate + repairRate))) -
 	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (numOfRepair * (failRate + repairRate))) *
 	         exp(-(failRate + repairRate) * timeVar);
 
@@ -188,7 +188,7 @@ void SaveToFile(char *name, double *data[])
 	printf ("[%s] Start writing to disk...\n", __func__);
 
 	int j, t;
-	char out_str[512] = {0};
+	char out_str[2048] = {0};
 	char tmpStr[32] = {0};
 	for (t = 0; t < TIME_MAX; t+=2)
 	{
