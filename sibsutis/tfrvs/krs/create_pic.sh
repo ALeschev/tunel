@@ -15,8 +15,8 @@ set style line 3 lt 2 pt 5
 set style line 4 lt 4 pt 3
 set style line 5 lt 5 pt 2
 
-set yrange [0:1.2]
-set xrange [0:22]
+set yrange [0.99995:1.00001]
+set xrange [0:8]
 set ytics
 set ylabel "Функция потенциальной живучести"
 set xlabel "Время наработки системы"
@@ -70,7 +70,7 @@ set style line 4 lt 4 pt 3
 set style line 5 lt 5 pt 2
 
 set yrange [0:1.2]
-set xrange [0:22]
+set xrange [0:10]
 set ytics
 set ylabel "Функция потенциальной живучести"
 set xlabel "Время наработки системы"
@@ -124,7 +124,7 @@ set style line 4 lt 4 pt 3
 set style line 5 lt 5 pt 2
 
 set yrange [0:1.2]
-set xrange [0:22]
+set xrange [0:6]
 set ytics
 set ylabel "Функция занятости ВС"
 set xlabel "Время наработки системы"

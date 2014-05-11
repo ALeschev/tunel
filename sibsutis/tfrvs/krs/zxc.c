@@ -25,7 +25,7 @@ int startPoint;
 int numOfPC;
 double failRate;
 double repairRate;
-int numOfRepair;
+double numOfRepair;
 
 void Init(char *name);
 double Cacl_Survivability(double timeVar);
@@ -148,6 +148,8 @@ double Cacl_Survivability( double timeVar)
 	double retVal;
 	double curN = numOfPC;
 
+	printf ("%f\n",numOfRepair);
+
 	retVal = (repairRate / (failRate + repairRate)) +
 	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (curN * (failRate + repairRate))) *
 	         exp(-(failRate + repairRate) * timeVar);
@@ -159,6 +161,8 @@ double Cacl_Employment(double timeVar)
 {
 	double retVal;
 	double curN = numOfPC;
+
+	printf ("%f\n",numOfRepair);
 
 	retVal = (curN * failRate / (numOfRepair * (failRate + repairRate))) -
 	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (numOfRepair * (failRate + repairRate))) *
@@ -238,20 +242,22 @@ void rangeAdd (double val)
 	while (p_diff->next)
 		p_diff = p_diff->next;
 
+	p_diff->difference = val;
+	rangeOfDifference.count++;
+
 	Difference *new_elem = (struct _difference *)malloc(sizeof (Difference));
 	p_diff->next = new_elem;
 	p_diff = p_diff->next;
+	p_diff->difference = 0;
 	p_diff->next = NULL;
-
-set_val:
-	p_diff->difference = (!rangeOfDifference.diff->next) ? 0 : val;
-	rangeOfDifference.count++;
 }
 
 double rangeGet (int p)
 {
 	if (rangeOfDifference.diff == NULL)
 		return -1;
+
+	printf("try find elem with index %d\n", p);
 
 	int i = 0;
 	Difference *p_diff = rangeOfDifference.diff;
@@ -260,6 +266,8 @@ double rangeGet (int p)
 		i++;
 		p_diff = p_diff->next;
 	}
+
+	printf ("rangeGet: return %f\n", p_diff->difference);
 
 	return p_diff->difference;
 }
