@@ -97,10 +97,6 @@ int main (int argc, char *argv[])
 	sprintf (output_file, "o_%s.%s.data", argv[1], argv[2]);
 
 	SaveToFile(output_file, dataArray);
-
-	printf ("[%s] leaving\n", __func__);
-
-	return 0;
 }
 
 void Init(char *name)
@@ -109,8 +105,6 @@ void Init(char *name)
 	char *pch = NULL;
 	int confLines[10] = {0};
 	FILE *input_fd = NULL;
-
-	printf ("[%s] entering\n", __func__);
 
 	if (!name)
 	{
@@ -147,8 +141,6 @@ void Init(char *name)
 
 	while (i < 10)
 		rangeAdd (confLines[i++]);
-
-	printf ("[%s] leaving\n", __func__);
 }
 
 double Cacl_Survivability( double timeVar)
@@ -156,13 +148,9 @@ double Cacl_Survivability( double timeVar)
 	double retVal;
 	double curN = numOfPC;
 
-	printf ("[%s] entering\n", __func__);
-
 	retVal = (repairRate/(failRate + repairRate)) +
 	         ((startPoint*failRate - (curN - startPoint)*repairRate)/(curN*(failRate + repairRate))) *
 	         exp(-(failRate + repairRate)*timeVar);
-
-	printf ("[%s] leaving\n", __func__);
 
 	return retVal;
 }
@@ -172,13 +160,9 @@ double Cacl_Employment(double timeVar)
 	double retVal;
 	double curN = numOfPC;
 
-	printf ("[%s] entering\n", __func__);
-
 	retVal = (curN*failRate / (numOfRepair * (failRate + repairRate))) -
 	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (numOfRepair * (failRate + repairRate))) *
 	         exp(-(failRate + repairRate) * timeVar);
-
-	printf ("[%s] leaving\n", __func__);
 
 	return retVal;
 }
@@ -229,32 +213,25 @@ void SaveToFile(char *name, double *data[])
 
 double Get_N()
 {
-	printf ("[%s] entering\n", __func__);
 	return repairRate / (failRate + repairRate);
 }
 
 double Get_M()
 {
-	printf ("[%s] entering\n", __func__);
 	return (Get_N() * failRate) / ceil(numOfRepair * (failRate + repairRate));
 }
 
 void rangeInit ()
 {
-	printf ("[%s] entering\n", __func__);
 	rangeOfDifference.diff = (struct _difference *)malloc(sizeof (Difference));
 	rangeOfDifference.diff->next = NULL;
 	rangeOfDifference.count = 0;
-
-	printf ("[%s] leaving\n", __func__);
 }
 
 void rangeAdd (double val)
 {
 	if (rangeOfDifference.diff == NULL)
 		return;
-
-	printf ("[%s] entering\n", __func__);
 
 	Difference *p_diff = rangeOfDifference.diff;
 
@@ -269,16 +246,12 @@ void rangeAdd (double val)
 set_val:
 	p_diff->difference = (!rangeOfDifference.diff->next) ? 0 : val;
 	rangeOfDifference.count++;
-
-	printf ("[%s] leaving\n", __func__);
 }
 
 double rangeGet (int p)
 {
 	if (rangeOfDifference.diff == NULL)
 		return -1;
-
-	printf ("[%s] entering\n", __func__);
 
 	int i = 0;
 	Difference *p_diff = rangeOfDifference.diff;
@@ -287,8 +260,6 @@ double rangeGet (int p)
 		i++;
 		p_diff = p_diff->next;
 	}
-
-	printf ("[%s] leaving\n", __func__);
 
 	return p_diff->difference;
 }
