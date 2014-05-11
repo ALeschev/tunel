@@ -51,6 +51,8 @@ int main (int argc, char *argv[])
 
 	sprintf (input_file, "i_%s.in", argv[1]);
 
+	printf ("load '%s'\n", input_file);
+
 	Init(input_file);
 
 	for (i = 0; i < TIME_MAX / 2; i++)
@@ -100,7 +102,8 @@ void Init(char *name)
 {
 	int size;
 	char *pch = NULL;
-	char *confLines = NULL;
+//	char *confLines = NULL;
+	int confLines[10] = {0};
 	FILE *input_fd = NULL;
 
 	if (!name)
@@ -116,24 +119,37 @@ void Init(char *name)
 		return;
 	}
 
-	size = fseek(input_fd, 0, SEEK_END); 
-	fseek(input_fd, 0, SEEK_SET); 
-	confLines = (char *)calloc(size, sizeof(char)); 
-	if (!confLines)
-	{
-		printf ("[%s] can't allocate memory\n", __func__);
-		return;
-	}
-	fread(confLines, size, sizeof(char), input_fd);
-
 	int i = 0;
-	int confElements[4] = {0};
-	pch = strtok (confLines, " ");
-	while ((pch != NULL) && (i < 4))
+	while (fscanf (input_fd, "%d", &confLines[i]) && i != 10)
 	{
-		confElements[i++] = atoi (pch);
-		pch = strtok (NULL, " ");
+		printf ("%s\n", confLines[i]);
+		i++;
 	}
+
+//	size = fseek(input_fd, 0, SEEK_END); 
+//	fseek(input_fd, 0, SEEK_SET); 
+//	confLines = (char *)calloc(size, sizeof(char)); 
+//	if (!confLines)
+//	{
+//		printf ("[%s] can't allocate memory\n", __func__);
+//		return;
+//	}
+//	fread(confLines, size, sizeof(char), input_fd);
+
+	printf ("confLines:\n%s\n", confLines);
+
+	fclose (input_fd);
+
+	int confElements[4] = {0};
+	memcpy (confElements, confLines, sizeof (int) * 4);
+
+//	pch = strtok (confLines, " ");
+//	while ((pch != NULL) && (i < 4))
+//	{
+//		confElements[i++] = atoi (pch);
+//		printf ("confElement %d\n", confElements);
+//		pch = strtok (NULL, " ");
+//	}
 
 	numOfPC = confElements[0];
 	startPoint = confElements[1];
@@ -190,10 +206,10 @@ void SaveToFile(char *name, double *data[])
 		return;
 	}
 
-	output_fd = fopen (name, "r");
+	output_fd = fopen (name, "w");
 	if (!output_fd)
 	{
-		printf ("[%s] can't open \"%s\"\n", __func__, name);
+		printf ("[%s] can't open \"%s\" <%p>\n", __func__, name, output_fd);
 		return;
 	}
 
@@ -217,6 +233,8 @@ void SaveToFile(char *name, double *data[])
 		memset (out_str, 0, sizeof (out_str));
 		memset (tmpStr, 0, sizeof (tmpStr));
 	}
+
+	fclose (output_fd);
 
 	printf ("Done\n");
 	getchar();
