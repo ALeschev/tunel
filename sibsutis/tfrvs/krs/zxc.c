@@ -3,8 +3,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
+#define INPUT_PATH "idata"
+#define OUTPUT_PATH "odata"
 #define TIME_MAX 24
+#define ERROR 1
+#define SUCCESS 0
 
 typedef struct _difference
 {
@@ -27,9 +34,9 @@ double failRate;
 double repairRate;
 double numOfRepair;
 
-void Init(char *name);
+int Init(char *name);
 double Cacl_Survivability(double timeVar);
-void SaveToFile(char *name, double *data[]);
+int SaveToFile(char *name, double *data[]);
 double Cacl_Employment(double timeVar);
 double Get_N();
 double Get_M();
@@ -50,11 +57,12 @@ int main (int argc, char *argv[])
 	double *dataArray[TIME_MAX / 2];
 	int employment = atoi(argv[2]);
 
-	sprintf (input_file, "i_%s.in", argv[1]);
+	sprintf (input_file, "%s/i_%s.in", INPUT_PATH, argv[1]);
 
-	printf ("load '%s'\n", input_file);
+	printf ("input '%s'\n", input_file);
 
-	Init(input_file);
+	if (Init(input_file) == ERROR)
+		return ERROR;
 
 	for (i = 0; i < TIME_MAX / 2; i++)
 		dataArray[i] = (double *)malloc(sizeof (double) * rangeOfDifference.count);
@@ -85,38 +93,40 @@ int main (int argc, char *argv[])
 		}
 
 		for (t = 0; t < TIME_MAX; t += 2)
-		{
 			dataArray[t/2][i] = (employment) ? Cacl_Employment(t) : Cacl_Survivability(t);
-			printf (".");
-		}
-
-		printf ("\n");
 	}
 
 	char output_file[256] = {0};
-	sprintf (output_file, "o_%s.%s.data", argv[1], argv[2]);
+	sprintf (output_file, "%s/o_%s.%s.data", OUTPUT_PATH, argv[1], argv[2]);
 
-	SaveToFile(output_file, dataArray);
+	if (SaveToFile(output_file, dataArray) == ERROR)
+		return ERROR;
+
+	return SUCCESS;
 }
 
-void Init(char *name)
+int Init(char *name)
 {
 	int size;
 	char *pch = NULL;
 	int confLines[10] = {0};
 	FILE *input_fd = NULL;
+	struct stat st = {0};
 
 	if (!name)
 	{
 		printf ("[%s] \"name\" is <%p>\n", __func__, name);
-		return;
+		return ERROR;
 	}
+
+	if (stat(INPUT_PATH, &st) == -1)
+		return ERROR;
 
 	input_fd = fopen (name, "r");
 	if (!input_fd)
 	{
 		printf ("[%s] can't open \"%s\"\n", __func__, name);
-		return;
+		return ERROR;
 	}
 
 	int i = 0;
@@ -141,14 +151,14 @@ void Init(char *name)
 
 	while (i < 10)
 		rangeAdd (confLines[i++]);
+
+	return SUCCESS;
 }
 
 double Cacl_Survivability( double timeVar)
 {
 	double retVal;
 	double curN = numOfPC;
-
-	printf ("%f\n",numOfRepair);
 
 	retVal = (repairRate / (failRate + repairRate)) +
 	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (curN * (failRate + repairRate))) *
@@ -162,8 +172,6 @@ double Cacl_Employment(double timeVar)
 	double retVal;
 	double curN = numOfPC;
 
-	printf ("%f\n",numOfRepair);
-
 	retVal = (curN * failRate / (numOfRepair * (failRate + repairRate))) -
 	         ((startPoint * failRate - (curN - startPoint) * repairRate) / (numOfRepair * (failRate + repairRate))) *
 	         exp(-(failRate + repairRate) * timeVar);
@@ -171,22 +179,26 @@ double Cacl_Employment(double timeVar)
 	return retVal;
 }
 
-void SaveToFile(char *name, double *data[])
+int SaveToFile(char *name, double *data[])
 {
+	struct stat st = {0};
 	FILE *output_fd = NULL;
 	if (!name)
 	{
 		printf ("[%s] \"name\" is <%p>\n", __func__, name);
-		return;
+		return ERROR;
 	}
 
 	printf ("output: %s\n", name);
+
+	if (stat(OUTPUT_PATH, &st) == -1)
+		mkdir(OUTPUT_PATH, 0775);
 
 	output_fd = fopen (name, "w");
 	if (!output_fd)
 	{
 		printf ("[%s] can't open \"%s\" <%p>\n", __func__, name, output_fd);
-		return;
+		return ERROR;
 	}
 
 	printf ("[%s] Start writing to disk...\n", __func__);
@@ -212,7 +224,9 @@ void SaveToFile(char *name, double *data[])
 
 	fclose (output_fd);
 
-	printf ("Done\n");
+	printf ("-----------------------------------\n");
+
+	return SUCCESS;
 }
 
 double Get_N()

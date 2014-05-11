@@ -1,11 +1,30 @@
 #!/bin/bash
 
+data_dir="odata"
+pic_dir="pic"
+
+if [ -e "$data_dir" ]
+then
+     echo "intput data dir: '$data_dir'"
+else
+     echo "ERROR: dir with data not found!"
+     exit
+fi
+
+if [ -e "$pic_dir" ]
+then
+     echo "dir for graphics: '$pic_dir'"
+else
+     echo "dir for graphics not found.. create it!"
+     mkdir $pic_dir
+fi
+
 gnuplot << EOP
 
-datafile = "o_1.0.data"
+datafile = "odata/o_1.0.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_1.0.jpg"
+set output "$pic_dir/o_1.0.jpg"
 set title "Зависимость функции потенциальной живучести (N) от различных значений состояния системы (i)"
 set grid x y
 
@@ -29,10 +48,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_2.0.data"
+datafile = "odata/o_2.0.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_2.0.jpg"
+set output "$pic_dir/o_2.0.jpg"
 set title "Зависимость потенциальной живучести (N) от различных значений интенсивности отказов (λ)"
 set grid x y
 
@@ -56,10 +75,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_3.0.data"
+datafile = "odata/o_3.0.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_3.0.jpg"
+set output "$pic_dir/o_3.0.jpg"
 set title "Зависимость потенциальной живучести (N) от различных значений интенсивности восстановления (μ)"
 set grid x y
 
@@ -83,10 +102,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_4.0.data"
+datafile = "odata/o_4.0.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_4.0.jpg"
+set output "$pic_dir/o_4.0.jpg"
 set title "Зависимость потенциальной живучести (N) от различных значений колличества восстанавливающих устройств (m)"
 set grid x y
 
@@ -110,10 +129,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_1.1.data"
+datafile = "odata/o_1.1.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_1.1.jpg"
+set output "$pic_dir/o_1.1.jpg"
 set title "Зависимость функции занятости (М) от различных значений состояний системы(i)"
 set grid x y
 
@@ -137,10 +156,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_2.1.data"
+datafile = "odata/o_2.1.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_2.1.jpg"
+set output "$pic_dir/o_2.1.jpg"
 set title "Зависимость функции занятости (М) от различных значений интенсивности отказов (λ)"
 set grid x y
 
@@ -164,10 +183,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_3.1.data"
+datafile = "odata/o_3.1.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_3.1.jpg"
+set output "$pic_dir/o_3.1.jpg"
 set title "Зависимость функции занятости (М) от различных значений интенсивности восстановления (μ)"
 set grid x y
 
@@ -190,10 +209,10 @@ EOP
 
 gnuplot << EOP
 
-datafile = "o_4.1.data"
+datafile = "odata/o_4.1.data"
 
 set terminal jpeg enhanced size 1080,710
-set output "o_4.1.jpg"
+set output "$pic_dir/o_4.1.jpg"
 set title "Зависимость функции занятости системы (M) от различных значений колличества востанавливающих устройств (m)"
 set grid x y
 
@@ -214,3 +233,5 @@ plot datafile using 1:2 with linespoints linestyle 1 title "m = 1",\
      datafile using 1:5 with linespoints linestyle 4 title "m = 4"
 
 EOP
+
+echo "graphics was created"
