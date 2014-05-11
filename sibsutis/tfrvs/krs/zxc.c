@@ -35,7 +35,7 @@ double Get_N();
 double Get_M();
 void rangeInit ();
 void rangeAdd (double val);
-double rangeGet (double p);
+double rangeGet (int p);
 
 int main (int argc, char *argv[])
 {
@@ -48,6 +48,7 @@ int main (int argc, char *argv[])
 	int i, t;
 	char input_file[256] = {0};
 	double *dataArray[TIME_MAX / 2];
+	int employment = atoi(argv[2]);
 
 	sprintf (input_file, "i_%s.in", argv[1]);
 
@@ -85,7 +86,7 @@ int main (int argc, char *argv[])
 
 		for (t = 0; t < TIME_MAX; t += 2)
 		{
-			dataArray[t/2][i] = (atoi(argv[2]) == 0) ? Cacl_Survivability(t) : Cacl_Employment(t);
+			dataArray[t/2][i] = (employment) ? Cacl_Employment(t) : Cacl_Survivability(t);
 			printf (".");
 		}
 
@@ -121,56 +122,26 @@ void Init(char *name)
 
 	int i = 0;
 	while (fscanf (input_fd, "%d", &confLines[i]) && i != 10)
-	{
-		printf ("%s\n", confLines[i]);
 		i++;
-	}
-
-//	size = fseek(input_fd, 0, SEEK_END); 
-//	fseek(input_fd, 0, SEEK_SET); 
-//	confLines = (char *)calloc(size, sizeof(char)); 
-//	if (!confLines)
-//	{
-//		printf ("[%s] can't allocate memory\n", __func__);
-//		return;
-//	}
-//	fread(confLines, size, sizeof(char), input_fd);
-
-	printf ("confLines:\n%s\n", confLines);
 
 	fclose (input_fd);
 
-	int confElements[4] = {0};
-	memcpy (confElements, confLines, sizeof (int) * 4);
+	int confElements[10] = {0};
+	memcpy (confElements, confLines, sizeof (int) * 10);
 
-//	pch = strtok (confLines, " ");
-//	while ((pch != NULL) && (i < 4))
-//	{
-//		confElements[i++] = atoi (pch);
-//		printf ("confElement %d\n", confElements);
-//		pch = strtok (NULL, " ");
-//	}
+	i = 0;
+	numOfPC = confElements[i++];
+	startPoint = confElements[i++];
+	failRate = pow(10, confElements[i++]);
+	repairRate = confElements[i++];
+	numOfRepair = confElements[i++];
 
-	numOfPC = confElements[0];
-	startPoint = confElements[1];
-	failRate = pow(10, confElements[2]);
-	repairRate = confElements[3];
-	numOfRepair = confElements[4];
-
-	indexOfDifference = atoi(confLines);
+	indexOfDifference = confLines[i++];
 
 	rangeInit();
 
-	pch = strtok (confLines, " ");
-	while (pch != NULL)
-	{
-		rangeAdd (atoi(pch));
-		pch = strtok (NULL, " ");
-	}
-
-	// foreach (var rangeElement in confLines[2].Split(' '))
-	// { rangeOfDifference.Add(double.Parse(rangeElement)); }
-	/* --- Obtain range of difference --- */
+	while (i < 10)
+		rangeAdd (confLines[i++]);
 }
 
 double Cacl_Survivability( double timeVar)
@@ -206,6 +177,8 @@ void SaveToFile(char *name, double *data[])
 		return;
 	}
 
+	printf ("output: %s\n", name);
+
 	output_fd = fopen (name, "w");
 	if (!output_fd)
 	{
@@ -225,19 +198,18 @@ void SaveToFile(char *name, double *data[])
 
 		for (j = 0; j < rangeOfDifference.count; j++)
 		{
-			sprintf(tmpStr,"%.2f ", data[t/2][j]);
+			sprintf(tmpStr,"%f ", data[t/2][j]);
 			strcat (out_str, tmpStr);
 		}
 
-		fwrite (out_str, sizeof (out_str), sizeof (char), output_fd);
-		memset (out_str, 0, sizeof (out_str));
-		memset (tmpStr, 0, sizeof (tmpStr));
+		strcat (out_str, "\n");
 	}
+
+	fwrite (out_str, sizeof (char) * strlen (out_str), sizeof (char), output_fd);
 
 	fclose (output_fd);
 
 	printf ("Done\n");
-	getchar();
 }
 
 double Get_N()
@@ -253,6 +225,7 @@ double Get_M()
 void rangeInit ()
 {
 	rangeOfDifference.diff = (struct _difference *)malloc(sizeof (Difference));
+	rangeOfDifference.diff->next = NULL;
 	rangeOfDifference.count = 0;
 }
 
@@ -262,27 +235,24 @@ void rangeAdd (double val)
 		return;
 
 	Difference *p_diff = rangeOfDifference.diff;
+
 	while (p_diff->next)
 		p_diff = p_diff->next;
 
-	if (rangeOfDifference.diff == p_diff)
-	{
-		p_diff->difference = val;
-		rangeOfDifference.count++;
-		return;
-	}
-
-	p_diff->next = (struct _difference *)malloc(sizeof (Difference));
+	Difference *new_elem = (struct _difference *)malloc(sizeof (Difference));
+	p_diff->next = new_elem;
 	p_diff = p_diff->next;
-	p_diff->difference = val;
+	p_diff->next = NULL;
 
+set_val:
+	p_diff->difference = (!rangeOfDifference.diff->next) ? 0 : val;
 	rangeOfDifference.count++;
 }
 
-double rangeGet (double p)
+double rangeGet (int p)
 {
 	if (rangeOfDifference.diff == NULL)
-		return;
+		return -1;
 
 	int i = 0;
 	Difference *p_diff = rangeOfDifference.diff;
@@ -294,4 +264,3 @@ double rangeGet (double p)
 
 	return p_diff->difference;
 }
-
