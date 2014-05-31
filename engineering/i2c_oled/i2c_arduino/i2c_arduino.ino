@@ -98,9 +98,9 @@ void setup()
 
   memset (&clock, 0, sizeof (clock_t));
 
-  clock.time.hours = 0;
-  clock.time.minutes = 45;
-  clock.time.seconds = 0;
+  clock.time.hours = 19;
+  clock.time.minutes = 10;
+  clock.time.seconds = 20;
   
   ds_time_set();
   
@@ -357,14 +357,14 @@ void printBigTime(char *string)
   }
 }
 
-int prev_pos = 0;
+int prev_line_pos = 0;
 int prev_sec = 0;
 void printSecLine(int seconds)
 {
   //seconds = 55;
   int end_pos = 0; 
 
-  if ((!prev_pos) && seconds)
+  if ((!prev_line_pos) && seconds)
   {
     for (int i = 0; i < seconds; i++)
       end_pos += 2;
@@ -372,20 +372,20 @@ void printSecLine(int seconds)
     if (end_pos > 120)
       end_pos = 120;
   } else {
-    end_pos = prev_pos + 2;
+    end_pos = prev_line_pos + 2;
   }
- 
-  if (prev_pos && ((seconds - prev_sec) < 0) || (prev_pos >= 120))
+
+  if (prev_line_pos && ((seconds - prev_sec) < 0) || (prev_line_pos >= 120))
   {
     ol_clear_area (6, 0, 7, 16);
-    prev_pos = 0;
+    prev_line_pos = 0;
     end_pos = 0;
     prev_sec = 0;
     return;
   }
 
   int i;
-  for (i = prev_pos; i < end_pos; i++)
+  for (i = prev_line_pos; i < end_pos; i++)
   {
     ol_setXY(7, i, 1);
     char str1[4] = {0};
@@ -407,8 +407,24 @@ void printSecLine(int seconds)
     }
   }
 
-  prev_pos = i;
-  prev_sec = seconds;
+  prev_line_pos = i;
+}
+
+void printSecPoint (int mode, int seconds)
+{
+  int i;
+  int start_pos = mode? 0:127;
+  int end_pos = mode? 127:0;
+  int delta = 1 * mode? 1:-1;
+ 
+  for (i = start_pos; i != end_pos; i+=delta)
+  {
+    ol_setXY(7, i, 1);
+    ol_send_char(0x7f);
+
+    ol_setXY(7, mode? i-1:i+1, 1);
+    ol_send_char(0);
+  }
 }
 
 /*-------OLED END-------------------------------------*/
@@ -509,36 +525,26 @@ void clock_print_time()
 {
   ds_time_update();
 
-Serial.println("-------ST-------");
-  Serial.println(clock.time.hours);
-  Serial.println(clock.time.minutes);
-  Serial.println(clock.time.seconds);
-  Serial.println("--------END---------");
+/*  if (clock.time.hours <= 0 || clock.time.hours > 23)
+   // clock.time.hours = 0;
+   return;
 
-  if (clock.time.hours <= 0 || clock.time.hours > 24)
-    clock.time.hours = 0;
-   //return;
-
-  if (clock.time.minutes < 0 || clock.time.minutes > 60)
-    clock.time.minutes = 0;
-//return;
+  if (clock.time.minutes <= 0 || clock.time.minutes > 59)
+//    clock.time.minutes = 0;
+return;
     
-  if (clock.time.seconds < 0 || clock.time.seconds > 60)
+  if (clock.time.seconds <= 0 || clock.time.seconds > 59)
   {
-    ol_send_str (0, 0, "ERROR", 5);
-    ol_clear_area (0, 0, 1, 1);
-    //   clock.time.seconds = 0;
-    delay(500);
   return;
   }
-
+*/
   char str_time[6] = {0};
 
   int hours   = clock.time.hours;
   int minutes = clock.time.minutes;
   int seconds = clock.time.seconds;
 
-  sprintf (str_time, "%d%d %d%d", (hours - hours%10)/10, hours%10, (minutes - minutes%10)/10, minutes%10);
+  sprintf (str_time, "%d%d:%d%d", (hours - hours%10)/10, hours%10, (minutes - minutes%10)/10, minutes%10);
 
   printBigTime(str_time);
 
@@ -546,16 +552,144 @@ Serial.println("-------ST-------");
     sprintf(str1, "%d%d", (seconds - seconds%10)/10, seconds%10);
     ol_send_str(0, 14, str1, 0);
 
-  printSecLine(seconds);
-
-  printBigNumber(':', 1, 6);
-  //smart_delay(500);
-  delay(500);
-  printBigNumber(' ', 1, 6);
-//  smart_delay(500);
-  delay(500);
-
+//  pacman_animation();
+//  clock_animation(seconds);
+  secLine_animation(seconds);
+//  secPoint_animation(seconds);
 
 }
 
 /*-------CLOCK END------------------------------------*/
+void secPoint_animation(int seconds)
+{
+  if (prev_sec == seconds)
+    return;
+
+  printSecPoint(seconds%2, seconds);
+//  printSecPoint(0, seconds);
+
+  prev_sec = seconds;
+}
+void secLine_animation(int seconds)
+{
+  if (prev_sec == seconds)
+    return;
+
+  printSecLine(seconds);
+  
+  prev_sec = seconds;
+}
+void clock_animation(int seconds)
+{
+  if (prev_sec == seconds)
+    return;
+
+  if (seconds%2)
+    printBigNumber(':', 1, 6);
+  else
+    printBigNumber(' ', 1, 6);
+
+  prev_sec = seconds;
+}
+
+void pacman_animation()
+{
+  printGhost(6, 0, 0);
+  printPacman(6, 3, 1);
+  dot_line();
+  printGhost(6, 0, 1);
+  printPacman(6, 3, 0);
+}
+
+void printPacman (unsigned char X, unsigned char Y, unsigned char mode)
+{
+  if (mode > 2)
+    return;
+
+  ol_setXY(X,Y,0);
+  int salto=0;
+  for(int i=0;i<32;i++)
+  {
+    ol_send_char(pgm_read_byte(pacman[mode]+i));
+
+    if(salto == 15) {
+      salto = 0;
+      X++;
+      ol_setXY(X,Y,0);
+    } else {
+      salto++;
+    }
+  }
+}
+
+void printGhost (unsigned char X, unsigned char Y, unsigned char mode)
+{
+  ol_setXY(X,Y,0);
+  int salto=0;
+  for(int i=0;i<32;i++)
+  {
+    ol_send_char(pgm_read_byte(ghost[!!mode]+i));
+
+    if(salto == 15) {
+      salto = 0;
+      X++;
+      ol_setXY(X,Y,0);
+    } else {
+      salto++;
+    }
+  }
+}
+
+void printDot (unsigned char X, unsigned char Y)
+{
+  ol_setXY(X,Y,0);
+  int salto=0;
+  for(int i=0;i<16;i++)
+  {
+    ol_send_char(pgm_read_byte(dot+i));
+
+    if(salto == 7) {
+      salto = 0;
+      X++;
+      ol_setXY(X,Y,0);
+    } else {
+      salto++;
+    }
+  }
+}
+
+static int first_dot_pos = 14;
+static int mode = 0;
+void dot_line ()
+{  
+  for (int i = 4; i != 15; i+=1)
+  {
+    if (!mode)
+    {
+     if (i%2)
+     {     
+       ol_send_str(6, i+1, " ", 0);
+       ol_send_str(7, i+1, " ", 0);
+       printDot(6, i); 
+       printDot(6, 15);
+     }
+    } else
+     if (!(i%2))
+     {
+       ol_send_str(6, i+1, " ", 0);
+       ol_send_str(7, i+1, " ", 0);
+       if (i != 4)
+         printDot(6, i);
+    }
+  }
+
+  if (mode){
+    printPacman(6, 3, 2);
+    delay(100);
+  }
+
+  if (first_dot_pos >= 4)
+    first_dot_pos -= 1;
+
+    mode = !mode;
+}
