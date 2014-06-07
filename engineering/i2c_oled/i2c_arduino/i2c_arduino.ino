@@ -98,8 +98,8 @@ void setup()
 
   memset (&clock, 0, sizeof (clock_t));
 
-  clock.time.hours = 19;
-  clock.time.minutes = 10;
+  clock.time.hours = 0;
+  clock.time.minutes = 31;
   clock.time.seconds = 20;
   
   ds_time_set();
@@ -552,9 +552,9 @@ return;
     sprintf(str1, "%d%d", (seconds - seconds%10)/10, seconds%10);
     ol_send_str(0, 14, str1, 0);
 
-//  pacman_animation();
+  pacman_animation();
 //  clock_animation(seconds);
-  secLine_animation(seconds);
+//  secLine_animation(seconds);
 //  secPoint_animation(seconds);
 
 }
