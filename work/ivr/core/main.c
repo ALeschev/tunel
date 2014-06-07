@@ -25,6 +25,7 @@
 #include <sys/stat.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
+#include <sys/syscall.h>
 
 #include <linux/types.h>
 #include <linux/kdev_t.h>
@@ -57,8 +58,63 @@ static mqueue_t configCmdQue;
 static volatile int sys_running = 0;
 static uint8_t ivr_mod_non_response = 0;
 
+static int trace_lvl = 0;
+static int trace_enable = 0;
+
+void consol_start(void);
+void consol_close(void);
+
 void HandlerSigterm(int x);
-int MessageCmdAdd(message_t *message, eCMD cmd);
+int MessageCmdAdd(message_t *message, ivr_cmd cmd);
+
+typedef   void (*con_out_func)(char *);
+
+con_out_func	con_func = NULL;
+
+void register_log(void *proc)
+{
+	con_func = (con_out_func)proc;
+}
+
+void unregister_log(void)
+{
+	con_func = NULL;
+}
+
+int get_ptid(void)
+{
+    pid_t tid;
+    tid = syscall(SYS_gettid);
+
+    return tid;
+}
+
+int ivrSetTrace(int lvl)
+{
+	trace_lvl = lvl;
+
+	return trace_enable;
+}
+
+int Trace(void)
+{
+	return trace_enable;
+}
+
+int ivrTrace()
+{
+	return trace_lvl;
+}
+
+void StartTrace(void)
+{
+	trace_enable = 1;
+}
+
+void StopTrace(void)
+{
+	trace_enable = 0;
+}
 
 void app_trace(int level, char *format, ...)
 {
@@ -106,10 +162,12 @@ void app_trace(int level, char *format, ...)
 	str[size++] = '\n';
 	str[size++] = 0;
 
-	printf("%s", str);
+	if(level < 0 || !con_func)
+	{
+		printf(str);
+	}
 
-	if (level == TRACE_ERR)
-		fputs(str, stderr);
+	if(con_func) con_func(str);
 }
 
 void ivr_init(void)
@@ -149,6 +207,8 @@ void ivr_init(void)
 		return;
 	}
 
+	consol_start();
+
 	sys_running = 1;
 
 	return;
@@ -168,6 +228,8 @@ void ivr_close(void)
 	lib_IPC_deinit();
 	mqueue_close(&configCmdQue);
 
+	consol_close();
+
 	sys_running = 0;
 }
 
@@ -178,7 +240,7 @@ void HandlerSigterm(int x)
 	sys_running = 0;
 }
 
-int MessageCmdAdd(message_t *message, eCMD cmd)
+int MessageCmdAdd(message_t *message, ivr_cmd cmd)
 {
 	//char *answ;
 	int res = -1;
@@ -245,19 +307,31 @@ static void CmdProc(stCMD * newCMD)
 
 	switch (comnd->ivr_command)
 	{
-		case CMD_ADD_CALLER:
+		case CMD_SEIZE:
 			ivr_add_caller_proc (callref, (caller_t *)comnd->attribute);
 		break;
 
-		case CMD_DEL_CALLER:
+		case CMD_PROGRESS:
+		break;
+
+		case CMD_RINGING_T:
+		break;
+
+		case CMD_ANSWER_T:
+		break;
+
+		case CMD_HOLD_T:
+		break;
+
+		case CMD_RELEASE:
 			ivr_del_caller_proc (callref);
 		break;
 
-		case CMD_COLLECT_DIG:
+		case CMD_TONEDETECTED:
 			ivr_collect_digit_proc (callref, (digits_t *)comnd->attribute);
 		break;
 
-		case CMD_PLAY_FILE_END:
+		case CMD_PLAY_END:
 			ivr_play_file_stop_proc (callref);
 		break;
 
@@ -297,7 +371,7 @@ static void CmdLoop(void)
 
 		if (ivr_mod_non_response >= MAX_NON_RESPONSE)
 		{
-			app_trace (TRACE_WARN, "MGAPP: lost!");
+			//app_trace (TRACE_WARN, "MGAPP: lost!");
 			ivr_rem_all_caller();
 			ivr_mod_non_response = 0;
 		} else {

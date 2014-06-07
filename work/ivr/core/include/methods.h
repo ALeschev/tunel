@@ -3,9 +3,6 @@
 
 #include "ivr_def.h"
 
-char *ivr_cmd_str(enum ivr_proc_commands cmd);
-char *ivr_state_str(int state);
-
 int ivr_mutex_init();
 int ivr_mutex_destroy();
 

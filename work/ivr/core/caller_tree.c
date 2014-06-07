@@ -136,7 +136,7 @@ int tree_set_digit (int callref, uint8_t dig)
 		c_call->Data.ditits_needed--;
 	}
 
-	if (!c_call->Data.ditits_needed && (c_call->Data.caller.state == CMD_COLLECT_DIG))
+	if (!c_call->Data.ditits_needed && (c_call->Data.caller.state == IVR_CALL_COLLECT_DIG))
 		return 0; /*this was last one. that's enough*/
 
 	return 1; /*need moooore digits!*/

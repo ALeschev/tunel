@@ -12,25 +12,50 @@
 
 #define MAX_DIG_COLLECT 32
 
-typedef enum ivr_proc_commands {
-	CMD_ADD_CALLER = 0,
-	CMD_DEL_CALLER,
-	CMD_COLLECT_DIG,
-	CMD_MAKE_CALL,
-	CMD_PLAY_FILE,
-	CMD_PLAY_FILE_END,
-	CMD_PLAY_FILELOOP,
+typedef enum ivr_commands {
+	/*APP->IVR*/
+	CMD_SEIZE = 0,
+	CMD_PROGRESS,
+	CMD_RINGING_F,
+	CMD_ANSWER_F,
+	CMD_HOLD_F,
+	CMD_RELEASE,
+	CMD_TONEDETECTED,
 
-	CMD_START_RECORD,
-	CMD_STOP_RECORD,
+	CMD_PLAY_END,
+
+	/*IVR->APP*/
+	CMD_BRIDGE,       /*Соединение двух произвольных каналов.*/
+	CMD_LOG,          /*Вносит произвольный текст в файл(ы) лога сервера Asterisk.*/
+
+	CMD_NOCDR,        /*Указывает Asterisk'у не сохранять CDR запись для вызова.*/
+
+	CMD_RINGING_T,      /*Установить состояние "вызова абонента" (звонка)*/
+	CMD_ANSWER_T,       /*Ответ на звонок, если по каналу поступает вызов*/
+	CMD_BUSY,         /*Установить состояние "занято" и ждать окончания соединения*/
+
+	CMD_CALL,         /*Совершить вызов и, в случае успеха, */
+	CMD_DISCONNECT,   /*Безусловное разъединение соединения*/
+
+	CMD_SENDDTMF,     /*Отправка в канал произвольной последовательности DTMF цифр*/
+
+	CMD_PLAYBACK,     /*Проигрывает звуковой файл. (+ готовность обработать донабор)*/
+	CMD_PLAYTONE,     /*Проигрывает список тонов (1..N), в это время могут исполняться другие команды.*/
+	CMD_STOPPLAYTONE, /*Останавливает проигрыш списка тонов.*/
+	CMD_DETECTTONE,   /*Запуск детектора тонов DTMF, Modem, Fax, Flash*/
+	CMD_HOLD_T,       /*Выдача Hold по сигнализации*/
+
+	CMD_RECORD,       /*Запись телефонного разговора в звуковой файл*/
+	CMD_STOPRECORD,   /*Останов записи телефонного разговора*/
 
 	CMD_CLEAN_CALLERS,
 
+	/*general*/
 	CMD_MODULE_CHECK,
 	CMD_MODULE_LOST,
 
 	CMD_END
-}eCMD;
+} ivr_cmd;
 
 enum ivr_call_state {
 	IVR_CALL_NULL_STATE = -1,
@@ -66,5 +91,8 @@ typedef struct {
 	uint8_t ivr_command;
 	uint8_t attribute[];
 } IVRCommands;
+
+char *ivr_cmd_str(enum ivr_commands cmd);
+char *ivr_call_state_str(int state);
 
 #endif //IVR_DEF_H

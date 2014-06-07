@@ -14,47 +14,47 @@
 static int ivr_callref_static = IVR_CALLREF_MOD_MAX;
 static pthread_mutex_t ivr_data_mutex;
 
-char *ivr_cmd_str(enum ivr_proc_commands cmd)
-{
-	switch (cmd)
-	{
-		case CMD_ADD_CALLER:    return "CMD_ADD_CALLER";
-		case CMD_DEL_CALLER:    return "CMD_DEL_CALLER";
-		case CMD_COLLECT_DIG:   return "CMD_COLLECT_DIG";
-		case CMD_MAKE_CALL:     return "CMD_MAKE_CALL";
-		case CMD_PLAY_FILE:     return "CMD_PLAY_FILE";
-		case CMD_PLAY_FILE_END: return "CMD_PLAY_FILE_END";
-		case CMD_PLAY_FILELOOP: return "CMD_PLAY_FILELOOP";
-		case CMD_START_RECORD:  return "CMD_START_RECORD";
-		case CMD_STOP_RECORD:   return "CMD_STOP_RECORD";
-		case CMD_CLEAN_CALLERS: return "CMD_CLEAN_CALLERS";
-		case CMD_MODULE_CHECK:  return "CMD_MODULE_CHECK";
-		case CMD_MODULE_LOST:   return "CMD_MODULE_LOST";
+// char *ivr_cmd_str(enum ivr_proc_commands cmd)
+// {
+// 	switch (cmd)
+// 	{
+// 		case CMD_ADD_CALLER:    return "CMD_ADD_CALLER";
+// 		case CMD_DEL_CALLER:    return "CMD_DEL_CALLER";
+// 		case CMD_COLLECT_DIG:   return "CMD_COLLECT_DIG";
+// 		case CMD_MAKE_CALL:     return "CMD_MAKE_CALL";
+// 		case CMD_PLAY_FILE:     return "CMD_PLAY_FILE";
+// 		case CMD_PLAY_FILE_END: return "CMD_PLAY_FILE_END";
+// 		case CMD_PLAY_FILELOOP: return "CMD_PLAY_FILELOOP";
+// 		case CMD_START_RECORD:  return "CMD_START_RECORD";
+// 		case CMD_STOP_RECORD:   return "CMD_STOP_RECORD";
+// 		case CMD_CLEAN_CALLERS: return "CMD_CLEAN_CALLERS";
+// 		case CMD_MODULE_CHECK:  return "CMD_MODULE_CHECK";
+// 		case CMD_MODULE_LOST:   return "CMD_MODULE_LOST";
 
-		case CMD_END:           return "CMD_END";
-	}
+// 		case CMD_END:           return "CMD_END";
+// 	}
 
-	return "undef";
-}
+// 	return "undef";
+// }
 
-/*----------------------------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------------------------*/
 
-char *ivr_state_str(int state)
-{
-	static char str[20];
+// char *ivr_call_state_str(int state)
+// {
+// 	static char str[20];
 
-	switch(state){
-		case IVR_CALL_NULL_STATE:    return "IVR_CALL_NULL_STATE";
-		case IVR_CALL_IDLE:          return "IVR_CALL_IDLE";
-		case IVR_CALL_NEW:           return "IVR_CALL_NEW";
-		case IVR_CALL_LISTEN_MUSIC:  return "IVR_CALL_LISTEN_MUSIC";
-		case IVR_CALL_COLLECT_DIG:   return "IVR_CALL_COLLECT_DIG";
-		case IVR_CALL_TALKING:       return "IVR_CALL_TALKING";
-	}
+// 	switch(state){
+// 		case IVR_CALL_NULL_STATE:    return "IVR_CALL_NULL_STATE";
+// 		case IVR_CALL_IDLE:          return "IVR_CALL_IDLE";
+// 		case IVR_CALL_NEW:           return "IVR_CALL_NEW";
+// 		case IVR_CALL_LISTEN_MUSIC:  return "IVR_CALL_LISTEN_MUSIC";
+// 		case IVR_CALL_COLLECT_DIG:   return "IVR_CALL_COLLECT_DIG";
+// 		case IVR_CALL_TALKING:       return "IVR_CALL_TALKING";
+// 	}
 
-	sprintf(str, "_undef_%02X_", state);
-	return str;
-}
+// 	sprintf(str, "_undef_%02X_", state);
+// 	return str;
+// }
 
 int ivr_mutex_init()
 {
@@ -118,7 +118,7 @@ void ivr_set_caller_state (int callref, int state)
 	if (prev_state != state)
 	{
 		app_trace (TRACE_INFO, "[%s][%d] caller %04x changed state: %s -> %s",
-		           __func__, __LINE__, callref, ivr_state_str(prev_state), ivr_state_str(state));
+		           __func__, __LINE__, callref, ivr_call_state_str(prev_state), ivr_call_state_str(state));
 	}
 
 	tree_set_state (callref, state);
@@ -345,7 +345,7 @@ void ivr_palay_file_proc (int callref, int start)
 	}
 
 	to_ivr = (IVRCommands*)payload;
-	to_ivr->ivr_command = CMD_PLAY_FILE;
+	to_ivr->ivr_command = CMD_PLAYBACK;
 	to_ivr->callref = callref;
 
 	if (start)
@@ -395,7 +395,7 @@ void ivr_make_call_proc (int callref, char *call_num)
 	payload = calloc(1, payload_sz);
 
 	to_ivr = (IVRCommands*)payload;
-	to_ivr->ivr_command = CMD_MAKE_CALL;
+	to_ivr->ivr_command = CMD_CALL;
 	to_ivr->callref = callref;
 
 	strncpy (called.to, call_num, MAX_DIG_COLLECT);
