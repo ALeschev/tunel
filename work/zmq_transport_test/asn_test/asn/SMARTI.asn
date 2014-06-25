@@ -415,7 +415,7 @@ RedirectingReason ::= ENUMERATED
 LegId ::= SEQUENCE
 {
   swSessionID [1] OCTET STRING,
-  appSessionID [2] OCTET STRING
+  appSessionID [2] INTEGER
 }
 
 EventIndicator ::= BIT STRING(SIZE(7)) -- 7bit value with valid values from EventIndicatorVal
