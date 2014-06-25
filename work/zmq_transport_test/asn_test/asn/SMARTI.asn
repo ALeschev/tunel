@@ -9,15 +9,48 @@ SmarTIMessage ::= SEQUENCE
 {
   version [0] INTEGER,
   legID   [1] LegId,
-  body [3] SmarTIBody
+  body    [3] SmarTIBody
 }
 
 SmarTIBody ::= CHOICE
 {
-  seize [1] SeizeType,
-  progress [2] ProgressType,
-  answer [3] AnswerType,
-  release [4] ReleaseType
+  connectionReqest         [1] ConnectionRequestType,
+  connectionResponse       [2] ConnectionResponseType,
+  connectionReject         [3] ConnectionRejectType,
+  connectionUpdateRequest  [4] ConnectionUpdateRequestType,
+  connectionUpdateResponse [5] ConnectionUpdateResponseType,
+  seize                    [6] SeizeType,
+  progress                 [7] ProgressType,
+  answer                   [8] AnswerType,
+  release                  [9] ReleaseType
+}
+
+ConnectionRequestType ::= SEQUENCE
+{
+  updateTimeout [1] INTEGER OPTIONAL
+}
+
+ConnectionResponseType ::= SEQUENCE
+{
+  updateTimeout [1] INTEGER OPTIONAL
+}
+
+ConnectionRejectType ::= SEQUENCE
+{
+  cause      [1] INTEGER,
+  diagnostic [2] OCTET STRING OPTIONAL
+}
+
+ConnectionUpdateRequestType ::= SEQUENCE
+{
+  timestamp [1] Timestamp OPTIONAL,
+  other     [2] AdditionalInformation OPTIONAL
+}
+
+ConnectionUpdateResponseType ::= SEQUENCE
+{
+  timestamp [1] Timestamp OPTIONAL,
+  other     [2] AdditionalInformation OPTIONAL
 }
 
 SeizeType ::= SEQUENCE
