@@ -6,8 +6,8 @@ OBJ_DIR=obj/
 OBJ:=$(wildcard $(OBJ_DIR)*.o)
 
 #ASN_MODULE=MyModule.asn1
-#ASN_MODULE=SMARTI.asn
-ASN_MODULE=pong.asn
+ASN_MODULE=SMARTI.asn
+#ASN_MODULE=pong.asn
 
 all: create_src create_lib
 
@@ -22,6 +22,7 @@ create_lib:
 
 asn_translate:
 	./asn1c $(ASN_MODULE)
+	rm -f converter-sample.c
 
 clean:
 	$(MAKE) -C src/ clean

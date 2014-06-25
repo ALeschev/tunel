@@ -17,6 +17,12 @@
 #include "ConnectionUpdateResponseType.h"
 
 
+char *reject_cause_str[reject_cause_max] =
+{
+	"prost))",
+	"hate_you",
+};
+
 /*------------------------------------------------------------------------------------------------------------*/
 
 static OCTET_STRING_t *

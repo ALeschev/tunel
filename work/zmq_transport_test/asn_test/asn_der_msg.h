@@ -8,12 +8,6 @@ enum reject_cause {
 	reject_cause_max
 };
 
-char *reject_cause_str[reject_cause_max] =
-{
-	"prost))",
-	"hate_you",
-};
-
 int asn_der_encode_ConnectionResponse (long check_time, void *buffer, int buffer_size);
 int asn_ber_decode_ConnectionResponse (int *updateTimeout, void *buffer);
 
