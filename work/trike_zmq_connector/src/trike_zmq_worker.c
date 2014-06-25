@@ -122,6 +122,7 @@ static void *thread_worker_loop(void *args){
 	worker_context->init_cb();
     while(worker_context->status==ACTIVE){
         count=zmq_poll(worker_context->zmq_items,worker_context->nitems,POLL_TIMEOUT);
+
         if(count>0){
             receive_messages(worker_context,count);
         }

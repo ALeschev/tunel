@@ -8,7 +8,7 @@ all: compile
 compile: $(FILES)
 
 $(PREFIX)%.o:
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $*.c  -o $(TOP_DIR)obj/$*.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -c $*.c  -o $(TOP_DIR)obj/$*.o -g
 
 clean:
 	rm *.o

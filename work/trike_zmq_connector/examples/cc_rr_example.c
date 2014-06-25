@@ -1,7 +1,6 @@
+#if 0
 #include <stdio.h>
 #include <string.h>
-
-#include "PongType.h"
 
 #include "trike_zmq_worker_api.h"
 #include "trike_msg_api.h"
@@ -146,3 +145,9 @@ int handle_reply(trike_transport_context_t *transport_context,trike_cc_rr_msg_t 
 void init_cb(void){
     printf("INIT WORKER\n");
 }
+#else
+int main()
+{
+    return 0;
+}
+#endif

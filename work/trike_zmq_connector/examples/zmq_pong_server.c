@@ -6,23 +6,48 @@
 #include "trike_msg_api.h"
 #include "trike_gen_cc_rr.h"
 
-//#define ERL_TEST 1
-
 #ifndef ERL_TEST
 #	include "PongType.h"
 #endif
 
+#define CHECK_TIME_MS 5000000 /*5s*/
+
+#define C_ALIVE 1
+#define C_DEAD 0
+#define MAX_PING_CNT 5
+
+#define CHECK_REQ "ping"
+#define CHECK_ANS "pong"
+
 int handle_request(trike_transport_context_t *transport_context, trike_cc_rr_msg_t *msg);
 
-int c = 100;
+static int c = 100;
+
+trike_worker_context_t *worker_context;
+
+static int client_status = 0;
+static int ping_cnt = 0;
+
+void sig_handler (int sig)
+{
+	printf ("sig_handler [%d]\n", sig);
+
+	stop_worker(worker_context);
+
+	exit(0);
+}
 
 int main()
 {
-	trike_worker_context_t *worker_context = start_worker(NULL);
 	trike_transport_context_t *server_context;
 	trike_gen_cc_reply_t server_params;
 
 	char addr[]="tcp://*";
+
+	signal (SIGINT, sig_handler);
+	signal (SIGTERM, sig_handler);
+
+	worker_context = start_worker(NULL);
 
 	server_params.handle_request = handle_request;
 	server_params.req_port = 50500;
@@ -39,9 +64,36 @@ int main()
 		return 0;
 	}
 
-	while(c){}
+	while(c)
+	{
+		usleep(CHECK_TIME_MS); /*100 ms*/
 
-	stop_worker(worker_context);
+		if (client_status == C_ALIVE)
+		{
+			client_status = C_DEAD;
+			ping_cnt = 0;
+		} else {
+			if (ping_cnt >= MAX_PING_CNT)
+			{
+				printf("Client disconnected!\n");
+				ping_cnt = 0;
+			}
+
+			trike_cc_rr_msg_t trike_cc_rr_msg;
+
+			trike_cc_rr_msg.dialog_id_data = CHECK_REQ;
+			trike_cc_rr_msg.dialog_id_size = strlen(CHECK_REQ);
+			trike_cc_rr_msg.request_id     = 0;
+			trike_cc_rr_msg.size = strlen(CHECK_REQ);
+			trike_cc_rr_msg.data = CHECK_REQ;
+
+			trike_send_cc_rr_msg(server_context, trike_cc_rr_msg);
+
+			ping_cnt++;
+		}
+
+		printf ("ping_cnt: %d\n", ping_cnt);
+	}
 
 	return 0;
 }
@@ -58,8 +110,8 @@ int handle_request(trike_transport_context_t *transport_context, trike_cc_rr_msg
 
 #ifdef ERL_TEST
 
-	char err_ans[] = "err";
-	char pong_ans[] = "pong";
+	char msg_err_ans[] = "err";
+	char msg_ans[] = "msg out";
 
 	char buff[256] = {0};
 
@@ -76,8 +128,8 @@ int handle_request(trike_transport_context_t *transport_context, trike_cc_rr_msg
            (char*)msg->data
            );
 
-	trike_cc_rr_msg.size = sizeof(err_ans) - 1;
-	trike_cc_rr_msg.data = err_ans;
+	trike_cc_rr_msg.size = sizeof(msg_err_ans) - 1;
+	trike_cc_rr_msg.data = msg_err_ans;
 
 	if (msg->size < 256)
 	{
@@ -87,24 +139,21 @@ int handle_request(trike_transport_context_t *transport_context, trike_cc_rr_msg
 		goto send;
 	}
 
-	if (!strcmp(buff, "ping"))
+	if (!strcmp(buff, "msg in"))
 	{
-		trike_cc_rr_msg.size = sizeof(pong_ans) - 1;
-		trike_cc_rr_msg.data = pong_ans;
+		trike_cc_rr_msg.size = sizeof(msg_ans) - 1;
+		trike_cc_rr_msg.data = msg_ans;
+	} else
+	if (!strcmp(buff, CHECK_REQ))
+	{
+		trike_cc_rr_msg.size = sizeof(CHECK_ANS) - 1;
+		trike_cc_rr_msg.data = CHECK_ANS;
+		goto send;
+	} else
+	if (!strcmp(buff, CHECK_ANS))
+	{
+		return 0;
 	}
-
-	printf("\nSend answer:\n"
-           "msg->dialog_id_data: %s\n"
-           "msg->dialog_id_size: %d\n"
-           "msg->request_id: %d\n"
-           "msg->size: %d\n"
-           "msg->data: %s\n",
-           (char *)trike_cc_rr_msg.dialog_id_data,
-           trike_cc_rr_msg.dialog_id_size,
-           trike_cc_rr_msg.request_id,
-           trike_cc_rr_msg.size,
-           (char*)trike_cc_rr_msg.data
-           );
 
 	printf ("--------------------\n");
 
@@ -147,6 +196,8 @@ send:
 	printf("Send message %s!\n", res? "failed":"ok");
 
 	--c;
+
+	client_status = C_ALIVE;
 
 	return 0;
 }
