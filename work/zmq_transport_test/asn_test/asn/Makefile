@@ -14,6 +14,8 @@ CFLAGS = -c -gdwarf-2 -Wall $(DEBUG_OPT) $(DEBUG) $(OPTIMIZE) -Wno-pointer-sign
 
 CFLAGS+=-I $(INCLUDE_DIR)
 
+CFLAGS+=-I ../../../asn1c/skeletons/
+
 ifeq ($(CROSS_COMPILE),ppc_4xxFP-)
 CFLAGS += -mpowerpc
 ARCH=ppc
@@ -34,7 +36,7 @@ OBJ_DIR=$(ARCH)/obj/
 all: asn_translate
 
 asn_translate:
-	./asn1c $(ASN_MODULE)
+	./asn1c -S ../../../asn1c/skeletons/ $(ASN_MODULE)
 	@mkdir -p $(CORE_PATH)
 	@mkdir -p $(INCLUDE_DIR)
 	@mkdir -p $(OBJ_DIR)

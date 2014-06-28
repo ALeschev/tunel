@@ -6,6 +6,8 @@ LIB_DIR=$(ASN_DIR)/$(ARCH)/lib/
 CFLAGS=-I $(INCLUDE_DIR) -I. -g
 LDFLAGS=-L $(LIB_DIR)
 
+CFLAGS+=-I ../../asn1c/skeletons/
+
 LIB = -lasn
 
 all: clean build_lib compile
