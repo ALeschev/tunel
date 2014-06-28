@@ -36,7 +36,7 @@ OBJ_DIR=$(ARCH)/obj/
 all: asn_translate
 
 asn_translate:
-	./asn1c -S ../../../asn1c/skeletons/ $(ASN_MODULE)
+	./asn1c -S ../../../asn1c/skeletons $(ASN_MODULE)
 	@mkdir -p $(CORE_PATH)
 	@mkdir -p $(INCLUDE_DIR)
 	@mkdir -p $(OBJ_DIR)
