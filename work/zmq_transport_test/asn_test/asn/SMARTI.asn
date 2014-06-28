@@ -9,12 +9,12 @@ SmarTIMessage ::= SEQUENCE
 {
   version [0] INTEGER,
   legID   [1] LegId,
-  body    [3] SmarTIBody
+  body    [2] SmarTIBody
 }
 
 SmarTIBody ::= CHOICE
 {
-  connectionReqest         [1] ConnectionRequestType,
+  connectionRequest        [1] ConnectionRequestType,
   connectionResponse       [2] ConnectionResponseType,
   connectionReject         [3] ConnectionRejectType,
   connectionUpdateRequest  [4] ConnectionUpdateRequestType,
@@ -415,7 +415,7 @@ RedirectingReason ::= ENUMERATED
 LegId ::= SEQUENCE
 {
   swSessionID [1] OCTET STRING,
-  appSessionID [2] INTEGER
+  appSessionID [2] OCTET STRING
 }
 
 EventIndicator ::= BIT STRING(SIZE(7)) -- 7bit value with valid values from EventIndicatorVal

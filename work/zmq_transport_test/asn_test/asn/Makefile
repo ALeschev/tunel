@@ -1,30 +1,62 @@
-SOURCE_DIR=src/
-INCLUDE_DIR=$(SOURCE_DIR)include/
-LIB_DIR=lib/
-OBJ_DIR=obj/
 
-OBJ:=$(wildcard $(OBJ_DIR)*.o)
+CC=$(CROSS_COMPILE)gcc
+AR=$(CROSS_COMPILE)ar
 
-#ASN_MODULE=MyModule.asn1
+CORE_PATH=core/
+INCLUDE_DIR=$(CORE_PATH)include/
+
 ASN_MODULE=SMARTI.asn
-#ASN_MODULE=pong.asn
 
-all: create_src create_lib
+OPTIMIZE= -O2 -fno-strength-reduce -fsigned-char
+OPTIMIZE2= -fomit-frame-pointer
+DEBUG_OPT= -g
+CFLAGS = -c -gdwarf-2 -Wall $(DEBUG_OPT) $(DEBUG) $(OPTIMIZE) -Wno-pointer-sign
 
-create_src: asn_translate
-	mv *.c $(SOURCE_DIR)
-	mv *.h $(INCLUDE_DIR)
-	mv *.sample $(SOURCE_DIR)
-	$(MAKE) CC=$(CC) -C src/
+CFLAGS+=-I $(INCLUDE_DIR)
 
-create_lib:
-	ar rc $(LIB_DIR)libasn.a $(OBJ)
+ifeq ($(CROSS_COMPILE),ppc_4xxFP-)
+CFLAGS += -mpowerpc
+ARCH=ppc
+endif
+
+ifeq ($(CROSS_COMPILE),arm-mv5sft-linux-gnueabi-)
+ARCH=mv
+endif
+
+ifeq ($(CROSS_COMPILE),arm-marvell-linux-gnueabi-)
+ARCH=2016
+CFLAGS += -Wno-unused-but-set-variable -fpartial-inlining
+endif
+
+LIB_DIR=$(ARCH)/lib/
+OBJ_DIR=$(ARCH)/obj/
+
+all: asn_translate
 
 asn_translate:
 	./asn1c $(ASN_MODULE)
-	rm -f converter-sample.c
+	@mkdir -p $(CORE_PATH)
+	@mkdir -p $(INCLUDE_DIR)
+	@mkdir -p $(OBJ_DIR)
+	@mv *.c $(CORE_PATH)
+	@mv *.h $(INCLUDE_DIR)
+	@rm -f converter-sample.c
+	@rm -f $(SOURCE_DIR)*.sample
+
+create_lib: create_obj
+	@mkdir -p $(LIB_DIR)
+	$(AR) rc $(LIB_DIR)libasn.a $(wildcard $(OBJ_DIR)*.o)
+
+create_obj: $(patsubst %.c,%.o,$(wildcard $(CORE_PATH)*.c))
+#	@+make $(J8) CC=$(CC) FLAGS=$(FLAGS) create_lib
+
+%.o: %.c
+	$(CC) $(J8) $(CFLAGS) $< $(FLAGS) -o $@
+	@mv $@ $(OBJ_DIR)
 
 clean:
-	$(MAKE) -C src/ clean
-	rm -f $(OBJ_DIR)*.o
-	rm -f $(LIB_DIR)*.a
+	@rm -f $(SOURCE_DIR)*.c
+	@rm -rf $(INCLUDE_DIR)
+	@rm -rf $(ARCH)
+	@rm -rf $(OBJ_DIR)
+	@rm -rf $(CORE_PATH)
