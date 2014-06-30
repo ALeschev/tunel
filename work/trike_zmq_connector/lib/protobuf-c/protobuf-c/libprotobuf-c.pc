@@ -1,0 +1,11 @@
+prefix=/home/wei/test/tunel/work/trike_zmq_connector/lib/protobuf-2.5.0
+exec_prefix=${prefix}
+libdir=/home/wei/test/tunel/work/trike_zmq_connector/lib
+includedir=/home/wei/test/tunel/work/trike_zmq_connector/include
+
+Name: libprotobuf-c
+Description: Protocol Buffers C library
+Version: 1.0.0-pre
+Libs: -L${libdir} -lprotobuf-c
+Libs.private:
+Cflags: -I${includedir}

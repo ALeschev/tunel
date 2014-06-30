@@ -1,0 +1,421 @@
+libzmq_la-fq.lo: fq.cpp fq.hpp array.hpp \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/vector \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_algobase.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/c++config.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/os_defines.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/features.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/predefs.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/cdefs.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/wordsize.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/gnu/stubs.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/cpu_defines.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cstddef \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/include/stddef.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/functexcept.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/exception_defines.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/cpp_type_traits.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/type_traits.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/numeric_traits.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_pair.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_move.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/concept_check.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_iterator_base_types.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_iterator_base_funcs.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_iterator.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/debug/debug.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/allocator.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/c++allocator.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/new_allocator.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/new \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/exception \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_construct.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_uninitialized.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_vector.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_bvector.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/vector.tcc \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/algorithm \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_algo.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cstdlib \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdlib.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/include/stddef.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/waitflags.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/waitstatus.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/endian.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/endian.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/xlocale.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/types.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/types.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/typesizes.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/time.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/select.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/select.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sigset.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/time.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/sysmacros.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/pthreadtypes.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/alloca.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/algorithmfwd.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_heap.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_tempbuf.h \
+  pipe.hpp msg.hpp \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdio.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/libio.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/_G_config.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/wchar.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/include/stdarg.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/stdio_lim.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sys_errlist.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/stdio.h \
+  config.hpp atomic_counter.hpp stdint.hpp platform.hpp \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdint.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/wchar.h \
+  mutex.hpp err.hpp ../include/zmq.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/errno.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/errno.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/linux/errno.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm/errno.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm-generic/errno.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm-generic/errno-base.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/assert.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/string.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdlib.h \
+  likely.hpp \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/netdb.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/netinet/in.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/socket.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/uio.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/uio.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/socket.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sockaddr.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm/socket.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm/sockios.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/in.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/byteswap.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/rpc/netdb.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/siginfo.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/netdb.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/pthread.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sched.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sched.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/signal.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/setjmp.h \
+  ypipe.hpp atomic_ptr.hpp yqueue.hpp object.hpp blob.hpp \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/string \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stringfwd.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/char_traits.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/postypes.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cwchar \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/wchar.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cstdio \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdio.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/localefwd.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/c++locale.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/clocale \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/locale.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/locale.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/iosfwd \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cctype \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/ctype.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/ostream_insert.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cxxabi-forced.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_function.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/backward/binders.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/basic_string.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/atomicity.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/gthr.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/gthr-default.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/unistd.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/posix_opt.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/environments.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/confname.h \
+  /home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/getopt.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/atomic_word.h \
+  /home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/basic_string.tcc
+
+fq.hpp:
+
+array.hpp:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/vector:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_algobase.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/c++config.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/os_defines.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/features.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/predefs.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/cdefs.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/wordsize.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/gnu/stubs.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/cpu_defines.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cstddef:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/include/stddef.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/functexcept.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/exception_defines.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/cpp_type_traits.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/type_traits.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/numeric_traits.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_pair.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_move.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/concept_check.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_iterator_base_types.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_iterator_base_funcs.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_iterator.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/debug/debug.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/allocator.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/c++allocator.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/new_allocator.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/new:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/exception:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_construct.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_uninitialized.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_vector.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_bvector.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/vector.tcc:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/algorithm:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_algo.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cstdlib:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdlib.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/include/stddef.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/waitflags.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/waitstatus.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/endian.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/endian.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/xlocale.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/types.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/types.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/typesizes.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/time.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/select.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/select.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sigset.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/time.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/sysmacros.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/pthreadtypes.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/alloca.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/algorithmfwd.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_heap.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_tempbuf.h:
+
+pipe.hpp:
+
+msg.hpp:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdio.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/libio.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/_G_config.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/wchar.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/include/stdarg.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/stdio_lim.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sys_errlist.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/stdio.h:
+
+config.hpp:
+
+atomic_counter.hpp:
+
+stdint.hpp:
+
+platform.hpp:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdint.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/wchar.h:
+
+mutex.hpp:
+
+err.hpp:
+
+../include/zmq.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/errno.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/errno.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/linux/errno.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm/errno.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm-generic/errno.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm-generic/errno-base.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/assert.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/string.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdlib.h:
+
+likely.hpp:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/netdb.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/netinet/in.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/socket.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sys/uio.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/uio.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/socket.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sockaddr.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm/socket.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/asm/sockios.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/in.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/byteswap.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/rpc/netdb.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/siginfo.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/netdb.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/pthread.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/sched.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/sched.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/signal.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/setjmp.h:
+
+ypipe.hpp:
+
+atomic_ptr.hpp:
+
+yqueue.hpp:
+
+object.hpp:
+
+blob.hpp:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/string:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stringfwd.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/char_traits.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/postypes.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cwchar:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/wchar.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cstdio:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/stdio.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/localefwd.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/c++locale.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/clocale:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/locale.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/locale.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/iosfwd:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cctype:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/ctype.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/ostream_insert.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/cxxabi-forced.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/stl_function.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/backward/binders.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/basic_string.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/ext/atomicity.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/gthr.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/gthr-default.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/unistd.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/posix_opt.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/environments.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/bits/confname.h:
+
+/home/wei/work/smg/marvell/bin/../arm-mv5sft-linux-gnueabi//sys-root/usr/include/getopt.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/arm-mv5sft-linux-gnueabi/bits/atomic_word.h:
+
+/home/wei/work/smg/marvell/bin/../lib/gcc/arm-mv5sft-linux-gnueabi/4.3.2/../../../../arm-mv5sft-linux-gnueabi/include/c++/4.3.2/bits/basic_string.tcc:
