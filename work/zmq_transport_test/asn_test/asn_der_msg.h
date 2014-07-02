@@ -48,6 +48,13 @@ typedef struct bridge {
 	char *leg2;
 } bridge_t;
 
+typedef struct msg_info
+{
+	int  version; /*not necessarily to fill. will be rewrited*/
+	char swSID[MAX_OCT_LEN];
+	char appSID[MAX_OCT_LEN];
+} msg_info_t;
+
 /* ---------- Seize message -------- */
 typedef struct CdPN {
 	uint8_t
@@ -68,8 +75,6 @@ typedef struct RedirInfo {
 } RedirInfo_t;
 
 typedef struct SeizeBasic {
-	char swSID[MAX_OCT_LEN];
-	char appSID[MAX_OCT_LEN];
 	char vatsId[MAX_OCT_LEN];
 	char applicationId[MAX_OCT_LEN];
 	char timestamp[MAX_OCT_LEN]; /*not necessarily to fill. will be rewrited*/
@@ -102,9 +107,6 @@ typedef struct SeizeOptional {
 
 /* -------- Progress message ------- */
 typedef struct ProgressBasic {
-	char swSID[MAX_OCT_LEN];
-	char appSID[MAX_OCT_LEN];
-
 	char timestamp[MAX_OCT_LEN]; /*not necessarily to fill. will be rewrited*/
 
 	uint8_t e_Ind;  /*event field*/
@@ -143,9 +145,6 @@ typedef struct ProgressOptional {
 
 /* ---------- Answer message -------- */
 typedef struct AnswerBasic {
-	char swSID[MAX_OCT_LEN];
-	char appSID[MAX_OCT_LEN];
-
 	char timestamp[MAX_OCT_LEN]; /*not necessarily to fill. will be rewrited*/
 } AnswerBasic_t;
 
@@ -177,9 +176,6 @@ typedef struct AnswerOptional {
 
 /* --------- Release message -------- */
 typedef struct ReleaseBasic {
-	char swSID[MAX_OCT_LEN];
-	char appSID[MAX_OCT_LEN];
-
 	char timestamp[MAX_OCT_LEN]; /*not necessarily to fill. will be rewrited*/
 	char cause[MAX_OCT_LEN];
 } ReleaseBasic_t;
@@ -191,32 +187,56 @@ typedef struct ReleaseOptional {
 } ReleaseOptional_t;
 /* ---------------------------------- */
 
+typedef struct dec_msg {
+	msg_info_t *info;
+	int  *present;
+	void *base;
+	void *options;
+} dec_msg_t;
+
+enum msg_present {
+	msg_NOTHING,	/* No components present */
+	msg_connectionRequest,
+	msg_connectionResponse,
+	msg_connectionReject,
+	msg_connectionUpdateRequest,
+	msg_connectionUpdateResponse,
+	msg_seize,
+	msg_progress,
+	msg_answer,
+	msg_release
+};
+
+void asn_set_trace (int trace);
+
 /* ------- Transports messages ------ */
-int asn_encode_ConnectionResponse (char *swSID, char *appSID, long check_time, void *buffer, int buffer_size);
-int asn_decode_ConnectionResponse (char *swSID, char *appSID, int *updateTimeout, void *buffer);
+int asn_encode_ConnectionResponse (msg_info_t *msg_info, long check_time, void *buffer, int buffer_size);
+//int asn_decode_ConnectionResponse (msg_info_t *msg_info, int *updateTimeout, void *buffer);
 
-int asn_encode_ConnectionReject (char *swSID, char *appSID, int cause, void *buffer, int buffer_size);
+int asn_encode_ConnectionReject (msg_info_t *msg_info, int cause, void *buffer, int buffer_size);
 
-int asn_encode_ConnectionUpdateRequest (char *swSID, char *appSID, int set_timestamp, void *buffer, int buffer_size);
-int asn_decode_ConnectionUpdateRequest (char *swSID, char *appSID, char *timestamp, void *buffer);
+int asn_encode_ConnectionUpdateRequest (msg_info_t *msg_info, int set_timestamp, void *buffer, int buffer_size);
+//int asn_decode_ConnectionUpdateRequest (msg_info_t *msg_info, char *timestamp, void *buffer);
 
-int asn_encode_ConnectionUpdateResponse (char *swSID, char *appSID, int set_timestamp, void *buffer, int buffer_size);
-int asn_decode_ConnectionUpdateResponse (char *swSID, char *appSID, char *timestamp, void *buffer);
+int asn_encode_ConnectionUpdateResponse (msg_info_t *msg_info, int set_timestamp, void *buffer, int buffer_size);
+//int asn_decode_ConnectionUpdateResponse (msg_info_t *msg_info, char *timestamp, void *buffer);
 
 /* ---------- Seize message --------- */
-int asn_encode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer, int buffer_size);
-int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer);
+int asn_encode_Seize (msg_info_t *msg_info, SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer, int buffer_size);
+//int asn_decode_Seize (SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer);
 
 /* -------- Progress message -------- */
-int asn_encode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer, int buffer_size);
-int asn_decode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer);
+int asn_encode_Progress (msg_info_t *msg_info, ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer, int buffer_size);
+//int asn_decode_Progress (ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer);
 
 /* --------- Answer message --------- */
-int asn_encode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer, int buffer_size);
-int asn_decode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer);
+int asn_encode_Answer (msg_info_t *msg_info, AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer, int buffer_size);
+//int asn_decode_Answer (AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer);
 
 /* --------- Release message -------- */
-int asn_encode_Release (int trace, ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer, int buffer_size);
-int asn_decode_Release (int trace, ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer);
+int asn_encode_Release (msg_info_t *msg_info, ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer, int buffer_size);
+//int asn_decode_Release (ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer);
+
+int asn_decode_msg (dec_msg_t *dec_msg, void *buffer);
 
 #endif /*_ASN_IVR_API_H_*/

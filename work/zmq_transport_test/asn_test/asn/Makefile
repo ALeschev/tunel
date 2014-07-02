@@ -7,14 +7,18 @@ INCLUDE_DIR=$(CORE_PATH)include/
 
 ASN_MODULE=SMARTI.asn
 
-OPTIMIZE= -O2 -fno-strength-reduce -fsigned-char
-OPTIMIZE2= -fomit-frame-pointer
+#OPTIMIZE= -O2 -fno-strength-reduce -fsigned-char
+#OPTIMIZE2= -fomit-frame-pointer
 DEBUG_OPT= -g
-CFLAGS = -c -gdwarf-2 -Wall $(DEBUG_OPT) $(DEBUG) $(OPTIMIZE) -Wno-pointer-sign
+#CFLAGS = -gdwarf-2 -Wall $(DEBUG_OPT) $(DEBUG) $(OPTIMIZE) -Wno-pointer-sign
+CFLAGS+=$(DEBUG_OPT)
+CFLAGS+=-c
 
 CFLAGS+=-I $(INCLUDE_DIR)
 
 CFLAGS+=-I ../../../asn1c/skeletons/
+
+#CFLAGS+=-DEMIT_ASN_DEBUG
 
 ifeq ($(CROSS_COMPILE),ppc_4xxFP-)
 CFLAGS += -mpowerpc

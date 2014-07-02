@@ -1,6 +1,8 @@
 #include <sys/time.h>
 #include <time.h>
 
+#include <errno.h>
+
 #include "asn_der_msg.h"
 
 #include "SmarTIMessage.h"
@@ -16,6 +18,8 @@
 #include "ConnectionResponseType.h"
 #include "ConnectionUpdateRequestType.h"
 #include "ConnectionUpdateResponseType.h"
+
+#define xfree(ptr) if (ptr){free(ptr); ptr=NULL;}
 
 #define VERSION 1
 
@@ -65,6 +69,13 @@ static char *get_loc_time ()
 
 /*------------------------------------------------------------------------------------------------------------*/
 
+void asn_set_trace (int trace)
+{
+	traceON = trace;
+}
+
+/*------------------------------------------------------------------------------------------------------------*/
+
 static OCTET_STRING_t *
 asn_generate_OCTET_STRING (OCTET_STRING_t *octet_str, char *str)
 {
@@ -100,7 +111,7 @@ asn_SmarTIMessage_fill (SmarTIMessage_t *SmarTIMessage, char *swSessionID, char 
 	SmarTIMessage->version = VERSION;
 	asn_generate_OCTET_STRING (&SmarTIMessage->legID.swSessionID, swSessionID);
 	asn_generate_OCTET_STRING (&SmarTIMessage->legID.appSessionID, appSessionID);
-	SmarTIMessage->body = SmarTIBody;
+	memcpy (&SmarTIMessage->body, &SmarTIBody, sizeof (SmarTIBody_t));
 
 	return SmarTIMessage;
 
@@ -424,7 +435,7 @@ ext:
 /*------------------------------------------------------------------------------------------------------------*/
 
 static SmarTIMessage_t *
-asn_SmarTIMessage_Release (SmarTIMessage_t *SmarTIMessage, ReleaseBasic_t *basic, ReleaseOptional_t *optional)
+asn_SmarTIMessage_Release (SmarTIMessage_t *SmarTIMessage, msg_info_t *msg_info, ReleaseBasic_t *basic, ReleaseOptional_t *optional)
 {
 	if (!SmarTIMessage || !basic)
 	{
@@ -450,7 +461,7 @@ asn_SmarTIMessage_Release (SmarTIMessage_t *SmarTIMessage, ReleaseBasic_t *basic
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_fill (SmarTIMessage, basic->swSID, basic->appSID, SmarTIBody) == NULL)
+	if (asn_SmarTIMessage_fill (SmarTIMessage, msg_info->swSID, msg_info->appSID, SmarTIBody) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_fill: fail\n", __func__, __LINE__);
 		goto ext;
@@ -463,25 +474,21 @@ ext:
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
-/*------------------------------------------------------------------------------------------------------------*/
-/*------------------------------------------------------------------------------------------------------------*/
-/*------------------------------------------------------------------------------------------------------------*/
-/*------------------------------------------------------------------------------------------------------------*/
 
-int asn_encode_ConnectionResponse (char *swSID, char *appSID, long check_time, void *buffer, int buffer_size)
+int asn_encode_ConnectionResponse (msg_info_t *msg_info, long check_time, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
 
-	if (!buffer || !swSID || !appSID)
+	if (!buffer || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (msg_info)? "ok":"fail");
 		enc_res.encoded = -1;
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_ConnectionResponse (&SmarTIMessage, swSID, appSID, &check_time) == NULL)
+	if (asn_SmarTIMessage_ConnectionResponse (&SmarTIMessage, msg_info->swSID, msg_info->appSID, &check_time) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_ConnectionResponse: fail\n", __func__, __LINE__);
 		goto ext;
@@ -498,105 +505,104 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_decode_ConnectionResponse (char *swSID, char *appSID, int *updateTimeout, void *buffer)
+static int asn_get_ConnectionResponse (SmarTIMessage_t *SmarTIMessage, dec_msg_t **dec_msg)
 {
-	asn_dec_rval_t dec_res = {0};
-	SmarTIMessage_t *SmarTIMessage = NULL;
-
-	if (!buffer || !swSID || !appSID)
+	if (!SmarTIMessage || !*dec_msg)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
-		dec_res.code = RC_FAIL;
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (SmarTIMessage)? "ok":"fail", (dec_msg)? "ok":"fail");
 		goto ext;
 	}
 
-	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
+	ConnectionResponseType_t *ConnectionResponse;
 
-	if (!SmarTIMessage)
+	ConnectionResponse = &SmarTIMessage->body.choice.connectionResponse;
+
+	if (!ConnectionResponse->updateTimeout)
 		goto ext;
 
-	memcpy (swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (appSID, SmarTIMessage->legID.appSessionID.buf, sizeof (SmarTIMessage->legID.appSessionID.size));
+	(*dec_msg)->options = (long *)calloc(1, sizeof (long));
+	if (!(*dec_msg)->options)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		goto ext;
+	}
 
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
+	*(*dec_msg)->present = SmarTIBody_PR_connectionResponse;
+	memcpy((*dec_msg)->options, ConnectionResponse->updateTimeout, sizeof (long));
 
-	*updateTimeout = *SmarTIMessage->body.choice.connectionResponse.updateTimeout;
+	return 0;
 
 ext:
-	switch(dec_res.code)
-	{
-		case RC_OK:
-			if (traceON)
-				printf ("%s: RC_OK\n", __func__);
-			break;
-		case RC_FAIL:  printf ("%s: RC_FAIL\n", __func__);  break;
-		case RC_WMORE: printf ("%s: RC_WMORE\n", __func__); break;
-	}
-
-	return dec_res.code;
+	return -1;
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-
-int asn_decode_ConnectionRequest (char *swSID, char *appSID, int *updateTimeout, void *buffer)
+static void asn_clean_ConnectionResponse (dec_msg_t **dec_msg)
 {
-	asn_dec_rval_t dec_res = {0};
-	SmarTIMessage_t *SmarTIMessage = NULL;
-
-	if (!buffer || !swSID || !appSID)
-	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
-		dec_res.code = RC_FAIL;
-		goto ext;
-	}
-
-	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(ConnectionUpdateRequestType_t));
-
-	if (!SmarTIMessage)
-		goto ext;
-
-	memcpy (swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (appSID, SmarTIMessage->legID.appSessionID.buf, sizeof (SmarTIMessage->legID.appSessionID.size));
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
-
-	*updateTimeout = *SmarTIMessage->body.choice.connectionRequest.updateTimeout;
-
-ext:
-	switch(dec_res.code)
-	{
-		case RC_OK:
-			if (traceON)
-				printf ("%s: RC_OK\n", __func__);
-			break;
-		case RC_FAIL:  printf ("%s: RC_FAIL\n", __func__);  break;
-		case RC_WMORE: printf ("%s: RC_WMORE\n", __func__); break;
-	}
-
-	return dec_res.code;
+	xfree((*dec_msg)->options);
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
-int asn_encode_ConnectionUpdateRequest (char *swSID, char *appSID, int set_timestamp, void *buffer, int buffer_size)
+
+static int asn_get_ConnectionRequest (SmarTIMessage_t *SmarTIMessage, dec_msg_t **dec_msg)
+{
+	if (!SmarTIMessage || !*dec_msg)
+	{
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (SmarTIMessage)? "ok":"fail", (dec_msg)? "ok":"fail");
+		goto ext;
+	}
+
+	ConnectionRequestType_t *ConnectionRequest;
+
+	ConnectionRequest = &SmarTIMessage->body.choice.connectionRequest;
+
+	if (!ConnectionRequest->updateTimeout)
+		goto ext;
+
+	(*dec_msg)->options = (long *)calloc(1, sizeof (long));
+	if (!(*dec_msg)->options)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		goto ext;
+	}
+
+	*(*dec_msg)->present = SmarTIBody_PR_connectionRequest;
+	memcpy((*dec_msg)->options, ConnectionRequest->updateTimeout, sizeof (long));
+
+	return 0;
+
+ext:
+	return -1;
+}
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+static void asn_clean_ConnectionRequest (dec_msg_t **dec_msg)
+{
+	xfree((*dec_msg)->options);
+}
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+int asn_encode_ConnectionUpdateRequest (msg_info_t *msg_info, int set_timestamp, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
 	Timestamp_t Timestamp = {0};
 
-	if (!buffer || !swSID || !appSID)
+	if (!buffer || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (msg_info)? "ok":"fail");
 		enc_res.encoded = -1;
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_ConnectionUpdate (SmarTIBody_PR_connectionUpdateRequest, &SmarTIMessage, swSID, appSID, set_timestamp, &Timestamp) == NULL)
+	if (asn_SmarTIMessage_ConnectionUpdate (SmarTIBody_PR_connectionUpdateRequest, &SmarTIMessage, msg_info->swSID,
+	                                        msg_info->appSID, set_timestamp, &Timestamp) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_ConnectionUpdate: fail\n", __func__, __LINE__);
 		goto ext;
@@ -613,69 +619,61 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_decode_ConnectionUpdateRequest (char *swSID, char *appSID, char *timestamp, void *buffer)
+static int asn_get_ConnectionUpdateRequest (SmarTIMessage_t *SmarTIMessage, dec_msg_t **dec_msg)
 {
-	asn_dec_rval_t dec_res = {0};
-	SmarTIMessage_t *SmarTIMessage = NULL;
-
-	if (!buffer || !timestamp || !swSID || !appSID)
+	if (!SmarTIMessage || !*dec_msg)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s]; 4th [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (timestamp)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
-		dec_res.code = RC_FAIL;
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (SmarTIMessage)? "ok":"fail", (dec_msg)? "ok":"fail");
 		goto ext;
 	}
 
-	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
+	ConnectionUpdateRequestType_t *ConnectionUpdateRequest;
 
-	if (!SmarTIMessage)
+	ConnectionUpdateRequest = &SmarTIMessage->body.choice.connectionUpdateRequest;
+
+	if (!ConnectionUpdateRequest->timestamp)
 		goto ext;
 
-	memcpy (swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (appSID, SmarTIMessage->legID.appSessionID.buf, sizeof (SmarTIMessage->legID.appSessionID.size));
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
-
-	Timestamp_t *Timestamp = SmarTIMessage->body.choice.connectionUpdateRequest.timestamp;
-
-	if (!Timestamp || !Timestamp->size)
+	(*dec_msg)->options = (char *)calloc(1, ConnectionUpdateRequest->timestamp->size);
+	if (!(*dec_msg)->options)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
 		goto ext;
+	}
 
-	memcpy (timestamp, Timestamp->buf, Timestamp->size);
+	*(*dec_msg)->present = SmarTIBody_PR_connectionUpdateRequest;
+	memcpy((*dec_msg)->options, ConnectionUpdateRequest->timestamp->buf, ConnectionUpdateRequest->timestamp->size);
+
+	return 0;
 
 ext:
-	switch(dec_res.code)
-	{
-		case RC_OK:
-			if (traceON)
-				printf ("%s: RC_OK\n", __func__);
-			break;
-		case RC_FAIL:  printf ("%s: RC_FAIL\n", __func__);  break;
-		case RC_WMORE: printf ("%s: RC_WMORE\n", __func__); break;
-	}
-
-	return dec_res.code;
+	return -1;
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
 
+static void asn_clean_ConnectionUpdateRequest (dec_msg_t **dec_msg)
+{
+	xfree ((*dec_msg)->options);
+}
 
-int asn_encode_ConnectionUpdateResponse (char *swSID, char *appSID, int set_timestamp, void *buffer, int buffer_size)
+int asn_encode_ConnectionUpdateResponse (msg_info_t *msg_info, int set_timestamp, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
 	Timestamp_t Timestamp = {0};
 
-	if (!buffer || !swSID || !appSID)
+	if (!buffer || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (msg_info)? "ok":"fail");
 		enc_res.encoded = -1;
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_ConnectionUpdate (SmarTIBody_PR_connectionUpdateResponse, &SmarTIMessage, swSID, appSID, set_timestamp, &Timestamp) == NULL)
+	if (asn_SmarTIMessage_ConnectionUpdate (SmarTIBody_PR_connectionUpdateResponse, &SmarTIMessage, msg_info->swSID,
+	                                        msg_info->appSID, set_timestamp, &Timestamp) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_ConnectionUpdate: fail\n", __func__, __LINE__);
 		goto ext;
@@ -693,69 +691,60 @@ ext:
 /*------------------------------------------------------------------------------------------------------------*/
 
 
-int asn_decode_ConnectionUpdateResponse (char *swSID, char *appSID, char *timestamp, void *buffer)
+static int asn_get_ConnectionUpdateResponse (SmarTIMessage_t *SmarTIMessage, dec_msg_t **dec_msg)
 {
-	asn_dec_rval_t dec_res = {0};
-	SmarTIMessage_t *SmarTIMessage = NULL;
-
-	if (!buffer || !timestamp || !swSID || !appSID)
+	if (!SmarTIMessage || !*dec_msg)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s]; 4th [%s]\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (timestamp)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
-		dec_res.code = RC_FAIL;
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (SmarTIMessage)? "ok":"fail", (dec_msg)? "ok":"fail");
 		goto ext;
 	}
 
-	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
+	ConnectionUpdateResponseType_t *ConnectionUpdateResponse;
 
-	if (!SmarTIMessage)
+	ConnectionUpdateResponse = &SmarTIMessage->body.choice.connectionUpdateResponse;
+
+	if (!ConnectionUpdateResponse->timestamp)
 		goto ext;
 
-
-	memcpy (swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (appSID, SmarTIMessage->legID.appSessionID.buf, sizeof (SmarTIMessage->legID.appSessionID.size));
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
-
-	Timestamp_t *Timestamp = SmarTIMessage->body.choice.connectionUpdateResponse.timestamp;
-
-	if (!Timestamp || !Timestamp->size)
+	(*dec_msg)->options = (char *)calloc(1, ConnectionUpdateResponse->timestamp->size);
+	if (!(*dec_msg)->options)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
 		goto ext;
+	}
 
-	memcpy (timestamp, Timestamp->buf, Timestamp->size);
+	*(*dec_msg)->present = SmarTIBody_PR_connectionUpdateResponse;
+	memcpy((*dec_msg)->options, ConnectionUpdateResponse->timestamp->buf, ConnectionUpdateResponse->timestamp->size);
+
+	return 0;
 
 ext:
-	switch(dec_res.code)
-	{
-		case RC_OK:
-			if (traceON)
-				printf ("%s: RC_OK\n", __func__);
-			break;
-		case RC_FAIL:  printf ("%s: RC_FAIL\n", __func__);  break;
-		case RC_WMORE: printf ("%s: RC_WMORE\n", __func__); break;
-	}
-
-	return dec_res.code;
+	return -1;
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_encode_ConnectionReject (char *swSID, char *appSID, int cause, void *buffer, int buffer_size)
+static void asn_clean_ConnectionUpdateResponse (dec_msg_t **dec_msg)
+{
+	xfree((*dec_msg)->options);
+}
+
+int asn_encode_ConnectionReject (msg_info_t *msg_info, int cause, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
 	OCTET_STRING_t diagnostic = {0};
 
-	if (!buffer || !swSID || !appSID)
+	if (!buffer || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (swSID)? "ok":"fail", (appSID)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (msg_info)? "ok":"fail");
 		enc_res.encoded = -1;
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_ConnectionReject (&SmarTIMessage, swSID, appSID, cause, &diagnostic) == NULL)
+	if (asn_SmarTIMessage_ConnectionReject (&SmarTIMessage, msg_info->swSID, msg_info->appSID, cause, &diagnostic) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_ConnectionUpdate: fail\n", __func__, __LINE__);
 		goto ext;
@@ -772,22 +761,20 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_encode_Release (int trace, ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer, int buffer_size)
+int asn_encode_Release (msg_info_t *msg_info, ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t  enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
 
-	if (!buffer || !basic)
+	if (!buffer || !basic || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (basic)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]; 3rd [%s]\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (basic)? "ok":"fail", (msg_info)? "ok":"fail");
 		enc_res.encoded = -1;
 		goto ext;
 	}
 
-	traceON = trace;
-
-	if (asn_SmarTIMessage_Release (&SmarTIMessage, basic, optional) == NULL)
+	if (asn_SmarTIMessage_Release (&SmarTIMessage, msg_info, basic, optional) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_Release: fail\n", __func__, __LINE__);
 		goto ext;
@@ -804,7 +791,7 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_decode_Release (int trace, ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer)
+int asn_decode_Release (ReleaseBasic_t *basic, ReleaseOptional_t *optional, void *buffer)
 {
 	asn_dec_rval_t dec_res = {0};
 	SmarTIMessage_t *SmarTIMessage = NULL;
@@ -818,18 +805,11 @@ int asn_decode_Release (int trace, ReleaseBasic_t *basic, ReleaseOptional_t *opt
 		goto ext;
 	}
 
-	traceON = trace;
 
 	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
 
 	if (!SmarTIMessage)
 		goto ext;
-
-	memcpy (basic->swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (basic->appSID, SmarTIMessage->legID.appSessionID.buf, sizeof (SmarTIMessage->legID.appSessionID.size));
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
 
 	Release = &SmarTIMessage->body.choice.release;
 
@@ -904,15 +884,30 @@ asn_seize_add_CallingPartyNumber (SeizeType_t *Seize, CallingPartyNumber_t *Call
 	sprintf (s_type, "%d", cgpn->type);
 	sprintf (s_numplan, "%d", cgpn->numplan);
 
-	asn_generate_OCTET_STRING(&CallingPartyNumber->nai, s_type);
-	asn_generate_OCTET_STRING(&CallingPartyNumber->npi, s_numplan);
-	CallingPartyNumber->screening = cgpn->screen;
-	CallingPartyNumber->apri      = 0; /* ! */
-	CallingPartyNumber->ni        = 0; /* ! */
+	// asn_generate_OCTET_STRING(&CallingPartyNumber->nai, s_type);
+	// asn_generate_OCTET_STRING(&CallingPartyNumber->npi, s_numplan);
+	// CallingPartyNumber->screening = cgpn->screen;
+	// CallingPartyNumber->apri      = 0; /* ! */
+	// CallingPartyNumber->ni        = 0; /* ! */
 
-	asn_generate_OCTET_STRING(&CallingPartyNumber->address, cgpn->sym);
+	// asn_generate_OCTET_STRING(&CallingPartyNumber->address, cgpn->sym);
 
-	Seize->cgpn = CallingPartyNumber;
+	// Seize->cgpn = CallingPartyNumber;
+
+	Seize->cgpn = (CallingPartyNumber_t *)calloc(1, sizeof (CallingPartyNumber_t));
+	if (!Seize->cgpn)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	asn_generate_OCTET_STRING(&Seize->cgpn->nai, s_type);
+	asn_generate_OCTET_STRING(&Seize->cgpn->npi, s_numplan);
+	Seize->cgpn->screening = cgpn->screen;
+	Seize->cgpn->apri      = 0; /* ! */
+	Seize->cgpn->ni        = 0; /* ! */
+
+	asn_generate_OCTET_STRING(&Seize->cgpn->address, cgpn->sym);
 
 	return 0;
 }
@@ -927,11 +922,13 @@ asn_seize_add_CallReference (SeizeType_t *Seize, CallReference_t *CallReference,
 
 	char buff[16] = {0};
 
-	snprintf(buff, 5, "%d", *callRef);
+	snprintf(buff, 16, "%d", *callRef);
 
-	asn_generate_OCTET_STRING(CallReference, buff);
+	// asn_generate_OCTET_STRING(CallReference, buff);
 
-	Seize->callRef = CallReference;
+	// Seize->callRef = CallReference;
+
+	Seize->callRef = OCTET_STRING_new_fromBuf (&asn_DEF_OCTET_STRING, buff, 5);
 
 	return 0;
 }
@@ -947,9 +944,11 @@ asn_seize_add_CallingPartysCategory (SeizeType_t *Seize, CallingPartysCategory_t
 	char s_category[16] = {0};
 	sprintf (s_category, "%d", *category);
 
-	asn_generate_OCTET_STRING (CallingPartysCategory, s_category);
+	// asn_generate_OCTET_STRING (CallingPartysCategory, s_category);
 
-	Seize->category = CallingPartysCategory;
+	// Seize->category = CallingPartysCategory;
+
+	Seize->category = OCTET_STRING_new_fromBuf (&asn_DEF_OCTET_STRING, s_category, 1);
 
 	return 0;
 }
@@ -962,9 +961,18 @@ asn_seize_add_TrunkGroupId (SeizeType_t *Seize, TrunkGroupId_t *TrunkGroupId, lo
 	if (!Seize || !TrunkGroupId || !TGID)
 		return 1;
 
-	TrunkGroupId = TGID;
+	// TrunkGroupId = TGID;
 
-	Seize->tgId = TrunkGroupId;
+	// Seize->tgId = TrunkGroupId;
+
+	Seize->tgId = (TrunkGroupId_t *)calloc(1, sizeof (TrunkGroupId_t));
+	if (!Seize->tgId)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	*Seize->tgId = *TGID;
 
 	return 0;
 }
@@ -983,12 +991,24 @@ asn_seize_add_OriginalCalledNumber (SeizeType_t *Seize, OriginalCalledNumber_t *
 	sprintf (s_type, "%d", origNum->type);
 	sprintf (s_numplan, "%d", origNum->numplan);
 
-	asn_generate_OCTET_STRING(&OriginalCalledNumber->nai, s_type);
-	asn_generate_OCTET_STRING(&OriginalCalledNumber->npi, s_numplan);
-	asn_generate_OCTET_STRING(&OriginalCalledNumber->address, origNum->sym);
-	OriginalCalledNumber->apri = 0; /* ! */
+	// asn_generate_OCTET_STRING(&OriginalCalledNumber->nai, s_type);
+	// asn_generate_OCTET_STRING(&OriginalCalledNumber->npi, s_numplan);
+	// asn_generate_OCTET_STRING(&OriginalCalledNumber->address, origNum->sym);
+	// OriginalCalledNumber->apri = 0; /* ! */
 
-	Seize->originalCDPN = OriginalCalledNumber;
+	// Seize->originalCDPN = OriginalCalledNumber;
+
+	Seize->originalCDPN = (OriginalCalledNumber_t *)calloc(1, sizeof (OriginalCalledNumber_t));
+	if (!Seize->originalCDPN)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	asn_generate_OCTET_STRING(&Seize->originalCDPN->nai, s_type);
+	asn_generate_OCTET_STRING(&Seize->originalCDPN->npi, s_numplan);
+	asn_generate_OCTET_STRING(&Seize->originalCDPN->address, origNum->sym);
+	Seize->originalCDPN->apri = 0; /* ! */
 
 	return 0;
 }
@@ -1007,15 +1027,30 @@ asn_seize_add_GenericNumber (SeizeType_t *Seize, GenericNumber_t *GenericNumber,
 	sprintf (s_type, "%d", genNum->type);
 	sprintf (s_numplan, "%d", genNum->numplan);
 
-	asn_generate_OCTET_STRING(&GenericNumber->nai, s_type);
-	asn_generate_OCTET_STRING(&GenericNumber->npi, s_numplan);
-	asn_generate_OCTET_STRING(&GenericNumber->address, genNum->sym);
-	asn_generate_OCTET_STRING(&GenericNumber->nqi, "");
-	GenericNumber->screening = genNum->screen;
-	GenericNumber->apri      = 0; /* ! */
-	GenericNumber->ni        = 0; /* ! */
+	// asn_generate_OCTET_STRING(&GenericNumber->nai, s_type);
+	// asn_generate_OCTET_STRING(&GenericNumber->npi, s_numplan);
+	// asn_generate_OCTET_STRING(&GenericNumber->address, genNum->sym);
+	// asn_generate_OCTET_STRING(&GenericNumber->nqi, "");
+	// GenericNumber->screening = genNum->screen;
+	// GenericNumber->apri      = 0; /* ! */
+	// GenericNumber->ni        = 0; /* ! */
 
-	Seize->genericNumber = GenericNumber;
+	// Seize->genericNumber = GenericNumber;
+
+	Seize->genericNumber = (GenericNumber_t *)calloc(1, sizeof (GenericNumber_t));
+	if (!Seize->genericNumber)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	asn_generate_OCTET_STRING(&Seize->genericNumber->nai, s_type);
+	asn_generate_OCTET_STRING(&Seize->genericNumber->npi, s_numplan);
+	asn_generate_OCTET_STRING(&Seize->genericNumber->address, genNum->sym);
+	asn_generate_OCTET_STRING(&Seize->genericNumber->nqi, "");
+	Seize->genericNumber->screening = genNum->screen;
+	Seize->genericNumber->apri      = 0; /* ! */
+	Seize->genericNumber->ni        = 0; /* ! */
 
 	return 0;
 }
@@ -1034,12 +1069,24 @@ asn_seize_add_RedirectingNumber (SeizeType_t *Seize, RedirectingNumber_t *Redire
 	sprintf (s_type, "%d", redirNum->type);
 	sprintf (s_numplan, "%d", redirNum->numplan);
 
-	asn_generate_OCTET_STRING(&RedirectingNumber->nai, s_type);
-	asn_generate_OCTET_STRING(&RedirectingNumber->npi, s_numplan);
-	asn_generate_OCTET_STRING(&RedirectingNumber->address, redirNum->sym);
-	RedirectingNumber->apri = 0; /* ! */
+	// asn_generate_OCTET_STRING(&RedirectingNumber->nai, s_type);
+	// asn_generate_OCTET_STRING(&RedirectingNumber->npi, s_numplan);
+	// asn_generate_OCTET_STRING(&RedirectingNumber->address, redirNum->sym);
+	// RedirectingNumber->apri = 0; /* ! */
 
-	Seize->redirectingNumber = RedirectingNumber;
+	// Seize->redirectingNumber = RedirectingNumber;
+
+	Seize->redirectingNumber = (RedirectingNumber_t *)calloc(1, sizeof (RedirectingNumber_t));
+	if (!Seize->redirectingNumber)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	asn_generate_OCTET_STRING(&Seize->redirectingNumber->nai, s_type);
+	asn_generate_OCTET_STRING(&Seize->redirectingNumber->npi, s_numplan);
+	asn_generate_OCTET_STRING(&Seize->redirectingNumber->address, redirNum->sym);
+	Seize->redirectingNumber->apri = 0; /* ! */
 
 	return 0;
 }
@@ -1052,14 +1099,38 @@ asn_seize_add_RedirectionInformation (SeizeType_t *Seize, RedirectionInformation
 	if (!Seize || !RedirectionInformation || !info)
 		return 1;
 
-	RedirectionInformation->redirecting  = info->redirecting;
-	RedirectionInformation->oreason      = info->oreason;
-	RedirectionInformation->reason       = info->reason;
+	// RedirectionInformation->redirecting  = info->redirecting;
+	// RedirectionInformation->oreason      = info->oreason;
+	// RedirectionInformation->reason       = info->reason;
 
-	RedirectionInformation->counter.buf = (uint8_t *)&info->counter;
-	RedirectionInformation->counter.size = sizeof(info->counter);
+	// RedirectionInformation->counter.buf = (uint8_t *)&info->counter;
+	// RedirectionInformation->counter.size = sizeof(info->counter);
 
-	Seize->redirectionInformation = RedirectionInformation;
+	// Seize->redirectionInformation = RedirectionInformation;
+
+	Seize->redirectionInformation = (RedirectionInformation_t *)calloc(1, sizeof (RedirectionInformation_t));
+	if (!Seize->redirectionInformation)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	Seize->redirectionInformation->redirecting  = info->redirecting;
+	Seize->redirectionInformation->oreason      = info->oreason;
+	Seize->redirectionInformation->reason       = info->reason;
+
+	uint8_t *buffer = Seize->redirectionInformation->counter.buf;
+	int size = sizeof(info->counter);
+
+	Seize->redirectionInformation->counter.buf = (uint8_t *)malloc(sizeof (uint8_t) * 3 + 1);
+	if (!Seize->redirectionInformation->counter.buf)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		return 1;
+	}
+
+	memcpy(Seize->redirectionInformation->counter.buf, &info->counter, size);
+	Seize->redirectionInformation->counter.size = size;
 
 	return 0;
 }
@@ -1072,9 +1143,11 @@ asn_seize_add_ForwardCallIndicators (SeizeType_t *Seize, ForwardCallIndicators_t
 	if (!Seize || !ForwardCallIndicators || !fci)
 		return 1;
 
-	asn_generate_OCTET_STRING(ForwardCallIndicators, fci);
+	// asn_generate_OCTET_STRING(ForwardCallIndicators, fci);
 
-	Seize->fci = ForwardCallIndicators;
+	// Seize->fci = ForwardCallIndicators;
+
+	Seize->fci = OCTET_STRING_new_fromBuf (&asn_DEF_OCTET_STRING, fci, 2);
 
 	return 0;
 }
@@ -1087,9 +1160,11 @@ asn_seize_add_UserServiceInformation (SeizeType_t *Seize, UserServiceInformation
 	if (!Seize || !UserServiceInformation || !usi)
 		return 1;
 
-	asn_generate_OCTET_STRING(UserServiceInformation, usi);
+	// asn_generate_OCTET_STRING(UserServiceInformation, usi);
 
-	Seize->usi = UserServiceInformation;
+	// Seize->usi = UserServiceInformation;
+
+	Seize->usi = OCTET_STRING_new_fromBuf (&asn_DEF_OCTET_STRING, usi, strlen(usi));
 
 	return 0;
 }
@@ -1102,9 +1177,11 @@ asn_seize_add_UserTeleserviceInformation (SeizeType_t *Seize, UserTeleserviceInf
 	if (!Seize || !UserTeleserviceInformation || !uti)
 		return 1;
 
-	asn_generate_OCTET_STRING(UserTeleserviceInformation, uti);
+	// asn_generate_OCTET_STRING(UserTeleserviceInformation, uti);
 
-	Seize->uti = UserTeleserviceInformation;
+	// Seize->uti = UserTeleserviceInformation;
+
+	Seize->uti = OCTET_STRING_new_fromBuf (&asn_DEF_OCTET_STRING, uti, strlen(uti));
 
 	return 0;
 }
@@ -1117,9 +1194,11 @@ asn_seize_add_TransmissionMediumRequirement (SeizeType_t *Seize, TransmissionMed
 	if (!Seize || !TransmissionMediumRequirement || !tmr)
 		return 1;
 
-	asn_generate_OCTET_STRING(TransmissionMediumRequirement, tmr);
+	// asn_generate_OCTET_STRING(TransmissionMediumRequirement, tmr);
 
-	Seize->tmr = TransmissionMediumRequirement;
+	// Seize->tmr = TransmissionMediumRequirement;
+
+	Seize->tmr = OCTET_STRING_new_fromBuf (&asn_DEF_OCTET_STRING, tmr, 2);
 
 	return 0;
 }
@@ -1127,8 +1206,8 @@ asn_seize_add_TransmissionMediumRequirement (SeizeType_t *Seize, TransmissionMed
 /*------------------------------------------------------------------------------------------------------------*/
 
 static SmarTIMessage_t *
-asn_SmarTIMessage_Seize (SmarTIMessage_t *SmarTIMessage, SeizeBasic_t *basic, SeizeOptional_t *optional,
-                         CallingPartyNumber_t *CallingPartyNumber,
+asn_SmarTIMessage_Seize (SmarTIMessage_t *SmarTIMessage, msg_info_t *msg_info, SeizeBasic_t *basic,
+                         SeizeOptional_t *optional, CallingPartyNumber_t *CallingPartyNumber,
                          CallReference_t *CallReference, CallingPartysCategory_t *CallingPartysCategory,
                          TrunkGroupId_t *TrunkGroupId, OriginalCalledNumber_t *OriginalCalledNumber,
                          GenericNumber_t *GenericNumber, RedirectingNumber_t *RedirectingNumber,
@@ -1180,7 +1259,7 @@ asn_SmarTIMessage_Seize (SmarTIMessage_t *SmarTIMessage, SeizeBasic_t *basic, Se
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_fill (SmarTIMessage, basic->swSID, basic->appSID, SmarTIBody) == NULL)
+	if (asn_SmarTIMessage_fill (SmarTIMessage, msg_info->swSID, msg_info->appSID, SmarTIBody) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_fill: fail\n", __func__, __LINE__);
 		goto ext;
@@ -1194,7 +1273,7 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_encode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer, int buffer_size)
+int asn_encode_Seize (msg_info_t *msg_info, SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t  enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
@@ -1215,14 +1294,12 @@ int asn_encode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	enc_res.encoded = -1;
 
-	if (!buffer || !basic)
+	if (!buffer || !basic || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (basic)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s] 3rd [%s]\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (basic)? "ok":"fail", (msg_info)? "ok":"fail");
 		goto ext;
 	}
-
-	traceON = trace;
 
 	memset(&CallingPartyNumber, 0, sizeof(CallingPartyNumber));
 	memset(&OriginalCalledNumber, 0, sizeof(OriginalCalledNumber));
@@ -1231,7 +1308,7 @@ int asn_encode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	/* check number format */
 
-	if (asn_SmarTIMessage_Seize (&SmarTIMessage, basic, optional, &CallingPartyNumber,
+	if (asn_SmarTIMessage_Seize (&SmarTIMessage, msg_info, basic, optional, &CallingPartyNumber,
 		                         &CallReference, &CallingPartysCategory, &TrunkGroupId, &OriginalCalledNumber,
 		                         &GenericNumber, &RedirectingNumber, &RedirectionInformation,
 		                         &ForwardCallIndicators, &UserServiceInformation, &UserTeleserviceInformation,
@@ -1246,51 +1323,57 @@ int asn_encode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	enc_res = der_encode_to_buffer(&asn_DEF_SmarTIMessage, &SmarTIMessage, buffer, buffer_size);
 
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_SmarTIMessage, &SmarTIMessage);
+
 ext:
 	return enc_res.encoded;
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional, void *buffer)
+static int asn_get_Seize (SmarTIMessage_t *SmarTIMessage, dec_msg_t **dec_msg)
 {
-	asn_dec_rval_t dec_res = {0};
-	SmarTIMessage_t *SmarTIMessage = NULL;
-	SeizeType_t *Seize;
-
-	if (!buffer || !basic)
+	if (!SmarTIMessage || !*dec_msg)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (basic)? "ok":"fail");
-		dec_res.code = RC_FAIL;
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s];\n", __func__, __LINE__,
+		       (SmarTIMessage)? "ok":"fail", (dec_msg)? "ok":"fail");
 		goto ext;
 	}
 
-	traceON = trace;
-
-	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
-
-	if (!SmarTIMessage)
-		goto ext;
+	SeizeBasic_t basic = {0};
+	SeizeOptional_t *optional;
+	SeizeType_t *Seize;
 
 	Seize = &SmarTIMessage->body.choice.seize;
 
-	memcpy (basic->swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (basic->appSID, SmarTIMessage->legID.appSessionID.buf, SmarTIMessage->legID.appSessionID.size);
-	memcpy (basic->vatsId, Seize->vatsId.buf, Seize->vatsId.size);
-	memcpy (basic->applicationId, Seize->applicationId.buf, Seize->applicationId.size);
-	memcpy (basic->timestamp, Seize->timestamp.buf, Seize->timestamp.size);
+	*(*dec_msg)->present = SmarTIBody_PR_seize;
 
-	sscanf ((char *)Seize->cdpn.nai.buf, "%"SCNd8, &basic->CalledPN.nai);
-	sscanf ((char *)Seize->cdpn.npi.buf, "%"SCNd8, &basic->CalledPN.npi);
-	basic->CalledPN.inn = Seize->cdpn.inn;
-	memcpy (basic->CalledPN.strCalled, Seize->cdpn.address.buf, Seize->cdpn.address.size);
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
-
-	if (!optional)
+	(*dec_msg)->base = (SeizeBasic_t *)calloc(1, sizeof (SeizeBasic_t));
+	if (!(*dec_msg)->base)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
 		goto ext;
+	}
+
+	(*dec_msg)->options = (SeizeOptional_t *)calloc(1, sizeof (SeizeOptional_t));
+	if (!(*dec_msg)->options)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		goto ext;
+	}
+
+	memcpy (basic.vatsId, Seize->vatsId.buf, Seize->vatsId.size);
+	memcpy (basic.applicationId, Seize->applicationId.buf, Seize->applicationId.size);
+	memcpy (basic.timestamp, Seize->timestamp.buf, Seize->timestamp.size);
+
+	sscanf ((char *)Seize->cdpn.nai.buf, "%"SCNd8, &basic.CalledPN.nai);
+	sscanf ((char *)Seize->cdpn.npi.buf, "%"SCNd8, &basic.CalledPN.npi);
+	basic.CalledPN.inn = Seize->cdpn.inn;
+	memcpy (basic.CalledPN.strCalled, Seize->cdpn.address.buf, Seize->cdpn.address.size);
+
+	memcpy ((*dec_msg)->base, &basic, sizeof (SeizeBasic_t));
+
+	optional = (*dec_msg)->options;
 
 	if (traceON >= 50)
 	{
@@ -1331,6 +1414,13 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	if (Seize->cgpn)
 	{
+		optional->cgpn = (number_t *)calloc(1, sizeof (number_t));
+		if (!optional->cgpn)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		sscanf ((char *)Seize->cgpn->nai.buf, "%"SCNd8, &optional->cgpn->type);
 		sscanf ((char *)Seize->cgpn->npi.buf, "%"SCNd8, &optional->cgpn->numplan);
 
@@ -1342,16 +1432,50 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 	}
 
 	if (Seize->callRef)
+	{
+		optional->callRef = (int *)calloc(1, sizeof (int));
+		if (!optional->callRef)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		sscanf ((char *)Seize->callRef->buf, "%d", optional->callRef);
+	}
 
 	if (Seize->category)
+	{
+		optional->category = (int *)calloc(1, sizeof (int));
+		if (!optional->category)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		sscanf ((char *)Seize->category->buf, "%d", optional->category);
+	}
 
 	if (Seize->tgId)
+	{
+		optional->TGID = (long *)calloc(1, sizeof (long));
+		if (!optional->TGID)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		memcpy(optional->TGID, Seize->tgId, sizeof *optional->TGID);
+	}
 
 	if (Seize->originalCDPN)
 	{
+		optional->origNum = (number_t *)calloc(1, sizeof (number_t));
+		if (!optional->origNum)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		sscanf ((char *)Seize->originalCDPN->nai.buf, "%"SCNd8, &optional->origNum->type);
 		sscanf ((char *)Seize->originalCDPN->npi.buf, "%"SCNd8, &optional->origNum->numplan);
 
@@ -1362,6 +1486,13 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	if (Seize->genericNumber)
 	{
+		optional->genNum = (number_t *)calloc(1, sizeof (number_t));
+		if (!optional->genNum)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		sscanf ((char *)Seize->genericNumber->nai.buf, "%"SCNd8, &optional->genNum->type);
 		sscanf ((char *)Seize->genericNumber->npi.buf, "%"SCNd8, &optional->genNum->numplan);
 
@@ -1375,6 +1506,13 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	if (Seize->redirectingNumber)
 	{
+		optional->redirNum = (number_t *)calloc(1, sizeof (number_t));
+		if (!optional->redirNum)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		sscanf ((char *)Seize->redirectingNumber->nai.buf, "%"SCNd8, &optional->redirNum->type);
 		sscanf ((char *)Seize->redirectingNumber->npi.buf, "%"SCNd8, &optional->redirNum->numplan);
 
@@ -1385,6 +1523,13 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	if (Seize->redirectionInformation)
 	{
+		optional->info = (RedirInfo_t *)calloc(1, sizeof (RedirInfo_t));
+		if (!optional->info)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
+
 		optional->info->redirecting = Seize->redirectionInformation->redirecting;
 		optional->info->oreason = Seize->redirectionInformation->oreason;
 		memcpy (&optional->info->counter, Seize->redirectionInformation->counter.buf, Seize->redirectionInformation->counter.size);
@@ -1392,16 +1537,48 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 	}
 
 	if (Seize->fci)
+	{
+		optional->fci = (char *)calloc(1, Seize->fci->size);
+		if (!optional->fci)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
 		memcpy(optional->fci, Seize->fci->buf, Seize->fci->size);
+	}
 
 	if (Seize->usi)
+	{
+		optional->usi = (char *)calloc(1, Seize->usi->size);
+		if (!optional->usi)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
 		memcpy(optional->usi, Seize->usi->buf, Seize->usi->size);
+	}
 
 	if (Seize->uti)
+	{
+		optional->uti = (char *)calloc(1, Seize->uti->size);
+		if (!optional->uti)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
 		memcpy(optional->uti, Seize->uti->buf, Seize->uti->size);
+	}
 
 	if (Seize->tmr)
+	{
+		optional->tmr = (char *)calloc(1, Seize->tmr->size);
+		if (!optional->tmr)
+		{
+			printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+			goto ext;
+		}
 		memcpy(optional->tmr, Seize->tmr->buf, Seize->tmr->size);
+	}
 
 /*	if (Seize->noCDR)
 	{
@@ -1423,21 +1600,46 @@ int asn_decode_Seize (int trace, SeizeBasic_t *basic, SeizeOptional_t *optional,
 
 	}*/
 
-ext:
-	switch(dec_res.code)
-	{
-		case RC_OK:
-			if (traceON)
-				printf ("%s: RC_OK\n", __func__);
-			break;
-		case RC_FAIL:  printf ("%s: RC_FAIL\n", __func__);  break;
-		case RC_WMORE: printf ("%s: RC_WMORE\n", __func__); break;
-	}
+	return 0;
 
-	return dec_res.code;
+ext:
+	return -1;
 }
 
 /*------------------------------------------------------------------------------------------------------------*/
+
+static void asn_clean_Seize (dec_msg_t **dec_msg)
+{
+	SeizeBasic_t *basic;
+	SeizeOptional_t *optional;
+
+	basic = (SeizeBasic_t *)((*dec_msg)->base);
+	optional = (SeizeOptional_t *)((*dec_msg)->options);
+
+	xfree(optional->cgpn)
+	xfree(optional->callRef)
+	xfree(optional->category)
+	xfree(optional->TGID)
+
+	xfree(optional->fci)
+	xfree(optional->usi)
+	xfree(optional->uti)
+	xfree(optional->tmr)
+
+	xfree(optional->origNum)
+	xfree(optional->genNum)
+	xfree(optional->redirNum)
+	xfree(optional->info)
+
+	xfree(optional->noCDR)
+	xfree(optional->bridge)
+	xfree(optional->detached)
+	xfree(optional->toLog)
+
+	xfree(optional);
+
+	xfree(basic);
+}
 
 static int
 asn_progress_add_Cause (ProgressType_t *Progress, Cause_t *Cause, char *cause)
@@ -1622,8 +1824,8 @@ asn_progress_add_PlayInfo (ProgressType_t *Progress, PlayInfo_t *PlayInfo, uint8
 /*------------------------------------------------------------------------------------------------------------*/
 
 static SmarTIMessage_t *
-asn_SmarTIMessage_Progress (SmarTIMessage_t *SmarTIMessage, ProgressBasic_t *basic, ProgressOptional_t *optional,
-                            Cause_t *cause, OptionalBackwardCallInidicators_t *obci,
+asn_SmarTIMessage_Progress (SmarTIMessage_t *SmarTIMessage, msg_info_t *msg_info, ProgressBasic_t *basic,
+                            ProgressOptional_t *optional, Cause_t *cause, OptionalBackwardCallInidicators_t *obci,
                             /*GenericNotificationIndicatorList_t *gnotification,*/ RedirectionNumber_t *redirectionNumber,
                             RedirectionNumberRestriction_t *redirectionRestInd, CallDiversionInformation_t *callDiversion,
                             CallTransferNumber_t *callTransferNumber, CollectedInfo_t *collectedInfo, PlayInfo_t *play)
@@ -1665,7 +1867,7 @@ asn_SmarTIMessage_Progress (SmarTIMessage_t *SmarTIMessage, ProgressBasic_t *bas
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_fill (SmarTIMessage, basic->swSID, basic->appSID, SmarTIBody) == NULL)
+	if (asn_SmarTIMessage_fill (SmarTIMessage, msg_info->swSID, msg_info->appSID, SmarTIBody) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_fill: fail\n", __func__, __LINE__);
 		goto ext;
@@ -1679,7 +1881,7 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_encode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer, int buffer_size)
+int asn_encode_Progress (msg_info_t *msg_info, ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t  enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
@@ -1696,19 +1898,18 @@ int asn_encode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *
 
 	enc_res.encoded = -1;
 
-	if (!buffer || !basic)
+	if (!buffer || !basic || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (basic)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s] 3rd [%s]\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (basic)? "ok":"fail", (msg_info)? "ok":"fail");
 		goto ext;
 	}
 
-	traceON = trace;
 
 	memset (&redirectionNumber, 0, sizeof (redirectionNumber));
 	memset (&callTransferNumber, 0, sizeof (callTransferNumber));
 
-	if (asn_SmarTIMessage_Progress (&SmarTIMessage, basic, optional, &cause, &obci, /*&gnotification,*/
+	if (asn_SmarTIMessage_Progress (&SmarTIMessage, msg_info, basic, optional, &cause, &obci, /*&gnotification,*/
 	                                &redirectionNumber, &redirectionRestInd, &callDiversion, &callTransferNumber,
 	                                &collectedInfo, &play) == NULL)
 	{
@@ -1727,7 +1928,7 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_decode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer)
+int asn_decode_Progress (ProgressBasic_t *basic, ProgressOptional_t *optional, void *buffer)
 {
 	asn_dec_rval_t dec_res = {0};
 	SmarTIMessage_t *SmarTIMessage = NULL;
@@ -1741,7 +1942,6 @@ int asn_decode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *
 		goto ext;
 	}
 
-	traceON = trace;
 
 	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
 
@@ -1750,14 +1950,9 @@ int asn_decode_Progress (int trace, ProgressBasic_t *basic, ProgressOptional_t *
 
 	Progress = &SmarTIMessage->body.choice.progress;
 
-	memcpy (basic->swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (basic->appSID, SmarTIMessage->legID.appSessionID.buf, SmarTIMessage->legID.appSessionID.size);
 	memcpy (basic->timestamp, Progress->timestamp.buf, Progress->timestamp.size);
 	memcpy (&basic->e_Ind, Progress->event.event.buf, Progress->event.event.size);
 	basic->e_Pres = Progress->event.presentation;
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
 
 	if (!optional)
 		goto ext;
@@ -2078,7 +2273,7 @@ asn_answer_add_Detect (AnswerType_t *Answer, Detect_t *Detect, char *detect)
 /*-----------------------------------------------------------------------------------------------------------*/
 
 static SmarTIMessage_t *
-asn_SmarTIMessage_Answer (SmarTIMessage_t *SmarTIMessage, AnswerBasic_t *basic, AnswerOptional_t *optional,
+asn_SmarTIMessage_Answer (SmarTIMessage_t *SmarTIMessage, msg_info_t *msg_info, AnswerBasic_t *basic, AnswerOptional_t *optional,
                           BackwardCallIndicators_t *BackwardCallIndicators, OptionalBackwardCallInidicators_t *OptionalBackwardCallInidicators,
                           /*GenericNotificationIndicatorList_t *GenericNotificationIndicatorList,*/ ConnectedNumber_t *ConnectedNumber,
                           GenericNumber_t *GenericNumber, RedirectionNumber_t *RedirectionNumber,
@@ -2118,7 +2313,7 @@ asn_SmarTIMessage_Answer (SmarTIMessage_t *SmarTIMessage, AnswerBasic_t *basic, 
 		goto ext;
 	}
 
-	if (asn_SmarTIMessage_fill (SmarTIMessage, basic->swSID, basic->appSID, SmarTIBody) == NULL)
+	if (asn_SmarTIMessage_fill (SmarTIMessage, msg_info->swSID, msg_info->appSID, SmarTIBody) == NULL)
 	{
 		printf ("[%s][%d] asn_SmarTIMessage_fill: fail\n", __func__, __LINE__);
 		goto ext;
@@ -2130,7 +2325,7 @@ ext:
 	return NULL;
 }
 
-int asn_encode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer, int buffer_size)
+int asn_encode_Answer (msg_info_t *msg_info, AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer, int buffer_size)
 {
 	asn_enc_rval_t  enc_res = {0};
 	SmarTIMessage_t SmarTIMessage = {0};
@@ -2145,21 +2340,20 @@ int asn_encode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *option
 	PlayInfo_t                         PlayInfo = {0};
 	Detect_t                           Detect = {0};
 
-	if (!buffer || !basic)
+	if (!buffer || !basic || !msg_info)
 	{
-		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s]\n", __func__, __LINE__,
-		       (buffer)? "ok":"fail", (basic)? "ok":"fail");
+		printf("[%s][%d] arg error: 1st [%s]; 2nd [%s] 3rd [%s]\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail", (basic)? "ok":"fail", (msg_info)? "ok":"fail");
 		enc_res.encoded = -1;
 		goto ext;
 	}
 
-	traceON = trace;
 
 	memset (&ConnectedNumber, 0, sizeof (ConnectedNumber));
 	memset (&GenericNumber, 0, sizeof (GenericNumber));
 	memset (&RedirectionNumber, 0, sizeof (RedirectionNumber));
 
-	if (asn_SmarTIMessage_Answer (&SmarTIMessage, basic, optional, &BackwardCallIndicators,
+	if (asn_SmarTIMessage_Answer (&SmarTIMessage, msg_info, basic, optional, &BackwardCallIndicators,
 	                              &OptionalBackwardCallInidicators, /*&GenericNotificationIndicatorList,*/
 	                              &ConnectedNumber, &GenericNumber, &RedirectionNumber,
 	                              &RedirectionNumberRestriction, &PlayInfo, &Detect) == NULL)
@@ -2179,7 +2373,7 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-int asn_decode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer)
+int asn_decode_Answer (AnswerBasic_t *basic, AnswerOptional_t *optional, void *buffer)
 {
 	asn_dec_rval_t dec_res = {0};
 	SmarTIMessage_t *SmarTIMessage = NULL;
@@ -2193,7 +2387,6 @@ int asn_decode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *option
 		goto ext;
 	}
 
-	traceON = trace;
 
 	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
 
@@ -2202,12 +2395,7 @@ int asn_decode_Answer (int trace, AnswerBasic_t *basic, AnswerOptional_t *option
 
 	Answer = &SmarTIMessage->body.choice.answer;
 
-	memcpy (basic->swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
-	memcpy (basic->appSID, SmarTIMessage->legID.appSessionID.buf, SmarTIMessage->legID.appSessionID.size);
 	memcpy (basic->timestamp, Answer->timestamp.buf, Answer->timestamp.size);
-
-	if (traceON >= 90)
-		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
 
 	if (!optional)
 		goto ext;
@@ -2347,3 +2535,111 @@ ext:
 
 /*------------------------------------------------------------------------------------------------------------*/
 
+int asn_decode_msg (dec_msg_t *dec_msg, void *buffer)
+{
+	asn_dec_rval_t dec_res = {0};
+	SmarTIMessage_t *SmarTIMessage = NULL;
+
+	dec_res.code = RC_FAIL;
+
+	if (!buffer)
+	{
+		printf("[%s][%d] arg error: 1st [%s];\n", __func__, __LINE__,
+		       (buffer)? "ok":"fail");
+		goto ext;
+	}
+
+	dec_res = ber_decode (0, &asn_DEF_SmarTIMessage, (void **)&SmarTIMessage, buffer, sizeof(SmarTIMessage_t));
+
+	if (!SmarTIMessage)
+		goto ext;
+
+	if (traceON >= 90)
+		xer_fprint(stdout, &asn_DEF_SmarTIMessage, SmarTIMessage);
+
+	dec_msg->info = (msg_info_t *)calloc(1, sizeof (msg_info_t));
+	if (!dec_msg->info)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		goto ext;
+	}
+
+	dec_msg->present = (int *)calloc(1, sizeof (int));
+	if (!dec_msg->present)
+	{
+		printf("[%s][%d] failed to allocate memory: %s\n", __func__, __LINE__, strerror(errno));
+		goto ext;
+	}
+
+	dec_msg->info->version = SmarTIMessage->version;
+	memcpy (dec_msg->info->swSID, SmarTIMessage->legID.swSessionID.buf, SmarTIMessage->legID.swSessionID.size);
+	memcpy (dec_msg->info->appSID, SmarTIMessage->legID.appSessionID.buf, SmarTIMessage->legID.appSessionID.size);
+
+	switch (SmarTIMessage->body.present)
+	{
+		case SmarTIBody_PR_connectionRequest:
+			asn_get_ConnectionRequest (SmarTIMessage, &dec_msg);
+			break;
+		case SmarTIBody_PR_connectionResponse:
+			asn_get_ConnectionResponse (SmarTIMessage, &dec_msg);
+			break;
+		// case SmarTIBody_PR_connectionReject:
+		// 	asn_get_ConnectionReject (SmarTIMessage, present, &dec_msg);
+		// 	break;
+		case SmarTIBody_PR_connectionUpdateRequest:
+			asn_get_ConnectionUpdateRequest (SmarTIMessage, &dec_msg);
+			break;
+		case SmarTIBody_PR_connectionUpdateResponse:
+			asn_get_ConnectionUpdateResponse (SmarTIMessage, &dec_msg);
+			break;
+		case SmarTIBody_PR_seize:
+			asn_get_Seize (SmarTIMessage, &dec_msg);
+			break;
+		// case SmarTIBody_PR_progress:
+		// 	asn_get_Progress (SmarTIMessage, &dec_msg);
+		// 	break;
+		// case SmarTIBody_PR_answer:
+		// 	asn_get_Answer (SmarTIMessage, &dec_msg);
+		// 	break;
+		// case SmarTIBody_PR_release:
+		// 	asn_get_Release (SmarTIMessage, &dec_msg);
+		// 	break;
+	}
+
+ext:
+	ASN_STRUCT_FREE(asn_DEF_SmarTIMessage, SmarTIMessage);
+
+	switch(dec_res.code)
+	{
+		case RC_OK:
+			if (traceON)
+				printf ("%s: RC_OK\n", __func__);
+			break;
+		case RC_FAIL:  printf ("%s: RC_FAIL\n", __func__);  break;
+		case RC_WMORE: printf ("%s: RC_WMORE\n", __func__); break;
+	}
+
+	return dec_res.code;
+}
+
+void asn_clean (dec_msg_t *dec_msg)
+{
+	if (!dec_msg)
+		return;
+
+	switch (*dec_msg->present)
+	{
+		case SmarTIBody_PR_connectionRequest:        asn_clean_ConnectionRequest (&dec_msg);                break;
+		case SmarTIBody_PR_connectionResponse:       asn_clean_ConnectionResponse (&dec_msg);               break;
+		/*case SmarTIBody_PR_connectionReject:         asn_clean_ConnectionReject (&dec_msg);                 break;*/
+		case SmarTIBody_PR_connectionUpdateRequest:  asn_clean_ConnectionUpdateRequest (&dec_msg);          break;
+		case SmarTIBody_PR_connectionUpdateResponse: asn_clean_ConnectionUpdateResponse (&dec_msg); break;
+		case SmarTIBody_PR_seize:                    asn_clean_Seize (&dec_msg);                            break;
+		// case SmarTIBody_PR_progress:                 asn_clean_Progress (&dec_msg);                         break;
+		// case SmarTIBody_PR_answer:                   asn_clean_Answer (&dec_msg);                           break;
+		// case SmarTIBody_PR_release:                  asn_clean_Release (&dec_msg);                          break;
+	}
+
+	xfree(dec_msg->info);
+	xfree(dec_msg->present);
+}

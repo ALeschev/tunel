@@ -7,7 +7,9 @@ int main(int argc, char const *argv[])
 {
 	char buffer[2048] = {0};
 
-	int trace = 50;
+	int trace = 0;
+
+	asn_set_trace (trace);
 
 #if 0 /* ConnectionResponseType TEST*/
 {
@@ -101,22 +103,23 @@ int main(int argc, char const *argv[])
 }
 #endif
 
-#if 0 /* SeizeType TEST*/
+#if 1 /* SeizeType TEST*/
 {
 	SeizeBasic_t basic = {0};
 	SeizeOptional_t optional = {0};
 	RedirInfo_t RInfo = {0};
+	msg_info_t msg_info;
 
-	char fci[] = "t";
-	char usi[] = "e";
-	char uti[] = "s";
-	char tmr[] = "t";
+	char fci[] = "1";
+	char usi[] = "2";
+	char uti[] = "3";
+	char tmr[] = "4";
 
 	CdPN_t Called = {0};
 	long TGID = 17;
 	int redirCount = 5;
 	int callref = 5555;
-	int category = 15;
+	int category = 1;
 	number_t cgpn = {0};
 	number_t origNum = {0};
 	number_t genNum = {0};
@@ -152,8 +155,9 @@ int main(int argc, char const *argv[])
 	RInfo.counter = redirCount;
 	RInfo.reason = RedirectingReason_noReply;
 
-	strncpy (basic.swSID, "4598", MAX_OCT_LEN);
-	strncpy (basic.appSID, "49", MAX_OCT_LEN);
+	strncpy (msg_info.swSID, "4598", MAX_OCT_LEN);
+	strncpy (msg_info.appSID, "49", MAX_OCT_LEN);
+
 	strncpy (basic.vatsId, "443", MAX_OCT_LEN);
 	strncpy (basic.applicationId, "132", MAX_OCT_LEN);
 	memcpy (&basic.CalledPN, &Called, sizeof (Called));
@@ -171,121 +175,137 @@ int main(int argc, char const *argv[])
 	optional.uti = uti;
 	optional.tmr = tmr;
 
-	if (asn_encode_Seize (trace, &basic, &optional, buffer, sizeof(buffer)) < 0)
+#ifdef MEM_DEBUG
+	int i;
+	for (i = 0; i < 999; i++)
+#endif
 	{
-		printf ("encoded failed!\n");
-		goto ext;
-	} else {
-		printf ("encoded\n");
-
-		memset (&RInfo, 0, sizeof(RInfo));
-		TGID = 0;
-		callref = 0;
-		memset (&cgpn, 0, sizeof (number_t));
-		memset (&origNum, 0, sizeof (number_t));
-		memset (&genNum, 0, sizeof (number_t));
-		category = 0;
-
-		memset (fci, 0, sizeof (fci));
-		memset (usi, 0, sizeof (usi));
-		memset (uti, 0, sizeof (uti));
-		memset (tmr, 0, sizeof (tmr));
-
-		if (asn_decode_Seize (trace, &basic, &optional, buffer) < 0)
+		if (asn_encode_Seize (&msg_info, &basic, &optional, buffer, sizeof(buffer)) < 0)
 		{
-			printf ("decode failed!\n");
+			printf ("encoded failed!\n");
 			goto ext;
+		} else {
+			dec_msg_t dec_msg;
+
+			if (asn_decode_msg (&dec_msg, buffer) < 0)
+			{
+				printf("decode failed\n");
+				goto ext;
+			}
+
+	/*		switch (*dec_msg.present)
+			{
+				case msg_connectionRequest: printf("msg_connectionRequest\n"); break;
+				case msg_connectionResponse: printf("msg_connectionResponse\n"); break;
+				case msg_connectionReject: printf("msg_connectionReject\n"); break;
+				case msg_connectionUpdateRequest: printf("msg_connectionUpdateRequest\n"); break;
+				case msg_connectionUpdateResponse: printf("msg_connectionUpdateResponse\n"); break;
+				case msg_seize: printf("msg_seize\n"); break;
+				case msg_progress: printf("msg_progress\n"); break;
+				case msg_answer: printf("msg_answer\n"); break;
+				case msg_release: printf("msg_release\n"); break;
+			}
+
+			SeizeBasic_t *SeizeBasic;
+			SeizeOptional_t * SeizeOptional;
+
+			SeizeBasic = (SeizeBasic_t *)dec_msg.base;
+			SeizeOptional = (SeizeOptional_t *)dec_msg.options;
+
+			printf("\ndec_msg.info->swSID %s\n"
+			         "dec_msg.info->appSID %s\n"
+			         "dec_msg.base->vatsId %s\n"
+			         "dec_msg.base->applicationId %s\n"
+			         "dec_msg.base->CalledPN.inn %d\n"
+			         "dec_msg.base->CalledPN.npi %d\n"
+			         "dec_msg.base->CalledPN.nai %d\n"
+			         "dec_msg.base->CalledPN.strCalled %s\n"
+			         "dec_msg.base->timestamp %s\n",
+			         dec_msg.info->swSID,
+			         dec_msg.info->appSID,
+			         SeizeBasic->vatsId,
+			         SeizeBasic->applicationId,
+			         SeizeBasic->CalledPN.inn,
+			         SeizeBasic->CalledPN.npi,
+			         SeizeBasic->CalledPN.nai,
+			         SeizeBasic->CalledPN.strCalled,
+			         SeizeBasic->timestamp);
+
+			if (SeizeOptional->cgpn)
+				printf("\nSeizeOptional->cgpn->sym %s\n"
+				         "SeizeOptional->cgpn->type %d\n"
+				         "SeizeOptional->cgpn->numplan %d\n"
+				         "SeizeOptional->cgpn->nqi %d\n"
+				         "SeizeOptional->cgpn->screen %d\n"
+				         "SeizeOptional->cgpn->present %d\n",
+				          SeizeOptional->cgpn->sym,
+				          SeizeOptional->cgpn->type,
+				          SeizeOptional->cgpn->numplan,
+				          SeizeOptional->cgpn->nqi,
+				          SeizeOptional->cgpn->screen,
+				          SeizeOptional->cgpn->present);
+
+			if (SeizeOptional->callRef)
+				printf("\nSeizeOptional->callRef %d\n", *SeizeOptional->callRef);
+
+			if (SeizeOptional->category)
+				printf("\nSeizeOptional->category %d\n", *SeizeOptional->category);
+
+			if (SeizeOptional->TGID)
+				printf("\nSeizeOptional->TGID %ld\n", *SeizeOptional->TGID);
+
+			if (SeizeOptional->origNum)
+				printf("\nSeizeOptional->origNum->sym %s\n"
+				         "SeizeOptional->origNum->type %d\n"
+				         "SeizeOptional->origNum->numplan %d\n"
+				         "SeizeOptional->origNum->nqi %d\n"
+				         "SeizeOptional->origNum->screen %d\n"
+				         "SeizeOptional->origNum->present %d\n",
+				          SeizeOptional->origNum->sym,
+				          SeizeOptional->origNum->type,
+				          SeizeOptional->origNum->numplan,
+				          SeizeOptional->origNum->nqi,
+				          SeizeOptional->origNum->screen,
+				          SeizeOptional->origNum->present);
+
+			if (SeizeOptional->genNum)
+				printf("\nSeizeOptional->genNum->sym %s\n"
+				         "SeizeOptional->genNum->type %d\n"
+				         "SeizeOptional->genNum->numplan %d\n"
+				         "SeizeOptional->genNum->nqi %d\n"
+				         "SeizeOptional->genNum->screen %d\n"
+				         "SeizeOptional->genNum->present %d\n",
+				          SeizeOptional->genNum->sym,
+				          SeizeOptional->genNum->type,
+				          SeizeOptional->genNum->numplan,
+				          SeizeOptional->genNum->nqi,
+				          SeizeOptional->genNum->screen,
+				          SeizeOptional->genNum->present);
+
+			if (SeizeOptional->info)
+				printf("\nSeizeOptional->info->redirecting %d\n"
+				         "SeizeOptional->info->oreason %d\n"
+				         "SeizeOptional->info->counter %d\n"
+				         "SeizeOptional->info->reason %d\n", 
+				          SeizeOptional->info->redirecting,
+				          SeizeOptional->info->oreason,
+				          SeizeOptional->info->counter,
+				          SeizeOptional->info->reason);
+
+			if (SeizeOptional->fci)
+				printf ("\nSeizeOptional->>fci %s\n", SeizeOptional->fci);
+
+			if (SeizeOptional->usi)
+				printf ("\nSeizeOptional->>usi %s\n", SeizeOptional->usi);
+
+			if (SeizeOptional->uti)
+				printf ("\nSeizeOptional->>uti %s\n", SeizeOptional->uti);
+
+			if (SeizeOptional->tmr)
+				printf ("\nSeizeOptional->>tmr %s\n", SeizeOptional->tmr);*/
+
+			asn_clean(&dec_msg);
 		}
-
-		printf("\nbasic.swSID %s\n"
-		         "basic.appSID %s\n"
-		         "basic.vatsId %s\n"
-		         "basic.applicationId %s\n"
-		         "basic.CalledPN.inn %d\n"
-		         "basic.CalledPN.npi %d\n"
-		         "basic.CalledPN.nai %d\n"
-		         "basic.CalledPN.strCalled %s\n"
-		         "basic.timestamp %s\n",
-		         basic.swSID,
-		         basic.appSID,
-		         basic.vatsId,
-		         basic.applicationId,
-		         basic.CalledPN.inn, basic.CalledPN.npi, basic.CalledPN.nai, basic.CalledPN.strCalled,
-		         basic.timestamp);
-
-		if (optional.cgpn)
-			printf("\noptional.cgpn->sym %s\n"
-			         "optional.cgpn->type %d\n"
-			         "optional.cgpn->numplan %d\n"
-			         "optional.cgpn->nqi %d\n"
-			         "optional.cgpn->screen %d\n"
-			         "optional.cgpn->present %d\n",
-			          optional.cgpn->sym,
-			          optional.cgpn->type,
-			          optional.cgpn->numplan,
-			          optional.cgpn->nqi,
-			          optional.cgpn->screen,
-			          optional.cgpn->present);
-
-		if (optional.callRef)
-			printf("\noptional.callRef %d\n", *optional.callRef);
-
-		if (optional.category)
-			printf("\noptional.category %d\n", *optional.category);
-
-		if (optional.TGID)
-			printf("\noptional.TGID %ld\n", *optional.TGID);
-
-		if (optional.origNum)
-			printf("\noptional.origNum->sym %s\n"
-			         "optional.origNum->type %d\n"
-			         "optional.origNum->numplan %d\n"
-			         "optional.origNum->nqi %d\n"
-			         "optional.origNum->screen %d\n"
-			         "optional.origNum->present %d\n",
-			          optional.origNum->sym,
-			          optional.origNum->type,
-			          optional.origNum->numplan,
-			          optional.origNum->nqi,
-			          optional.origNum->screen,
-			          optional.origNum->present);
-
-		if (optional.genNum)
-			printf("\noptional.genNum->sym %s\n"
-			         "optional.genNum->type %d\n"
-			         "optional.genNum->numplan %d\n"
-			         "optional.genNum->nqi %d\n"
-			         "optional.genNum->screen %d\n"
-			         "optional.genNum->present %d\n",
-			          optional.genNum->sym,
-			          optional.genNum->type,
-			          optional.genNum->numplan,
-			          optional.genNum->nqi,
-			          optional.genNum->screen,
-			          optional.genNum->present);
-
-		if (optional.info)
-			printf("\noptional.info->redirecting %d\n"
-			         "optional.info->oreason %d\n"
-			         "optional.info->counter %d\n"
-			         "optional.info->reason %d\n", 
-			          optional.info->redirecting,
-			          optional.info->oreason,
-			          optional.info->counter,
-			          optional.info->reason);
-
-		if (optional.fci)
-			printf ("\noptional->fci %s\n", optional.fci);
-
-		if (optional.usi)
-			printf ("\noptional->usi %s\n", optional.usi);
-
-		if (optional.uti)
-			printf ("\noptional->uti %s\n", optional.uti);
-
-		if (optional.tmr)
-			printf ("\noptional->tmr %s\n", optional.tmr);
-
 	}
 }
 #endif
@@ -428,7 +448,7 @@ int main(int argc, char const *argv[])
 }
 #endif
 
-#if 1 /* AnswerType TEST*/
+#if 0 /* AnswerType TEST*/
 {
 	char swSID[MAX_OCT_LEN] = "444";
 	char appSID[MAX_OCT_LEN] = "2222";
