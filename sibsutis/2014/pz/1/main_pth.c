@@ -1,50 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-#if !defined(SWIN) && !defined(SLIN)
-#   error ERROR: System undefined!
-#endif
-
-#if defined(SWIN)
-#   define SYS_WIN
-#elif defined(SLIN)
-#   define SYS_LIN
-#endif
+#include <pthread.h>
 
 enum e_state { EMPTY = 0 };
 
-int get_value()
+int max = 0;
+int *arr = NULL;
+
+int done = 0;
+int s_count = 0;
+
+int *arr_init()
 {
-    int input;
-
-    printf ("-> ");
-    scanf ("%d", &input);
-    printf ("\n");
-
-    if (input <= 0)
-        return 0;
-
-    return input;
-}
-
-/*sieve of Eratosthenes*/
-#ifdef SYS_WIN
-void 
-#else
-int *
-#endif
-sieve_of_Eratosthenes(int max)
-{
-    int i, j;
-    int value;
-    int s_count = 0;
-
-#ifdef SYS_WIN
-    int arr[100] = {EMPTY};
-#else
-    int *s_num = NULL;
-    int *arr = NULL;
+    if (arr)
+        return arr;
 
     arr = (int *) calloc (1, sizeof (int) * max);
     if (arr == NULL)
@@ -52,7 +22,47 @@ sieve_of_Eratosthenes(int max)
         printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
         return NULL;
     }
-#endif
+
+    return arr;
+}
+
+void *pth_step(void *arg)
+{
+    int i;
+    int step = *((int *)arg);
+    int value = arr[step];
+
+    for (i = step; i <= max; i++)
+    {
+        if (arr[i] == EMPTY)
+            continue;
+
+        if ((arr[i] != value) && !(arr[i] % value))
+        {
+            arr[i] = EMPTY;
+            s_count++;
+        }
+    }
+
+    done++;
+
+    return NULL;
+}
+
+/*sieve of Eratosthenes*/
+int *sieve_of_Eratosthenes()
+{
+    int i;
+    int value;
+    int *s_num = NULL;
+    pthread_t *thread_id = NULL;
+
+    thread_id = (pthread_t *)calloc(1, sizeof (pthread_t) * max);
+    if (thread_id == NULL)
+    {
+        printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
+        return NULL;
+    }
 
     for (i = 1; i < max; i++)
         arr[i - 1] = i;
@@ -68,31 +78,18 @@ sieve_of_Eratosthenes(int max)
         if (value == EMPTY)
             continue;
 
-        for (j = i; j <= max; j++)
-        {
-            int step = j;
-
-            if (arr[step] == EMPTY)
-                continue;
-
-            if ((arr[step] != value) && !(arr[step] % value))
-            {
-                arr[step] = EMPTY;
-                s_count++;
-            }
-        }
+        pthread_create (&thread_id[i-3], NULL, pth_step, (void*)&i);
     }
+
+    /* check this */
+    while (done < (max - 3))
+        usleep(100000);
 
     s_count = max - s_count - 1;
 
     printf ("Total simple numbers: %d\n", s_count);
 
-    // int k;
-    // for (k = 0; k < max; k++)
-    //     printf ("%d ", arr[k]);
-    // printf ("\n");
-
-#ifdef SYS_LIN
+#ifdef DEBUG
     s_num = (int *) calloc (1, sizeof (int) * s_count);
     if (s_num == NULL)
     {
@@ -105,40 +102,56 @@ sieve_of_Eratosthenes(int max)
         if (arr[i] != EMPTY)
             s_num[i] = arr[i];
     }
+#endif
 
-    free (arr);
+    free (thread_id);
 
     return s_num;
-#endif
 }
 
 int main (int argc, char *argv[])
 {
-    int input;
+    int i;
 
-    if ((input = get_value()) == 0)
+    if (argc < 2)
     {
-        printf ("\nInvalid input value\n");
+        printf ("\nArg error. Use first arg for set max value.\n");
         return 1;
     }
 
-#ifdef SYS_WIN
-    sieve_of_Eratosthenes (input);
-#else
-    int *s_num = NULL;
+    max = atoi(argv[1]);
+    if (max <= 0)
+    {
+        printf ("\nArg error. Max value must more than 0\n");
+        return 1;
+    }
 
-    s_num = sieve_of_Eratosthenes (input);
+    if (arr_init() == NULL)
+        return 1;
+
+#ifdef DEBUG
+    int *s_num = NULL;
+    s_num = sieve_of_Eratosthenes ();
     if (s_num == NULL)
     {
         printf ("\nFailed to get simple numbers :(\n");
         return 1;
     }
 
+    for (i = 0; i < s_count; i++)
+        printf ("%d ", s_num[i]);
+    printf ("\n");
+
     /* use s_nums */
 
     if (s_num)
         free (s_num);
+#else
+    sieve_of_Eratosthenes ();
 #endif
+
+    if (arr)
+        free (arr);
 
     return 0;
 }
