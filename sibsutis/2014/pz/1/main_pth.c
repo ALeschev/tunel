@@ -1,92 +1,144 @@
-/*
-    The authors of this work have released all rights to it and placed it
-    in the public domain under the Creative Commons CC0 1.0 waiver
-    (http://creativecommons.org/publicdomain/zero/1.0/).
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-    Retrieved from: http://en.literateprograms.org/Red-black_tree_(C)?oldid=19567
-*/
-
-#include "rbtree.h"
 #include <stdio.h>
-#include <assert.h>
-#include <stdlib.h> /* rand() */
+#include <string.h>
+#include <unistd.h>
 
-static int compare_int(void* left, void* right);
-static void print_tree(rbtree t);
-static void print_tree_helper(rbtree_node n, int indent);
+#if !defined(SWIN) && !defined(SLIN)
+#   error ERROR: System undefined!
+#endif
 
-int compare_int(void* leftp, void* rightp) {
-    int left = *((int *)leftp);
-    int right = *((int *)rightp);
-    if (left < right) 
-        return -1;
-    else if (left > right)
-        return 1;
-    else {
-        assert (left == right);
+#if defined(SWIN)
+#   define SYS_WIN
+#elif defined(SLIN)
+#   define SYS_LIN
+#endif
+
+enum e_state { EMPTY = 0 };
+
+int get_value()
+{
+    int input;
+
+    printf ("-> ");
+    scanf ("%d", &input);
+    printf ("\n");
+
+    if (input <= 0)
         return 0;
-    }
+
+    return input;
 }
 
-#define INDENT_STEP  4
-
-void print_tree_helper(rbtree_node n, int indent);
-
-void print_tree(rbtree t) {
-    print_tree_helper(t->root, 0);
-    puts("");
-}
-
-void print_tree_helper(rbtree_node n, int indent) {
-    int i;
-    if (n == NULL) {
-        fputs("<empty tree>", stdout);
-        return;
-    }
-    if (n->right != NULL) {
-        print_tree_helper(n->right, indent + INDENT_STEP);
-    }
-    for(i=0; i<indent; i++)
-        fputs(" ", stdout);
-    if (n->color == BLACK)
-        printf("%d\n", *((int *)n->key));
-    else
-        printf("<%d>\n", *((int *)n->key));
-    if (n->left != NULL) {
-        print_tree_helper(n->left, indent + INDENT_STEP);
-    }
-}
-
-int main() {
-    int i;
-    rbtree t = rbtree_create();
-    print_tree(t);
-
-    for(i=0; i<5000; i++) {
-        int x = rand() % 10000;
-        int y = rand() % 10000;
-#ifdef TRACE
-        print_tree(t);
-        printf("Inserting %d -> %d\n\n", x, y);
+/*sieve of Eratosthenes*/
+#ifdef SYS_WIN
+void 
+#else
+int *
 #endif
-        rbtree_insert(t, (void*)&x, (void*)&y, compare_int);
-        assert(rbtree_lookup(t, (void*)&x, compare_int) == (void*)&y);
+sieve_of_Eratosthenes(int max)
+{
+    int i, j;
+    int value;
+    int s_count = 0;
+
+#ifdef SYS_WIN
+    int arr[100] = {EMPTY};
+#else
+    int *s_num = NULL;
+    int *arr = NULL;
+
+    arr = (int *) calloc (1, sizeof (int) * max);
+    if (arr == NULL)
+    {
+        printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
+        return NULL;
     }
-    for(i=0; i<60000; i++) {
-        int x = rand() % 10000;
-#ifdef TRACE
-        print_tree(t);
-        printf("Deleting key %d\n\n", x);
 #endif
-        rbtree_delete(t, (void*)&x, compare_int);
+
+    for (i = 1; i < max; i++)
+        arr[i - 1] = i;
+
+    /*
+        i = 3.
+        cause: "first elem always equal 1, just skip it"
+    */
+    for (i = 3; i <= max; i++)
+    {
+        value = arr[i - 2];
+
+        if (value == EMPTY)
+            continue;
+
+        for (j = i; j <= max; j++)
+        {
+            int step = j;
+
+            if (arr[step] == EMPTY)
+                continue;
+
+            if ((arr[step] != value) && !(arr[step] % value))
+            {
+                arr[step] = EMPTY;
+                s_count++;
+            }
+        }
     }
+
+    s_count = max - s_count - 1;
+
+    printf ("Total simple numbers: %d\n", s_count);
+
+    // int k;
+    // for (k = 0; k < max; k++)
+    //     printf ("%d ", arr[k]);
+    // printf ("\n");
+
+#ifdef SYS_LIN
+    s_num = (int *) calloc (1, sizeof (int) * s_count);
+    if (s_num == NULL)
+    {
+        printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
+        return NULL;
+    }
+
+    for (i = 0; i < max; i++)
+    {
+        if (arr[i] != EMPTY)
+            s_num[i] = arr[i];
+    }
+
+    free (arr);
+
+    return s_num;
+#endif
+}
+
+int main (int argc, char *argv[])
+{
+    int input;
+
+    if ((input = get_value()) == 0)
+    {
+        printf ("\nInvalid input value\n");
+        return 1;
+    }
+
+#ifdef SYS_WIN
+    sieve_of_Eratosthenes (input);
+#else
+    int *s_num = NULL;
+
+    s_num = sieve_of_Eratosthenes (input);
+    if (s_num == NULL)
+    {
+        printf ("\nFailed to get simple numbers :(\n");
+        return 1;
+    }
+
+    /* use s_nums */
+
+    if (s_num)
+        free (s_num);
+#endif
+
     return 0;
 }

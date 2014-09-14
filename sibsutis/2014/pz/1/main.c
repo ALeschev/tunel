@@ -14,20 +14,6 @@
 
 enum e_state { EMPTY = 0 };
 
-int get_value()
-{
-    int input;
-
-    printf ("-> ");
-    scanf ("%d", &input);
-    printf ("\n");
-
-    if (input <= 0)
-        return 0;
-
-    return input;
-}
-
 /*sieve of Eratosthenes*/
 #ifdef SYS_WIN
 void 
@@ -41,7 +27,7 @@ sieve_of_Eratosthenes(int max)
     int s_count = 0;
 
 #ifdef SYS_WIN
-    int arr[100] = {EMPTY};
+    int arr[10000] = {EMPTY};
 #else
     int *s_num = NULL;
     int *arr = NULL;
@@ -87,10 +73,10 @@ sieve_of_Eratosthenes(int max)
 
     printf ("Total simple numbers: %d\n", s_count);
 
-    int k;
-    for (k = 0; k < max; k++)
-        printf ("%d ", arr[k]);
-    printf ("\n");
+    // int k;
+    // for (k = 0; k < max; k++)
+    //     printf ("%d ", arr[k]);
+    // printf ("\n");
 
 #ifdef SYS_LIN
     s_num = (int *) calloc (1, sizeof (int) * s_count);
@@ -112,13 +98,20 @@ sieve_of_Eratosthenes(int max)
 #endif
 }
 
-int main (void)
+int main (int argc, char *argv[])
 {
-    int input;
+    int input = 0;
 
-    if ((input = get_value()) == 0)
+    if (argc < 2)
     {
-        printf ("\nInvalid input value\n");
+        printf ("\nArg error. Use first arg for set max value.\n");
+        return 1;
+    }
+
+    input = atoi(argv[1]);
+    if (input <= 0)
+    {
+        printf ("\nArg error. Max value must be > 0\n");
         return 1;
     }
 
