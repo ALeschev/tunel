@@ -523,33 +523,35 @@ void clock_set_state (int t_state)
 /*---------------------------------------------------*/
 void clock_print_time()
 {
-  ds_time_update();
-
-/*  if (clock.time.hours <= 0 || clock.time.hours > 23)
-   // clock.time.hours = 0;
-   return;
-
-  if (clock.time.minutes <= 0 || clock.time.minutes > 59)
-//    clock.time.minutes = 0;
-return;
-    
-  if (clock.time.seconds <= 0 || clock.time.seconds > 59)
-  {
-  return;
-  }
-*/
   char str_time[6] = {0};
 
-  int hours   = clock.time.hours;
-  int minutes = clock.time.minutes;
-  int seconds = clock.time.seconds;
+  unsigned char *hours;
+  unsigned char *minutes;
+  unsigned char *seconds;
 
-  sprintf (str_time, "%d%d:%d%d", (hours - hours%10)/10, hours%10, (minutes - minutes%10)/10, minutes%10);
+  ds_time_update();
+
+  hours = &clock.time.hours;
+  minutes = &clock.time.minutes;
+  seconds = &clock.time.seconds;
+
+  if ((*hours <= 0   || *hours > 23)     ||
+      (*minutes <= 0 || *minutes > 59)   ||
+      (*seconds <= 0 || *seconds > 59))
+  {
+    ol_send_str(0, 1, "ds1307", 0);
+    ol_send_str(1, 1, "return", 0);
+    ol_send_str(2, 1, "invalid", 0);
+    ol_send_str(3, 1, "time :(", 0);
+    return;
+  }
+
+  sprintf (str_time, "%d%d:%d%d", (*hours - *hours%10)/10, *hours%10, (*minutes - *minutes%10)/10, *minutes%10);
 
   printBigTime(str_time);
 
     char str1[4] = {0};
-    sprintf(str1, "%d%d", (seconds - seconds%10)/10, seconds%10);
+    sprintf(str1, "%d%d", (*seconds - *seconds%10)/10, *seconds%10);
     ol_send_str(0, 14, str1, 0);
 
   pacman_animation();
