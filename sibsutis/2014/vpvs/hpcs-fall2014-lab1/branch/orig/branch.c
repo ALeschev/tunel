@@ -18,19 +18,15 @@ double x[n], y[n], z[n];
 void blend_map(double *dest, double *a, double *b, int size, int blend)
 {
     int i = 0;
-
-    if (blend && (blend != 255))
-    {
-        for (i = 0; i < size; i ++)
+    
+    for (i = 0; i < size; i++) {
+        if (blend == 255) {
+            dest[i] = a[i];
+        } else if (blend == 0) {
+            dest[i] = b[i];
+        } else {
             dest[i] = a[i] * blend + b[i] * (255 - blend) / 256.0;
-    } else
-    if (!blend)
-    {
-        memcpy (dest, b, size);
-    } else
-    if (blend == 255)
-    {
-        memcpy (dest, b, size);
+        }
     }
 }
 
