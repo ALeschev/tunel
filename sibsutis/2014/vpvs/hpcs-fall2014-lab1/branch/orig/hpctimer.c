@@ -113,7 +113,7 @@ static double hpctimer_wtime_tsc()
  */
 static int hpctimer_tsc_initialize()
 {
-    printf("hpctimer: Initializing timer...\n");
+    // printf("hpctimer: Initializing timer...\n");
     hpctimer_overhead = hpctimer_measure_overhead();
     hpctimer_freq = hpctimer_calibrate_sleep(hpctimer_overhead);
     return HPCTIMER_SUCCESS;    
@@ -214,8 +214,8 @@ static uint64_t hpctimer_calibrate_sleep(uint64_t overhead)
     count = hpctimer_gettsc();
     sleep(delay);
     count = hpctimer_gettsc() - count - overhead;
-    printf("hpctimer: TSC ticks per second: %" PRIu64 " (%.2f GHz)\n", count / delay,
-           ((double)count / delay) * 1E-9);
+    // printf("hpctimer: TSC ticks per second: %" PRIu64 " (%.2f GHz)\n", count / delay,
+           // ((double)count / delay) * 1E-9);
     return count / delay;
 }
 
