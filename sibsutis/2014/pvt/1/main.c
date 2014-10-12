@@ -1,34 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-#if !defined(SWIN) && !defined(SLIN)
-#   error ERROR: System undefined!
-#endif
-
-#if defined(SWIN)
-#   define SYS_WIN
-#elif defined(SLIN)
-#   define SYS_LIN
-#endif
+#include <stdlib.h>
 
 enum e_state { EMPTY = 0 };
 
-/*sieve of Eratosthenes*/
-#ifdef SYS_WIN
-void 
-#else
-int *
-#endif
-sieve_of_Eratosthenes(int max)
+int *sieve_of_Eratosthenes(int max)
 {
     int i, j;
     int value;
     int s_count = 0;
 
-#ifdef SYS_WIN
-    int arr[10000] = {EMPTY};
-#else
     int *s_num = NULL;
     int *arr = NULL;
 
@@ -38,7 +20,6 @@ sieve_of_Eratosthenes(int max)
         printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
         return NULL;
     }
-#endif
 
     for (i = 1; i < max; i++)
         arr[i - 1] = i;
@@ -78,7 +59,6 @@ sieve_of_Eratosthenes(int max)
     //     printf ("%d ", arr[k]);
     // printf ("\n");
 
-#ifdef SYS_LIN
     s_num = (int *) calloc (1, sizeof (int) * s_count);
     if (s_num == NULL)
     {
@@ -95,7 +75,6 @@ sieve_of_Eratosthenes(int max)
     free (arr);
 
     return s_num;
-#endif
 }
 
 int main (int argc, char *argv[])
@@ -115,9 +94,6 @@ int main (int argc, char *argv[])
         return 1;
     }
 
-#ifdef SYS_WIN
-    sieve_of_Eratosthenes (input);
-#else
     int *s_num = NULL;
 
     s_num = sieve_of_Eratosthenes (input);
@@ -128,10 +104,8 @@ int main (int argc, char *argv[])
     }
 
     /* use s_nums */
-
     if (s_num)
         free (s_num);
-#endif
 
     return 0;
 }

@@ -2,14 +2,22 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <stdlib.h>
 
+enum th_state { DISABLE = 0, ENABLE };
 enum e_state { EMPTY = 0 };
 
 int max = 0;
 int *arr = NULL;
 
-int done = 0;
 int s_count = 0;
+
+struct thread
+{
+    int state;
+    pthread_t thread_id;
+    /* data */
+};
 
 int *arr_init()
 {
@@ -28,91 +36,86 @@ int *arr_init()
 
 void *pth_step(void *arg)
 {
-    int i;
+    int i, j;
     int step = *((int *)arg);
     int value = arr[step];
 
-    for (i = step; i <= max; i++)
+    for (i = 0; i < max; i++)
     {
-        if (arr[i] == EMPTY)
-            continue;
-
-        if ((arr[i] != value) && !(arr[i] % value))
-        {
-            arr[i] = EMPTY;
-            s_count++;
-        }
+        if (arr[i] != EMPTY)
+            printf ("%d ", arr[i]);
     }
 
-    done++;
-
-    return NULL;
-}
-
-/*sieve of Eratosthenes*/
-int *sieve_of_Eratosthenes()
-{
-    int i;
-    int value;
-    int *s_num = NULL;
-    pthread_t *thread_id = NULL;
-
-    thread_id = (pthread_t *)calloc(1, sizeof (pthread_t) * max);
-    if (thread_id == NULL)
-    {
-        printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
-        return NULL;
-    }
-
-    for (i = 1; i < max; i++)
-        arr[i - 1] = i;
-
-    /*
-        i = 3.
-        cause: "first elem always equal 1, just skip it"
-    */
-    for (i = 3; i <= max; i++)
+    for (i = step; i <= max; i+=2)
     {
         value = arr[i - 2];
 
         if (value == EMPTY)
             continue;
 
-        pthread_create (&thread_id[i-3], NULL, pth_step, (void*)&i);
+        printf ("\ni = %d\n", i);
+
+        for (j = i; j <= max; j+=2)
+        {
+            int step = j;
+
+            if (arr[step] == EMPTY)
+                continue;
+
+            if ((arr[step] != value) && !(arr[step] % value))
+            {
+                printf("arr[%d][%d] value[%d]: %d empty\n",step, arr[step], value, arr[step]);
+                arr[step] = EMPTY;
+                s_count++;
+            }
+        }
     }
 
-    /* check this */
-    while (done < (max - 3))
-        usleep(100000);
+    return NULL;
+}
+
+/*sieve of Eratosthenes*/
+void sieve_of_Eratosthenes()
+{
+    int i;//, j;
+    struct thread threads[2];
+
+    for (i = 1; i < max; i++)
+        arr[i - 1] = i;
+
+    for (i = 0; i < max; i++)
+    {
+        if (arr[i] != EMPTY)
+            printf ("%d ", arr[i]);
+    }
+
+    /*
+        i = 3.
+        cause: "first elem always equal 1, just skip it"
+    */
+
+    i = 4;
+    pthread_create (&threads[0].thread_id, NULL, pth_step, (void *)&i);
+
+    // j = 3;
+    // pthread_create (&threads[1].thread_id, NULL, pth_step, (void *)&j);
+
+    pthread_join (threads[0].thread_id, NULL);
+    // pthread_join (threads[1].thread_id, NULL);
 
     s_count = max - s_count - 1;
 
     printf ("Total simple numbers: %d\n", s_count);
 
-#ifdef DEBUG
-    s_num = (int *) calloc (1, sizeof (int) * s_count);
-    if (s_num == NULL)
-    {
-        printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
-        return NULL;
-    }
-
-    for (i = 0; i < max; i++)
+for (i = 0; i < max; i++)
     {
         if (arr[i] != EMPTY)
-            s_num[i] = arr[i];
-    }
-#endif
-
-    free (thread_id);
-
-    return s_num;
+            printf ("%d ", arr[i]);
+    }    
 }
 
 int main (int argc, char *argv[])
 {
-    int i;
-
     if (argc < 2)
     {
         printf ("\nArg error. Use first arg for set max value.\n");
@@ -129,26 +132,7 @@ int main (int argc, char *argv[])
     if (arr_init() == NULL)
         return 1;
 
-#ifdef DEBUG
-    int *s_num = NULL;
-    s_num = sieve_of_Eratosthenes ();
-    if (s_num == NULL)
-    {
-        printf ("\nFailed to get simple numbers :(\n");
-        return 1;
-    }
-
-    for (i = 0; i < s_count; i++)
-        printf ("%d ", s_num[i]);
-    printf ("\n");
-
-    /* use s_nums */
-
-    if (s_num)
-        free (s_num);
-#else
     sieve_of_Eratosthenes ();
-#endif
 
     if (arr)
         free (arr);

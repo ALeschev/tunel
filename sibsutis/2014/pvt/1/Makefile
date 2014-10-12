@@ -1,9 +1,9 @@
-#CFLAGS=-DSLIN
-CFLAGS=-DDEBUG
+CFLAGS += -Wall -Werror -g
+CFLAGS += -DDEBUG
 
 all:
-	#gcc -Wall -Werror -O2 $(CFLAGS) main.c -o main
-	gcc -Wall -Werror -O2 $(CFLAGS) main_pth.c -o main_pth -lpthread
+	gcc $(CFLAGS) main.c -o main
+	gcc $(CFLAGS) main_pth.c -o main_pth -lpthread
 
 clean:
 	rm -f *.exe
