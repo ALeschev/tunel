@@ -8,7 +8,7 @@
 
 #include "hpctimer.h"
 
-enum { n = 64 * 1024 * 1024 };
+enum { n = 16 * 1024 * 1024 };
 
 int main()
 {

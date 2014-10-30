@@ -9,7 +9,7 @@
 #include "hpctimer.h"
 
 enum { 
-    n = 100000,
+    n = 10000000,
     nreps = 20 
 };
 
