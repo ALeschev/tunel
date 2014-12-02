@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <errno.h>
 
 enum th_state { DISABLE = 0, ENABLE };
 enum e_state { EMPTY = 0 };
@@ -10,13 +11,11 @@ enum e_state { EMPTY = 0 };
 int max = 0;
 int *arr = NULL;
 
-int s_count = 0;
-
-struct thread
+struct thread_data
 {
-    int state;
-    pthread_t thread_id;
-    /* data */
+    int th_num;
+    int start;
+    int end;
 };
 
 int *arr_init()
@@ -26,10 +25,7 @@ int *arr_init()
 
     arr = (int *) calloc (1, sizeof (int) * max);
     if (arr == NULL)
-    {
         printf ("[%s][%d] Failed to allocated memory\n", __func__, __LINE__);
-        return NULL;
-    }
 
     return arr;
 }
@@ -37,81 +33,65 @@ int *arr_init()
 void *pth_step(void *arg)
 {
     int i, j;
-    int step = *((int *)arg);
-    int value = arr[step];
+    // int value;
+    struct thread_data *data = (struct thread_data *)arg;
 
-    for (i = 0; i < max; i++)
+#ifdef DEBUG
+    printf("Thread %d started:\n\tstart index: %d\n\tend index: %d\n\n",
+           data->th_num, data->start, data->end);
+#endif
+
+    for (i = 2; i <= max; i++)
     {
-        if (arr[i] != EMPTY)
-            printf ("%d ", arr[i]);
-    }
-
-    for (i = step; i <= max; i+=2)
-    {
-        value = arr[i - 2];
-
-        if (value == EMPTY)
-            continue;
-
-        printf ("\ni = %d\n", i);
-
-        for (j = i; j <= max; j+=2)
+        for (j = data->start; j <= data->end; j++)
         {
-            int step = j;
-
-            if (arr[step] == EMPTY)
+            if (arr[j] == EMPTY)
                 continue;
 
-            if ((arr[step] != value) && !(arr[step] % value))
-            {
-                printf("arr[%d][%d] value[%d]: %d empty\n",step, arr[step], value, arr[step]);
-                arr[step] = EMPTY;
-                s_count++;
-            }
+            if ((arr[j] != i) && !(arr[j] % i))
+                arr[j] = EMPTY;
         }
     }
+
+#ifdef DEBUG
+    printf("Thread %d stopped\n", data->th_num);
+#endif
 
     return NULL;
 }
 
-/*sieve of Eratosthenes*/
 void sieve_of_Eratosthenes()
 {
-    int i;//, j;
-    struct thread threads[2];
+    int i;
+    pthread_t th_id[2];
+    struct thread_data th_data[2];
 
-    for (i = 1; i < max; i++)
-        arr[i - 1] = i;
+    for (i = 0; i < max; i++)
+        arr[i] = i;
 
+    th_data[0].th_num = 0;
+    th_data[0].start = 0;
+    th_data[0].end = max/2;
+    th_data[1].th_num = 1;
+    th_data[1].start = max/2 + 1;
+    th_data[1].end = max-1;
+
+    pthread_create (&th_id[0], NULL, pth_step, (void *)&th_data[0]);
+    pthread_create (&th_id[1], NULL, pth_step, (void *)&th_data[1]);
+
+    pthread_join (th_id[0], NULL);
+    pthread_join (th_id[1], NULL);
+
+    int snum = 0;
     for (i = 0; i < max; i++)
     {
         if (arr[i] != EMPTY)
-            printf ("%d ", arr[i]);
+            snum++;
     }
 
-    /*
-        i = 3.
-        cause: "first elem always equal 1, just skip it"
-    */
-
-    i = 4;
-    pthread_create (&threads[0].thread_id, NULL, pth_step, (void *)&i);
-
-    // j = 3;
-    // pthread_create (&threads[1].thread_id, NULL, pth_step, (void *)&j);
-
-    pthread_join (threads[0].thread_id, NULL);
-    // pthread_join (threads[1].thread_id, NULL);
-
-    s_count = max - s_count - 1;
-
-    printf ("Total simple numbers: %d\n", s_count);
-
-for (i = 0; i < max; i++)
-    {
-        if (arr[i] != EMPTY)
-            printf ("%d ", arr[i]);
-    }    
+#ifdef DEBUG
+    printf ("Total simple numbers: %d\n", snum);
+#endif
 }
 
 int main (int argc, char *argv[])
@@ -135,7 +115,7 @@ int main (int argc, char *argv[])
     sieve_of_Eratosthenes ();
 
     if (arr)
-        free (arr);
+       free (arr);
 
     return 0;
 }

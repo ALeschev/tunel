@@ -1,5 +1,5 @@
 CFLAGS += -Wall -Werror -g
-CFLAGS += -DDEBUG
+#CFLAGS += -DDEBUG
 
 all:
 	gcc $(CFLAGS) main.c -o main
