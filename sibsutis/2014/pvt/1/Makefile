@@ -6,4 +6,4 @@ all:
 	gcc $(CFLAGS) main_pth.c -o main_pth -lpthread
 
 clean:
-	rm -f *.exe
+	rm -f main main_pth
