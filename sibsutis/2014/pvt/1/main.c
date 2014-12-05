@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "hpctimer.h"
 
 enum e_state { EMPTY = 0 };
 
@@ -53,6 +54,8 @@ void sieve_of_Eratosthenes()
 
 int main (int argc, char *argv[])
 {
+    double t;
+
     if (argc < 2)
     {
         printf ("\nArg error. Use first arg for set max value.\n");
@@ -69,7 +72,12 @@ int main (int argc, char *argv[])
     if (arr_init() == NULL)
         return 1;
 
+    t = hpctimer_wtime();
+
     sieve_of_Eratosthenes ();
+
+    t = hpctimer_wtime() - t;
+    printf("Elapsed time (sec.): %.6f\n", t);
 
    if (arr)
        free (arr);
