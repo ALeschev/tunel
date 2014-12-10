@@ -8,3 +8,4 @@ all:
 
 clean:
 	rm -f work_crew
+	rm -rf ./dir1/*_e ./dir1/*.out

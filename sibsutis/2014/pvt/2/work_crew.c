@@ -36,16 +36,19 @@
 #define MAX_NODES 250
 #define MAX_INPUT_STR 16
 #define ONE_SEC 1000000
+#define START_DIR "./dir1"
 
 enum node_state { INITED, LAUNCHED, SEARCHING, COMPLETED };
 enum file_run_mode { C_lang, BASH };
 
 typedef struct
 {
-    pthread_t node_id;
+    pthread_t node_th;
+    int node_id;
     int state;
     int activated;
     char data[MAX_INPUT_STR];
+    char dir[256];
 } node_t;
 
 typedef struct
@@ -96,25 +99,54 @@ void node_set_state (node_t *node, int state)
     if (node->state == state)
         return;
 
-    trace_info("Node <%p> state changed: %s -> %s", &node->node_id,
+    trace_info("Node <%d> state changed: %s -> %s", node->node_id,
                node_state_str(node->state), node_state_str(state));
 
-    node->state = state;
-
-    switch (state)
+    switch (node->state)
     {
         case INITED:
-            node->activated = 0;
+            switch (state)
+            {
+                case INITED:
+                break;
+                case LAUNCHED:
+                    node->activated = 1;
+                break;
+            }
         break;
         case LAUNCHED:
-            node->activated = 1;
+            switch (state)
+            {
+                case INITED:
+                    node->activated = 0;
+                break;
+                case SEARCHING:
+                    /*not change*/
+                break;
+            }
         break;
         case SEARCHING:
-            node->activated = 0;
+            switch (state)
+            {
+                case INITED:
+                    node->activated = 0;
+                break;
+                case COMPLETED:
+                    node->activated = 0;
+                break;
+            }
         break;
         case COMPLETED:
+            switch (state)
+            {
+                case INITED:
+                    node->activated = 0;
+                break;
+            }
         break;
     }
+
+        node->state = state;
 }
 
 node_t *node_get_free(node_data_t *node_data)
@@ -125,21 +157,25 @@ node_t *node_get_free(node_data_t *node_data)
     if (!node_data)
         return NULL;
 
-    for (i = 0; i < node_data->cur_max; i++)
-    {
-        p_node = &node_data->nodes[i];
-
-        if (p_node->state == INITED)
-            return p_node;
-    }
-
     for (i = node_data->cur_max; i < MAX_NODES; i++)
     {
         p_node = &node_data->nodes[i];
 
         if (p_node->state == INITED)
         {
+            p_node->node_id = i;
             node_data->cur_max++;
+            return p_node;
+        }
+    }
+
+    for (i = 0; i < node_data->cur_max; i++)
+    {
+        p_node = &node_data->nodes[i];
+
+        if (p_node->state == INITED)
+        {
+            p_node->node_id = i;
             return p_node;
         }
     }
@@ -147,7 +183,7 @@ node_t *node_get_free(node_data_t *node_data)
     return NULL;
 }
 
-void node_set_free(node_data_t *node_data, pthread_t node_id)
+void node_set_free(node_data_t *node_data, int node_id)
 {
     int i;
     node_t *p_node;
@@ -161,6 +197,7 @@ void node_set_free(node_data_t *node_data, pthread_t node_id)
 
         if (p_node->node_id == node_id)
         {
+            p_node->node_id = -1;
             node_set_state(p_node, INITED);
             return;
         }
@@ -172,6 +209,7 @@ void node_set_free(node_data_t *node_data, pthread_t node_id)
 
         if (p_node->node_id == node_id)
         {
+            p_node->node_id = -1;
             node_set_state(p_node, INITED);
 
             if (node_data->cur_max > 0)
@@ -196,7 +234,12 @@ void node_clear_all(node_data_t *node_data, int force)
             if (force)
                 node_set_state(p_node, INITED);
 
-            pthread_join(p_node->node_id, NULL);
+            pthread_join(p_node->node_th, NULL);
+
+            if (!force)
+                node_set_state(p_node, INITED);
+
+            p_node->node_id = -1;
 
             if (node_data->cur_max > 0)
                 node_data->cur_max--;
@@ -204,53 +247,55 @@ void node_clear_all(node_data_t *node_data, int force)
     }
 }
 
-int compile_file(node_t *node, char *filename)
+int compile_file(node_t *node, char *filename, char *dirname)
 {
-    int status;
-    char command[32 + MAX_INPUT_STR] = {0};
+    int status = 1;
+    char command[64 + MAX_INPUT_STR] = {0};
 
-    if (!filename)
+    if (!filename || !dirname)
         return 1;
 
-    sprintf (command, "gcc %s.c -o %s_e 2> %s_compile.out",
-            filename, filename, filename);
+    sprintf (command, "gcc %s/%s.c -o %s/%s_e 2> %s/%s_compile.out",
+            dirname, filename, dirname, filename, dirname, filename);
 
-    trace_info("Node <%p>. Try exec: %s", &node->node_id, command);
+    trace_info("Node <%d>. Try exec: %s", node->node_id, command);
 
     status = system(command);
 
-    trace_info("Node <%p>. %s.c: Compile status %s", &node->node_id,
+    trace_info("Node <%d>. %s.c: Compile status %s", node->node_id,
                 filename, status? "NOK":"OK");
 
     return status;
 }
 
-void run_file (node_t *node, char *filename, int mode)
+void run_file (node_t *node, char *filename, char *dirname, int mode)
 {
     int status;
-    char command[16 + MAX_INPUT_STR] = {0};
+    char command[64 + MAX_INPUT_STR] = {0};
 
-    if (!filename)
+    if (!filename || !dirname)
         return;
 
     switch(mode)
     {
         case C_lang:
-            sprintf(command, "./%s_e 1> %s_run.out", filename, filename);
+            sprintf(command, "%s/%s_e %d 1> %s/%s_run.out",
+                    dirname, filename, node->node_id, dirname, filename);
         break;
 
         case BASH:
-            sprintf(command, "bash ./%s.sh > %s_run.out", filename, filename);
+            sprintf(command, "bash %s/%s.sh %d > %s/%s_run.out",
+                    dirname, filename, node->node_id, dirname, filename);
         break;
 
         default:
-            trace_err("Node <%p>. %s_e: Unknown run-mode", &node->node_id, filename);
+            trace_err("Node <%d>. %s_e: Unknown run-mode", node->node_id, filename);
     }
 
     if (strlen(command))
     {
         status = system(command);
-        trace_info("Node <%p>. %s_e: Run status: %s", &node->node_id,
+        trace_info("Node <%d>. %s_e: Run status: %s", node->node_id,
                         filename, status? "NOK":"OK");
     }
 }
@@ -279,12 +324,7 @@ int scan_file(node_t *node, char *filename, char *dirname)
         if (!strncmp(entry->d_name, filename, strlen(filename)))
         {
             if (!strcmp(&entry->d_name[strlen(entry->d_name) - 2], ".c"))
-            {
-                trace_info("Node <%p>. Found file %s - is C source file",
-                            &node->node_id, filename);
-
                 have_source_file = 1;
-            }
         }
     }
 
@@ -311,9 +351,7 @@ int scan_dir(node_t *node, char *filename, char *dirname)
         if (entry->d_type == DT_DIR)
         {
             if (!strcmp(entry->d_name, filename))
-            {
                 have_dir= 1;
-            }
         }
     }
 
@@ -346,12 +384,7 @@ int scan_bash(node_t *node, char *filename, char *dirname)
         if (!strncmp(entry->d_name, filename, strlen(filename)))
         {
             if (!strcmp(&entry->d_name[strlen(entry->d_name) - 3], ".sh"))
-            {
-                trace_info("Node <%p>. Found file %s - is Bash source file",
-                            &node->node_id, filename);
-
                 have_source_file = 1;
-            }
         }
     }
 
@@ -366,31 +399,39 @@ int scandirectory(node_t *node, char *filename, char *dirname)
     int file_entry = 0, dir_entry = 0, bash_entry = 0;
     char buff[128] = {0};
 
-    sprintf (buff, "echo \"[%s] %s:%d:%s(): Info: Node <%p>. "
-                   "Filename %s. Start at '$PWD'\"", get_time(),
+    sprintf (buff, "echo \"[%s] %s:%d:%s(): Info: Node <%d>. "
+                   "Filename %s. Start at '%s'\"", get_time(),
                    __FILE__, __LINE__, __func__,
-                   &node->node_id, filename);
+                   node->node_id, filename, dirname);
     system(buff);
 
     file_entry = scan_file(node, filename, dirname);
     if (file_entry)
     {
-        if (compile_file(node, filename) == 0)
-            run_file(node, filename, C_lang);
+        trace_info("Node <%d>. Found file %s in %s. Its C source file",
+                            node->node_id, filename, node->dir);
+
+        if (compile_file(node, filename, dirname) == 0)
+        {
+            run_file(node, filename, dirname, C_lang);
+        }
     }
 
     dir_entry = scan_dir(node, filename, dirname);
     if (dir_entry)
     {
-        sprintf (buff, "echo \"[%s] %s:%d:%s(): Info: Node <%p>. "
-                       "Found dir '%s' in '$PWD'\"", get_time(),
+        node->dir[strlen(node->dir)] = '/';
+        strcat (node->dir, filename);
+
+        sprintf (buff, "echo \"[%s] %s:%d:%s(): Info: Node <%d>. "
+                       "Found dir '%s' in '$PWD/%s'\"", get_time(),
                    __FILE__, __LINE__, __func__,
-                   &node->node_id, filename);
+                   node->node_id, filename, node->dir);
         system(buff);
 
-        chdir(filename);
-        // trace_info("Node <%p>. Found dir %s", &node->node_id, filename);
-        scandirectory(node, filename, "./");
+        // chdir(filename);
+        // trace_info("Node <%d>. Found dir %s", node->node_id, filename);
+        scandirectory(node, filename, node->dir);
     }
 
     if (!file_entry && !dir_entry)
@@ -398,11 +439,10 @@ int scandirectory(node_t *node, char *filename, char *dirname)
         bash_entry = scan_bash(node, filename, dirname);
         if (bash_entry)
         {
-            trace_info("Node <%p>. Try run bash '%s'", &node->node_id, filename);
-            run_file(node, filename, BASH);
-        } else {
-            trace_info("Node <%p>. Bash script with name '%s' not found",
-                       &node->node_id, filename);
+            trace_info("Node <%d>. Found file %s - is Bash source file",
+                        node->node_id, filename);
+
+            run_file(node, filename, dirname, BASH);
         }
 
     }
@@ -414,14 +454,11 @@ void *node_thread(void *arg)
 {
     node_t *node = (node_t *)arg;
 
-    while (node->activated)
-    {
-        chdir("./dir1/");
-        if (scandirectory(node, node->data, "./"))
-            break;
-    }
+    node_set_state(node, SEARCHING);
 
-    trace_info("Node <%p>: completed", &node->node_id);
+    scandirectory(node, node->data, node->dir);
+
+    trace_info("Node <%d>: completed", node->node_id);
 
     node_set_state(node, INITED);
 
@@ -478,10 +515,11 @@ void *worker_thread(void *arg)
         }
 
         memcpy (p_node->data, input_data, MAX_INPUT_STR);
+        strcpy (p_node->dir, START_DIR);
 
         node_set_state(p_node, LAUNCHED);
 
-        pthread_create(&p_node->node_id, NULL, node_thread, (void *)p_node);
+        pthread_create(&p_node->node_th, NULL, node_thread, (void *)p_node);
     }
 
     node_clear_all(&node_data, 0/*wait/force*/);
