@@ -9,6 +9,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 #define trace_err(fmt, ...) \
         do { \
@@ -38,6 +39,7 @@
 #define ONE_SEC 1000000
 #define START_DIR "./dir1"
 
+enum worker_state { STOPPED, STARTED, HARD_STOP, SOFT_STOP };
 enum node_state { INITED, LAUNCHED, SEARCHING, COMPLETED };
 enum file_run_mode { C_lang, BASH };
 
@@ -57,6 +59,8 @@ typedef struct
     int cur_max;
 } node_data_t;
 
+static int worker_state = STOPPED;
+
 char *get_time(void)
 {
     static char cBuffer[100];
@@ -75,6 +79,19 @@ char *get_time(void)
     return cBuffer;
 }
 
+char *worker_state_str(int state)
+{
+    switch (state)
+    {
+        case STARTED: return "Started";
+        case STOPPED: return "Stopped";
+        case HARD_STOP: return "Hard stop";
+        case SOFT_STOP: return "Soft stop";
+    }
+
+    return "Undefined";
+}
+
 char *node_state_str(int state)
 {
     switch (state)
@@ -86,6 +103,18 @@ char *node_state_str(int state)
     }
 
     return "Undefined";
+}
+
+void worker_set_state (int state)
+{
+    if (worker_state == state)
+        return;
+
+    trace_info("Worker state changed: %s -> %s",
+                worker_state_str(worker_state),
+                worker_state_str(state));
+
+    worker_state = state;
 }
 
 void node_set_state (node_t *node, int state)
@@ -492,47 +521,81 @@ void *worker_thread(void *arg)
 
     srand(time(NULL));
 
-    while (1)
+    worker_set_state(STARTED);
+
+    while (worker_state != STOPPED)
     {
-        rand_time = rand() % ONE_SEC;
-
-        usleep(rand_time);
-
-        if (fscanf(file_fd, "%s", input_data) == EOF)
+        switch(worker_state)
         {
-            trace_info("Detect end of file. Deactivate threads");
+            case STARTED:
+            {
+                rand_time = rand() % ONE_SEC;
+
+                usleep(rand_time);
+
+                if (fscanf(file_fd, "%s", input_data) == EOF)
+                {
+                    trace_info("Detect end of file. Deactivate threads");
+                    break;
+                }
+
+                trace_info("command after %.3f sec: %s",
+                           (float)rand_time/ONE_SEC, input_data);
+
+                p_node = node_get_free(&node_data);
+                if (!p_node)
+                {
+                    trace_err("Failed to get free node. '%s' skipped", input_data);
+                    continue;
+                }
+
+                memcpy (p_node->data, input_data, MAX_INPUT_STR);
+                strcpy (p_node->dir, START_DIR);
+
+                node_set_state(p_node, LAUNCHED);
+
+                pthread_create(&p_node->node_th, NULL, node_thread, (void *)p_node);
+            }
+            break;
+            case SOFT_STOP:
+                node_clear_all(&node_data, 0);
+            break;
+            case HARD_STOP:
+                node_clear_all(&node_data, 1);
+            break;
+            case STOPPED:
             break;
         }
-
-        trace_info("command after %.3f sec: %s",
-                   (float)rand_time/ONE_SEC, input_data);
-
-        p_node = node_get_free(&node_data);
-        if (!p_node)
-        {
-            trace_err("Failed to get free node. '%s' skipped", input_data);
-            continue;
-        }
-
-        memcpy (p_node->data, input_data, MAX_INPUT_STR);
-        strcpy (p_node->dir, START_DIR);
-
-        node_set_state(p_node, LAUNCHED);
-
-        pthread_create(&p_node->node_th, NULL, node_thread, (void *)p_node);
     }
-
-    node_clear_all(&node_data, 0/*wait/force*/);
 
     fclose(file_fd);
 
     return NULL;
 }
 
+void signal_handler(int sig)
+{
+    switch(sig)
+    {
+        case SIGQUIT:
+            worker_set_state(SOFT_STOP);
+        break;
+
+        case SIGINT:
+        case SIGTERM:
+            worker_set_state(HARD_STOP);
+        break;
+    }
+}
+
 int main()
 {
     pthread_t worker_th;
     char data_file[] = "data_file";
+
+    signal(SIGQUIT, signal_handler);
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
 
     trace_info("Work crew started");
 
