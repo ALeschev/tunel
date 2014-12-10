@@ -255,7 +255,7 @@ int compile_file(node_t *node, char *filename, char *dirname)
     if (!filename || !dirname)
         return 1;
 
-    sprintf (command, "gcc %s/%s.c -o %s/%s_e 2> %s/%s_compile.out",
+    sprintf (command, "gcc %s/%s.c -o %s/%s_e 2> %s/%s_compile_out",
             dirname, filename, dirname, filename, dirname, filename);
 
     trace_info("Node <%d>. Try exec: %s", node->node_id, command);
@@ -279,12 +279,12 @@ void run_file (node_t *node, char *filename, char *dirname, int mode)
     switch(mode)
     {
         case C_lang:
-            sprintf(command, "%s/%s_e %d 1> %s/%s_run.out",
+            sprintf(command, "%s/%s_e %d 1> %s/%s_run_out",
                     dirname, filename, node->node_id, dirname, filename);
         break;
 
         case BASH:
-            sprintf(command, "bash %s/%s.sh %d > %s/%s_run.out",
+            sprintf(command, "bash %s/%s.sh %d > %s/%s_run_out",
                     dirname, filename, node->node_id, dirname, filename);
         break;
 
