@@ -39,9 +39,9 @@
 #define ONE_SEC 1000000
 #define START_DIR "./dir1"
 
+enum file_run_mode { C_lang, BASH };
 enum worker_state { STOPPED, STARTED, HARD_STOP, SOFT_STOP };
 enum node_state { INITED, LAUNCHED, SEARCHING, COMPLETED };
-enum file_run_mode { C_lang, BASH };
 
 typedef struct
 {
@@ -261,7 +261,10 @@ void node_clear_all(node_data_t *node_data, int force)
         if (p_node->state != INITED)
         {
             if (force)
+            {
                 node_set_state(p_node, INITED);
+                pthread_cancel(p_node->node_th);
+            }
 
             pthread_join(p_node->node_th, NULL);
 
@@ -449,13 +452,14 @@ int scandirectory(node_t *node, char *filename, char *dirname)
     dir_entry = scan_dir(node, filename, dirname);
     if (dir_entry)
     {
-        node->dir[strlen(node->dir)] = '/';
-        strcat (node->dir, filename);
+        // node->dir[strlen(node->dir)] = '/';
+        sprintf (node->dir, "%s/%s", node->dir, filename);
+        // strcat (node->dir, filename);
 
         sprintf (buff, "echo \"[%s] %s:%d:%s(): Info: Node <%d>. "
                        "Found dir '%s' in '$PWD/%s'\"", get_time(),
-                   __FILE__, __LINE__, __func__,
-                   node->node_id, filename, node->dir);
+                       __FILE__, __LINE__, __func__,
+                       node->node_id, filename, node->dir);
         system(buff);
 
         // chdir(filename);
@@ -498,7 +502,6 @@ void *worker_thread(void *arg)
 {
     FILE *file_fd = NULL;
     node_data_t node_data;
-    node_t *p_node;
     char *data_file = NULL;
     char input_data[MAX_INPUT_STR] = {0};
     int rand_time = 0;
@@ -525,23 +528,32 @@ void *worker_thread(void *arg)
 
     while (worker_state != STOPPED)
     {
+#ifdef USE_THREAD
+        node_t *p_node;
+
+        rand_time = rand() % ONE_SEC;
+        usleep(rand_time);
+#endif
+
         switch(worker_state)
         {
             case STARTED:
             {
-                rand_time = rand() % ONE_SEC;
-
-                usleep(rand_time);
-
                 if (fscanf(file_fd, "%s", input_data) == EOF)
                 {
                     trace_info("Detect end of file. Deactivate threads");
+#ifdef USE_THREAD
+                    worker_set_state(SOFT_STOP);
+#else
+                    worker_set_state(STOPPED);
+#endif
                     break;
                 }
 
                 trace_info("command after %.3f sec: %s",
                            (float)rand_time/ONE_SEC, input_data);
 
+#ifdef USE_THREAD
                 p_node = node_get_free(&node_data);
                 if (!p_node)
                 {
@@ -555,13 +567,27 @@ void *worker_thread(void *arg)
                 node_set_state(p_node, LAUNCHED);
 
                 pthread_create(&p_node->node_th, NULL, node_thread, (void *)p_node);
+#else
+                node_t node;
+                node.node_id = 0;
+                memcpy (node.data, input_data, MAX_INPUT_STR);
+                strcpy (node.dir, START_DIR);
+
+                scandirectory(&node, node.data, node.dir);
+#endif
             }
             break;
             case SOFT_STOP:
+#ifdef USE_THREAD
                 node_clear_all(&node_data, 0);
+                worker_set_state(STOPPED);
+#endif
             break;
             case HARD_STOP:
+#ifdef USE_THREAD
                 node_clear_all(&node_data, 1);
+                worker_set_state(STOPPED);
+#endif
             break;
             case STOPPED:
             break;
@@ -597,7 +623,11 @@ int main()
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
-    trace_info("Work crew started");
+#ifdef USE_THREAD
+    trace_info("Work crew started. Mode: Threads");
+#else
+    trace_info("Work crew started. Mode: Successively");
+#endif
 
     pthread_create (&worker_th, NULL, worker_thread, (void *)data_file);
 
