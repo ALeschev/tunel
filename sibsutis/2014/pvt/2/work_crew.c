@@ -254,6 +254,8 @@ void node_clear_all(node_data_t *node_data, int force)
     int i;
     node_t *p_node;
 
+    trace_info("Deactivate threads <%s>", force? "HARD":"SOFT");
+
     for (i = 0; i < MAX_NODES; i++)
     {
         p_node = &node_data->nodes[i];

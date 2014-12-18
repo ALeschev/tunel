@@ -9,20 +9,23 @@
 #include "hpctimer.h"
 
 enum { 
-    N = 512,
-    NREPS = 3
+	N = 512,
+	NREPS = 3
 };
 
 double A[N * N], B[N * N], C[N * N];
 
 void dgemm_def(double *a, double *b, double *c, int n)
 {
-    int i, j, k;
-    
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            for (k = 0; k < n; k++) {
-                *(c + i * n + j) += *(a + i * n + k) * *(b + k * n + j);
+	int i, j, k;
+
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+		{
+			for (k = 0; k < n; k++)
+			{
+				*(c + i * n + j) += *(a + i * n + k) * *(b + k * n + j);
 			}
 		}
 	}
@@ -30,25 +33,76 @@ void dgemm_def(double *a, double *b, double *c, int n)
 
 void dgemm_transpose(double *a, double *b, double *c, int n)
 {
-    /* TODO */
+	int i, j, k;
+
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+		{
+			for (k = 0; k < n; k+=4)
+			{
+				*(c + i * n + j) += *(a + i * n + k) *
+				                    *(b + k * (n - k - 1) + j);
+
+				*(c + i * n + j) += *(a + i * n + k) *
+				                    *(b + k * (n - k) + j);
+
+				*(c + i * n + j) += *(a + i * n + k) *
+				                    *(b + k * (n - k + 1) + j);
+
+				*(c + i * n + j) += *(a + i * n + k) *
+				                    *(b + k * (n - k + 2) + j);
+			}
+		}
+	}
 }
+
+#define START_BS_LOOP for (i = 0; i < n; i += BS) { \
+                         for (j = 0; j < n; j += BS) { \
+                             for (k = 0; k < n; k += BS)
+#define STOP_BS_LOOP }}
+
+void print_matrix(double *a, int n);
 
 void dgemm_block(double *a, double *b, double *c, int n)
 {
-    /* TODO */
+	int i, j, k, i0, j0, k0;
+	double *a0, *b0, *c0;
+	int BS = 2;
+
+	START_BS_LOOP
+	{
+		for (i0 = 0, c0 = (c + i * n + j), a0 = (a + i * n + k);
+		     i0 < BS; ++i0, c0 += n, a0 += n)
+		{
+			for (k0 = 0, b0 = (b + k * n + j);
+			     k0 < BS; ++k0, b0 += n)
+			{
+				for (j0 = 0; j0 < BS; ++j0)
+				{
+					c0[j0] += a0[k0] * b0[j0];
+				}
+			}
+		}
+
+	}
+	STOP_BS_LOOP
 }
 
 void init_matrix(double *a, double *b, double *c, int n)
 {
-	int i, j, k;
+	int i, j;
 
-	for (i = 0; i < n; i++) {
-		for (j = 0; j < n; j++) {
-			for (k = 0; k < n; k++) {
-                *(a + i * n + j) = 1.0;
-                *(b + i * n + j) = 2.0;
-                *(c + i * n + j) = 0.0;
-			}
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+		{
+			// for (k = 0; k < n; k++)
+			// {
+				*(a + i * n + j) = 1.0;
+				*(b + i * n + j) = 2.0;
+				*(c + i * n + j) = 0.0;
+			// }
 		}
 	}
 }
@@ -68,25 +122,25 @@ void print_matrix(double *a, int n)
 
 int main(int argc, char **argv)
 {
-    int i;
-    double t;
-    		
-    init_matrix(A, B, C, N);
-        
-    t = hpctimer_getwtime();
-    for (i = 0; i < NREPS; i++) {
-        dgemm_def(A, B, C, N);
-        //dgemm_transpose(A, B, C, N);
-        //dgemm_transpose2(A, B, C, N);
-        //dgemm_block(A, B, C, N);
-    }
-    t = hpctimer_getwtime() - t;
-    t = t / NREPS;
-    
-    /*print_matrix(C, N);*/
-    
-    printf("Elapsed time: %.6f sec.\n", t);
+	int i;
+	double t;
 
-    return 0;
+	init_matrix(A, B, C, N);
+
+	t = hpctimer_getwtime();
+	for (i = 0; i < NREPS; i++) {
+		// dgemm_def(A, B, C, N);
+		dgemm_transpose(A, B, C, N);
+		//dgemm_transpose2(A, B, C, N);
+		// dgemm_block(A, B, C, N);
+	}
+	t = hpctimer_getwtime() - t;
+	t = t / NREPS;
+
+	/*print_matrix(C, N);*/
+
+	printf("Elapsed time: %.6f sec.\n", t);
+
+	return 0;
 }
 
