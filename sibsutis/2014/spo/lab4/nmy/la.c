@@ -196,6 +196,8 @@ void process_number(int *state, FILE **fd, int ch, int *err)
     if((isspace(ch)) || ch == '<' || ch == '>' || ch == '=' ||
         ch == '(' || ch == ')' || ch == ';' || ch == '-' || ch == '+')
     {
+        fseek(*fd, ftell(*fd) - 1, SEEK_SET);
+
         entry.key = NUMBER;
         strcpy(entry.value, buf);
 
