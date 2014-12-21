@@ -9,97 +9,121 @@
 #include <unistd.h>
 #include "ticket.hpp"
 #include "citizen.hpp"
-#include "lawer.hpp"
+#include "lawyer.hpp"
 
 using namespace std;
 
-mutex queue_mutex;
-deque <ticket*> queue;
-citizen *citizens;
-lawer *lawers;
-int limit;
-
 void citizen_thread(int);
-void lawer_thread(int);
+void lawyer_thread(int);
 void winner_check_thread(int, int);
 
-int main() {
-  srand(time(NULL));
+int main(void)
+{
+	thread *citizen_threads;
+	thread *lawyer_threads;
+	citizen *citizens;
+	lawyer *lawyers;
 
-  int citizen_count = (rand() % 20) + 1;
-  int lawer_count = citizen_count + (rand() % 3);
-  thread *citizen_threads = new thread[citizen_count];
-  thread *lawer_threads = new thread[lawer_count];
-  limit = 2;
-//  limit = (rand() % 5) + 1;
+	int deviation = 0;
+	int citizen_count = 0;
+	int lawyer_count = 0;
 
-  citizens = new citizen[citizen_count];
-  lawers = new lawer[lawer_count];
+	srand(time(NULL));
 
-  for (int i = 0; i < citizen_count; ++i) {
-    citizen_threads[i] = thread(citizen_thread, i);
-  }
-  for (int i = 0; i < lawer_count; ++i) {
-    lawer_threads[i] = thread(lawer_thread, i);
-  }
+	deviation = rand() % 1;
+	citizen_count = (rand() % 20) + 1;
+	lawyer_count = citizen_count deviation? +:- (rand() % 3);
 
-  thread winner(winner_check_thread, citizen_count, lawer_count);
-  winner.join();
+	citizen_threads = new thread[citizen_count];
+	lawyer_threads = new thread[lawyer_count];
 
-  return 0;
+	citizens = new citizen[citizen_count];
+	lawyers = new lawyer[lawyer_count];
+
+	for (int i = 0; i < citizen_count; ++i)
+		citizen_threads[i] = thread(citizen_thread, &citizens[i]);
+
+	for (int i = 0; i < lawyer_count; ++i)
+		lawyer_threads[i] = thread(lawyer_thread, &lawyers[i]);
+
+	thread winner(winner_check_thread, citizens, lawyers);
+	winner.join();
+
+	return 0;
 }
 
-void citizen_thread(int id) {
-  while (1) {
-    citizens[id].set_task();
-    if (citizens[id].time_to_leave(limit)) {
-      cout << "Citizen " << id << " has left the city." << endl;
-      citizens[id].leave();
-      break;
-    }
+void citizen_thread(citizen *inhabitant)
+{
+	bool active = true;
 
-    sleep(10 - citizens[id].activity());
-  }
+	while (active)
+	{
+		inhabitant->set_task();
+		if (inhabitant->limits_check())
+		{
+			cout << "Citizen has left the city." << endl;
+			inhabitant->leave();
+			active = false;
+		}
+
+		sleep(10 - inhabitant->activity());
+	}
 }
 
-void lawer_thread(int id) {
-  while (1) {
-    lawers[id].get_task();
-    if (lawers[id].time_to_leave(limit)) {
-      cout << "Lawer " << id << " has left the city." << endl;
-      lawers[id].leave();
-      break;
-    }
-  }
+void lawyer_thread(lawyer *official)
+{
+	bool active = true;
+
+	while (active)
+	{
+		official->get_task();
+		if (official->limits_check())
+		{
+			cout << "Lawyer has left the city." << endl;
+			official->leave();
+			active = false;
+		}
+	}
 }
 
-void winner_check_thread(int citizen_count, int lawer_count) {
-  bool active = false;
-  while (1) {
-    active = false;
-    for (int i = 0; i < citizen_count; ++i) {
-      if (citizens[i].status()) {
-        active = true;
-        break;
-      }
-    }
-    if (!active) {
-      cout << "Lawers win" << endl;
-      exit(EXIT_SUCCESS);
-    }
+void winner_check_thread(citizen *citizens, lawyer *lawyers)
+{
+	int citizen_count = sizeof (*citizens) / sizeof (citizen);
+	int lawyer_count = sizeof (*lawyers) / sizeof (lawyer);
+	int cur_citizen;
+	int cur_lawyer;
 
-    active = false;
-    for (int i = 0; i < lawer_count; ++i) {
-      if (lawers[i].status()) {
-        active = true;
-        break;
-      }
-    }
-    if (!active) {
-      cout << "Citizens win" << endl;
-      exit(EXIT_SUCCESS);
-    }
+	while (1)
+	{
+		cur_citizen = cur_lawyer = 0;
 
-    usleep(500);
-  }
+		for (int i = 0; i < citizen_count; ++i)
+		{
+			if (!citizens[i].status())
+				continue;
+
+			cur_citizen++;
+		}
+		if (!cur_citizen)
+		{
+			cout << "All citizens leave :(" << endl;
+			exit(EXIT_SUCCESS);
+		}
+
+		for (int i = 0; i < lawyer_count; ++i)
+		{
+			if (lawyers[i].status())
+				continue;
+
+			cur_lawyer++;
+		}
+		if (!cur_lawyer)
+		{
+			cout << "All lawyer leave :(" << endl;
+			exit(EXIT_SUCCESS);
+		}
+
+		usleep(500);
+		cout << "usleep test" << endl;
+	}
 }
