@@ -12,6 +12,7 @@ private:
 	int tickets_fail;
 	int tickets_success;
 	bool active;
+	int limit;
 
 public:
 	lawyer()
@@ -20,9 +21,10 @@ public:
 		tickets_fail = 0;
 		tickets_success = 0;
 		active = true;
+		limit = (rand() % 10) + 1;
 	}
 
-	bool time_to_leave(int limit)
+	bool limits_check()
 	{
 		return tickets_fail - tickets_success > limit;
 	}
