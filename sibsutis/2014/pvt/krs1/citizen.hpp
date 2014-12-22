@@ -1,11 +1,6 @@
 #pragma once
 #include <iostream>
 
-#include <iomanip>
-#include <random>
-#include <map>
-#include <iostream>
-
 using namespace std;
 
 extern deque <ticket*> queue;
@@ -23,27 +18,27 @@ private:
 	int tickets_fail;
 	bool active;
 	int limit;
-	default_random_engine gen;
 
 public:
 	citizen()
 	{
 		tickets_success = 0;
 		tickets_fail = 0;
-		limit = (rand() % 100) + 1;
 		active = true;
-		_activity = (rand() % 5) + 1;
+		limit = (rand() % 5) + 1;
 	}
 
-	double generate()
+	int generate()
 	{
-		exponential_distribution<double> dist(_activity);
-		return dist(gen);
+		default_random_engine gen;
+		exponential_distribution<double> dist(1);
+		_activity = dist(gen);
 	}
 
-	double activity()
+	int activity()
 	{
-		return generate();
+		generate();
+		return _activity;
 	}
 
 	bool limits_check()
@@ -71,6 +66,7 @@ public:
 		if (queue.size() < 10)
 		{
 			// start = std::chrono::system_clock::now();
+			task->priority = (rand() % 5) + 1;
 			queue.push_back(task);
 			total_ticket++;
 			average_queue_len += queue.size();

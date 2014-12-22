@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 using namespace std;
 
 extern deque <ticket*> queue;
@@ -24,7 +26,7 @@ public:
 		tickets_fail = 0;
 		tickets_success = 0;
 		active = true;
-		limit = (rand() % 100) + 1;
+		limit = (rand() % 10) + 1;
 	}
 
 	bool limits_check()
@@ -42,6 +44,18 @@ public:
 		return active;
 	}
 
+	void shake()
+	{
+		deque <ticket*> foo;
+		unique_lock <mutex> lock(queue_mutex);
+		if (queue.empty())
+		{
+			return;
+		}
+
+		queue.swap(foo);
+	}
+
 	void get_task()
 	{
 		chrono::time_point<std::chrono::system_clock> start, end;
@@ -52,6 +66,8 @@ public:
 		{
 			return;
 		}
+
+		std::sort(queue.begin(), queue.end());
 
 		start = std::chrono::system_clock::now();
 
@@ -67,7 +83,7 @@ public:
 
 		task->promise_time = time;
 		task->real_time = rand() % (time * 2) + 1;
-		usleep(task->real_time * 100);
+		usleep(task->real_time * 10000);
 		task->task.set_value(true);
 
 		// cout << "Lawyer: Real: " << task->real_time <<

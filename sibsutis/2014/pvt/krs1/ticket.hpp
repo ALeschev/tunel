@@ -11,8 +11,15 @@ public:
 	promise <bool> task;
 	int promise_time;
 	int real_time;
+	int priority;
 
 	ticket() {}
+
+	bool operator<(const ticket& a)
+	{
+		return a.priority < this->priority;
+	}
+
 };
 
 mutex queue_mutex;

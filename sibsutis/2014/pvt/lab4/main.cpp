@@ -15,53 +15,60 @@ lock_free_mutex mutex;
 void provider();
 void consumer(int);
 
-int main() {
-  srand(time(NULL));
+int main()
+{
+	srand(time(NULL));
 
-  thread *provider_threads = new thread[4];
-  thread provider_thread(provider);
-  for (auto i = 0; i < 4; ++i) {
-    provider_threads[i] = thread(consumer, i + 1);
-  }
+	thread *provider_threads = new thread[4];
+	thread provider_thread(provider);
 
-  provider_thread.join();
-  for (auto i = 0; i < 4; ++i) {
-    provider_threads[i].join();
-  }
-  return 0;
+	for (auto i = 0; i < 4; ++i)
+		provider_threads[i] = thread(consumer, i + 1);
+
+	provider_thread.join();
+
+	for (auto i = 0; i < 4; ++i)
+		provider_threads[i].join();
+
+	return 0;
 }
 
-void provider() {
-  for (;;) {
-    int count = (rand() % 10) + 1;
-    vector <int> array;
+void provider()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		int count = (rand() % 10) + 1;
+		vector <int> array;
 
-    for (auto i = 0; i < count; ++i) {
-      array.push_back(rand() % 100);
-    }
+		for (auto i = 0; i < count; ++i)
+			array.push_back(rand() % 100);
 
-    cout << "Initital: ";
-    for (auto value : array) {
-      cout << value << ' ';
-    }
-    cout << endl;
+		cout << "Initital: ";
 
-    queue.push(array);
-  }
+		for (auto value : array)
+			cout << value << ' ';
+
+		cout << endl;
+
+		queue.push(array);
+	}
 }
 
 void consumer(int id) {
-  for (;;) {
-    shared_ptr <vector <int>> array = queue.pop();
+	for (int i = 0; i < 100; i++)
+	{
+		shared_ptr <vector <int>> array = queue.pop();
 
-    if (array != nullptr) {
-      sort(array->begin(), array->end());
+		if (array != nullptr)
+		{
+			sort(array->begin(), array->end());
 
-      cout << "Sorted (" << id << "): ";
-      for (auto value : *array) {
-        cout << value << ' ';
-      }
-      cout << endl;
-    }
-  }
+			cout << "Sorted (" << id << "): ";
+
+			for (auto value : *array)
+				cout << value << ' ';
+
+			cout << endl;
+		}
+	}
 }
