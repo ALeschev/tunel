@@ -41,10 +41,9 @@ int main(void)
 	citizen_count = (rand() % 10) + 1;
 
 	if (rand() % 1)
-		lawyer_count = citizen_count + (rand() % 3);
+		lawyer_count = citizen_count + (rand() % (citizen_count/4));
 	else
-		lawyer_count = citizen_count - (rand() % 4) + 1;
-
+		lawyer_count = citizen_count - (rand() % (citizen_count/4));
 
 	cout << "Emulation started: " << endl;
 	cout << "Citizens: " << citizen_count << endl;
@@ -75,34 +74,28 @@ int main(void)
 
 void citizen_thread(citizen *inhabitant)
 {
-	bool active = true;
-
-	while (active)
+	while (inhabitant->status() == true)
 	{
 		inhabitant->set_task();
 		if (inhabitant->limits_check())
 		{
 			cout << "Citizen left." << endl;
 			inhabitant->leave();
-			active = false;
 		} else {
-			usleep(inhabitant->activity() * 10000);
+			usleep(inhabitant->activity() * 100);
 		}
 	}
 }
 
 void lawyer_thread(lawyer *official)
 {
-	bool active = true;
-
-	while (active)
+	while (official->status() == true)
 	{
 		official->get_task();
 		if (official->limits_check())
 		{
 			cout << "Lawyer left." << endl;
 			official->leave();
-			active = false;
 		}
 	}
 }
@@ -113,7 +106,7 @@ void lawyer_thread_shaker(lawyer *shaker)
 
 	while (active)
 	{
-		sleep(5);
+		sleep(rand()%20 + 1);
 		shaker->shake();
 		cout << "Shake!\n";
 	}
@@ -125,6 +118,8 @@ void winner_check_thread(citizen *citizens, int citizen_count,
 	int cur_citizen;
 	int cur_lawyer;
 
+	srand(time(NULL));
+
 	while (1)
 	{
 		cur_citizen = cur_lawyer = 0;
@@ -133,9 +128,12 @@ void winner_check_thread(citizen *citizens, int citizen_count,
 		{
 			if (!citizens[i].status())
 			{
-				if (rand()%100 == 0)
+				int luck = rand()%100;
+				// cout << "Citizen luck " << luck << endl;
+				if (luck == 0)
 				{
 					citizen_threads[i].join();
+					citizens[i].regen();
 					cout << "New Citizen spawned" << endl;
 					citizen_threads[i] = thread(citizen_thread, &citizens[i]);
 				} else {
@@ -155,9 +153,12 @@ void winner_check_thread(citizen *citizens, int citizen_count,
 		{
 			if (!lawyers[i].status())
 			{
-				if (rand()%100 == 0)
+				int luck = rand()%100;
+				// cout << "Lawyer luck " << luck << endl;
+				if (luck == 0)
 				{
 					lawyer_threads[i].join();
+					lawyers[i].regen();
 					cout << "New Lawyer spawned" << endl;
 					lawyer_threads[i] = thread(lawyer_thread, &lawyers[i]);
 				} else {

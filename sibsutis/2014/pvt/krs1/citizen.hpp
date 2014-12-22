@@ -24,13 +24,18 @@ private:
 	default_random_engine gen;
 
 public:
-	citizen()
+	void regen()
 	{
 		tickets_success = 0;
 		tickets_fail = 0;
-		limit = (rand() % 100) + 1;
+		limit = (rand() % 250) + 1;
 		active = true;
 		_activity = (rand() % 5) + 1;
+	}
+
+	citizen()
+	{
+		regen();
 	}
 
 	double activity()
@@ -56,17 +61,17 @@ public:
 
 	void set_task()
 	{
-		unique_lock <mutex> lock(queue_mutex);
+		// unique_lock <mutex> lock(queue_mutex);
 		ticket *task = new ticket;
 		future <bool> result = task->task.get_future();
 
-		// queue_mutex.lock();
+		queue_mutex.lock();
 		if (queue.size() < 10)
 		{
 			queue.push_back(task);
 			total_ticket++;
 			average_queue_len += queue.size();
-			// queue_mutex.unlock();
+			queue_mutex.unlock();
 
 			result.get();
 
@@ -81,7 +86,7 @@ public:
 			}
 
 		} else {
-			// queue_mutex.unlock();
+			queue_mutex.unlock();
 		}
 	}
 };

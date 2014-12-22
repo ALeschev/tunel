@@ -19,12 +19,17 @@ private:
 	int limit;
 
 public:
-	lawyer()
+	void regen()
 	{
 		tickets_fail = 0;
 		tickets_success = 0;
 		active = true;
-		limit = (rand() % 10) + 1;
+		limit = (rand() % 250) + 1;
+	}
+
+	lawyer()
+	{
+		regen();
 	}
 
 	bool limits_check()
@@ -57,7 +62,7 @@ public:
 	{
 		chrono::time_point<std::chrono::system_clock> start, end;
 		unique_lock <mutex> lock(queue_mutex);
-		time = (rand() % 5) + 1;
+		int time = (rand() % 5) + 1;
 		ticket *task;
 
 		if (queue.empty())
@@ -79,7 +84,7 @@ public:
 
 		task->promise_time = time;
 		task->real_time = rand() % (time * 2) + 1;
-		usleep(task->real_time * 10000);
+		usleep(task->real_time);
 		task->task.set_value(true);
 
 		// cout << "Lawyer: Real: " << task->real_time <<
