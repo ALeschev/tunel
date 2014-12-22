@@ -13,7 +13,6 @@ extern chrono::duration<double> averate_ticket_wait;
 class lawyer
 {
 private:
-	int time;
 	int tickets_fail;
 	int tickets_success;
 	bool active;
@@ -22,7 +21,6 @@ private:
 public:
 	lawyer()
 	{
-		time = (rand() % 5) + 1;
 		tickets_fail = 0;
 		tickets_success = 0;
 		active = true;
@@ -48,10 +46,9 @@ public:
 	{
 		deque <ticket*> foo;
 		unique_lock <mutex> lock(queue_mutex);
+
 		if (queue.empty())
-		{
 			return;
-		}
 
 		queue.swap(foo);
 	}
@@ -60,12 +57,11 @@ public:
 	{
 		chrono::time_point<std::chrono::system_clock> start, end;
 		unique_lock <mutex> lock(queue_mutex);
+		time = (rand() % 5) + 1;
 		ticket *task;
 
 		if (queue.empty())
-		{
 			return;
-		}
 
 		std::sort(queue.begin(), queue.end());
 
