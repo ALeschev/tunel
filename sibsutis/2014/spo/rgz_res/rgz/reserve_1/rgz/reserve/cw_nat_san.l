@@ -3,7 +3,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "cw.tab.h"
+#include "cw_nat_san.tab.h"
 
 extern void yyerror(char *);
 extern char* _fname;
@@ -24,7 +24,6 @@ ws [ \t\n]
 
 "int" return TVAR1;
 "string" return TVAR2;
-"double" return TVAR3;
 "write" return WRITE;
 "read" return READ;
 
@@ -40,17 +39,12 @@ ws [ \t\n]
 	return INTEGER;
 }
 
-{digit}*\.{digit}* {
-	yylval.dbl=atof(yytext);
-	return DBL;
-}
-
 {arifm}		return *yytext;
 {compare}	return *yytext;
 {bools}		return *yytext;
 
-":=" return ASSIGN;
-"!=" return NEQ;
+":=" { return ASSIGN; }
+"!=" { return NEQ; }
 
 {delim} { return *yytext; }
 

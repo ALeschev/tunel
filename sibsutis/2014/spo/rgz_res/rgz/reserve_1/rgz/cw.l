@@ -23,8 +23,7 @@ ws [ \t\n]
 (\")[^(\")]*(\") { yylval=(YYSTYPE)strdup(yytext);	return STR; }
 
 "int" return TVAR1;
-"string" return TVAR2;
-"double" return TVAR3;
+"double" return TVAR2;
 "write" return WRITE;
 "read" return READ;
 
@@ -40,17 +39,17 @@ ws [ \t\n]
 	return INTEGER;
 }
 
-{digit}*\.{digit}* {
-	yylval.dbl=atof(yytext);
-	return DBL;
+({digit}*\.{digit}+|{digit}+\.|{digit}+)([eE][-+]?{digit}+)?[flFL]? {
+	yylval.dbl=atoi(yytext);
+	return DOUBLE;
 }
 
 {arifm}		return *yytext;
 {compare}	return *yytext;
 {bools}		return *yytext;
 
-":=" return ASSIGN;
-"!=" return NEQ;
+":=" { return ASSIGN; }
+"!=" { return NEQ; }
 
 {delim} { return *yytext; }
 

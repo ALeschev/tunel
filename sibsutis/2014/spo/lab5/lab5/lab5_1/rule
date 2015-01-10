@@ -1,0 +1,4 @@
+S->if ( E ) F
+F->ID := E1|ID := E2
+E->E1 < E1|E1 > E1|E1 == E1
+E1->E1 + E1|E1 - E1|ID|NUMBER

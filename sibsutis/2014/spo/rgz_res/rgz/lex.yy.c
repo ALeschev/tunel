@@ -784,7 +784,7 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 25 "cw.l"
-return TVAR1;
+{printf ("MOTHERFUCKER: INT\n" );return TVAR1;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -794,7 +794,7 @@ return TVAR2;
 case 4:
 YY_RULE_SETUP
 #line 27 "cw.l"
-return TVAR3;
+{printf ("MOTHERFUCKER: DOUBLE\n" );return TVAR3;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -813,70 +813,73 @@ YY_RULE_SETUP
 	if (strcmp("while",yytext)==0) { return WHILE; }
 	else if (strcmp("if",yytext)==0) { return IF; }
 	else if (strcmp("else",yytext)==0) { return ELSE; }
-	else { yylval=(YYSTYPE)strdup(yytext); return ID; }
+	else { yylval=(YYSTYPE)strdup(yytext); return ID; 
+		printf ("ELSE MOTHERFUCKER: %s\n", yytext);}
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 38 "cw.l"
+#line 39 "cw.l"
 {
 	yylval.integer=atoi(yytext);
+	printf ("INT MOTHERFUCKER: %d\n", yylval.integer);
 	return INTEGER;
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 43 "cw.l"
+#line 45 "cw.l"
 {
 	yylval.dbl=atof(yytext);
-	return DBL;
+	printf ("DOUBLE MOTHERFUCKER: %f\n", yylval.dbl);
+	return DOUBLE;
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 48 "cw.l"
-return *yytext;
+#line 51 "cw.l"
+{printf ("arifm MOTHERFUCKER: %s\n", yytext); return *yytext;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 49 "cw.l"
-return *yytext;
+#line 52 "cw.l"
+{printf ("compare MOTHERFUCKER: %s\n", yytext);return *yytext;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 50 "cw.l"
-return *yytext;
+#line 53 "cw.l"
+{printf ("bools MOTHERFUCKER: %s\n", yytext);return *yytext;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 52 "cw.l"
-return ASSIGN;
+#line 55 "cw.l"
+{ printf ("MOTHERFUCKER: :=\n"); return ASSIGN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 53 "cw.l"
-return NEQ;
+#line 56 "cw.l"
+{ return NEQ; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 55 "cw.l"
+#line 58 "cw.l"
 { return *yytext; }
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 57 "cw.l"
+#line 60 "cw.l"
 {}
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 59 "cw.l"
+#line 62 "cw.l"
 {}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 62 "cw.l"
+#line 65 "cw.l"
 {
 	char buf[1024];
 	sprintf(buf, "line:%d Unknown character: %s", yylineno, yytext);
@@ -885,10 +888,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 67 "cw.l"
+#line 70 "cw.l"
 ECHO;
 	YY_BREAK
-#line 892 "lex.yy.c"
+#line 895 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1849,4 +1852,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 67 "cw.l"
+#line 70 "cw.l"

@@ -45,15 +45,32 @@
      TVAR2 = 263,
      TVAR3 = 264,
      INTEGER = 265,
-     STR = 266,
-     ID = 267,
-     DBL = 268,
+     DOUBLE = 266,
+     STR = 267,
+     ID = 268,
      IFX = 269,
      ELSE = 270,
      ASSIGN = 271,
      NEQ = 272
    };
 #endif
+/* Tokens.  */
+#define IF 258
+#define WHILE 259
+#define READ 260
+#define WRITE 261
+#define TVAR1 262
+#define TVAR2 263
+#define TVAR3 264
+#define INTEGER 265
+#define DOUBLE 266
+#define STR 267
+#define ID 268
+#define IFX 269
+#define ELSE 270
+#define ASSIGN 271
+#define NEQ 272
+
 
 
 
@@ -72,7 +89,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 76 "cw.tab.h"
+#line 93 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,3 +1,27 @@
+MOTHERFUCKER: INT
+MOTHERFUCKER: INT
+MOTHERFUCKER: INT
+MOTHERFUCKER: INT
+MOTHERFUCKER: INT
+MOTHERFUCKER: DOUBLE
+MOTHERFUCKER: :=
+INT MOTHERFUCKER: 5
+MOTHERFUCKER: :=
+INT MOTHERFUCKER: 1
+MOTHERFUCKER: :=
+INT MOTHERFUCKER: 25
+MOTHERFUCKER: :=
+INT MOTHERFUCKER: 5
+MOTHERFUCKER: :=
+INT MOTHERFUCKER: 1
+compare MOTHERFUCKER: <
+INT MOTHERFUCKER: 5
+MOTHERFUCKER: :=
+arifm MOTHERFUCKER: +
+MOTHERFUCKER: :=
+arifm MOTHERFUCKER: /
+compare MOTHERFUCKER: =
+INT MOTHERFUCKER: 5
 global main
 extern printf
 extern scanf
@@ -9,7 +33,12 @@ SECTION .bss
 SECTION .data
 	ifmt db "%d", 0
 	sfmt db "%d", 0
-	dbl: dq 1.123
+	h dd 0
+	r dd 0
+	a dd 0
+	b dd 0
+	c dd 0
+	dou dd 0
 
 SECTION .text
 	main:
@@ -30,7 +59,7 @@ SECTION .text
 	pop dword [b]
 
 	;Присваивание
-	push dword dbl
+	push dword 1
 
 	;WRITE()
 SECTION .data
@@ -40,9 +69,8 @@ SECTION .text
 	call printf
 	add esp, 4
 	;WRITE()
-	push dword [dou]
 SECTION .data
-	msg1 db "%f", 0xA, 0
+	msg1 db , ' ', 0
 SECTION .text
 	push dword msg1
 	call printf

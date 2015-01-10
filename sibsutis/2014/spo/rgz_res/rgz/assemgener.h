@@ -81,6 +81,8 @@ nodet *creat_double(double value)
 {
 	nodet *point=malloc(sizeof(double)+sizeof(nodetCon));
 
+	printf ("CREATE DOUBLE\n");
+
 	if(!point)	yyerror("out of memory!");
 	point->type=tCon;
 	point->con.type='3';
@@ -140,8 +142,8 @@ void ex(nodet *p)
 				sprintf(buf, "%s%s", p->con.string, buf2);
 				type='2';
 			} else {
-				sprintf(buf2, "%s", buf);
-				sprintf(buf, "%f%s", p->con.dbl, buf2);
+				// sprintf(buf2, "%s", buf);
+				// sprintf(buf, "%f%s", p->con.dbl, buf2);
 				type='3';
 			}
 			break;
@@ -153,7 +155,7 @@ void ex(nodet *p)
 			} else 
 			if (p->con.type=='3')
 			{
-				printf("\tpush dword %f\n", p->con.dbl);
+				// printf("\tpush dword %f\n", p->con.dbl);
 				type='3';
 			} else {
 				printf("SECTION .data\n");
@@ -192,10 +194,10 @@ void ex(nodet *p)
 				}
 				else if (found==NULL || found->type==TVAR3)
 				{
-					printf("\tpush dword _buf\n");
-					printf("\tpush dword ifmt\n");
-					printf("\tcall scanf\n\tadd esp, 8\n");
-					printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
+					// printf("\tpush dword _buf\n");
+					// printf("\tpush dword ifmt\n");
+					// printf("\tcall scanf\n\tadd esp, 8\n");
+					// printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
 					type='3';
 				}
 			}
@@ -218,8 +220,8 @@ void ex(nodet *p)
 				}
 				else if (found->type==TVAR3)
 				{
-					sprintf(buf,"%s%s", "%f", buf2);
-					printf("\tpush dword [%s]\n", p->id.name);
+					// sprintf(buf,"%s%s", "%f", buf2);
+					// printf("\tpush dword [%s]\n", p->id.name);
 					stack_del+=4;
 				}
 			}
@@ -233,7 +235,7 @@ void ex(nodet *p)
 				} else
 				if(found==NULL || found->type==TVAR3)
 				{
-					printf("\tpop dword [%s]\n", p->id.name);
+					// printf("\tpop dword [%s]\n", p->id.name);
 				} else {
 					if (type=='2')
 						printf("\tpop dword [%s]\n", p->id.name);

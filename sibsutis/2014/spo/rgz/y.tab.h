@@ -43,13 +43,15 @@
      WRITE = 261,
      TVAR1 = 262,
      TVAR2 = 263,
-     INTEGER = 264,
-     STR = 265,
-     ID = 266,
-     IFX = 267,
-     ELSE = 268,
-     ASSIGN = 269,
-     NEQ = 270
+     TVAR3 = 264,
+     INTEGER = 265,
+     STR = 266,
+     ID = 267,
+     DBL = 268,
+     IFX = 269,
+     ELSE = 270,
+     ASSIGN = 271,
+     NEQ = 272
    };
 #endif
 /* Tokens.  */
@@ -59,13 +61,15 @@
 #define WRITE 261
 #define TVAR1 262
 #define TVAR2 263
-#define INTEGER 264
-#define STR 265
-#define ID 266
-#define IFX 267
-#define ELSE 268
-#define ASSIGN 269
-#define NEQ 270
+#define TVAR3 264
+#define INTEGER 265
+#define STR 266
+#define ID 267
+#define DBL 268
+#define IFX 269
+#define ELSE 270
+#define ASSIGN 271
+#define NEQ 272
 
 
 
@@ -79,12 +83,13 @@ typedef union YYSTYPE
 
 	struct node *nodet;
 	int integer;
+	double dbl;
 	char *string;
 
 
 
 /* Line 2068 of yacc.c  */
-#line 88 "y.tab.h"
+#line 93 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

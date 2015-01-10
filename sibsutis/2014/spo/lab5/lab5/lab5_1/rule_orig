@@ -1,0 +1,4 @@
+S->for ( F ; E ; F ) do F ;
+F->ID := E1|ID := E2
+E->E1 < E1|E1 > E1|E1 == E1
+E1->E1 + E1|E1 - E1|ID|NUMBER

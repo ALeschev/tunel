@@ -18,7 +18,6 @@ typedef struct
 	union
 	{
 		int integer;
-		double dbl;
 		char *string;
 	};
 } nodetCon;
@@ -77,18 +76,6 @@ nodet *creat_string(char *value)
 	return point;
 }
 
-nodet *creat_double(double value)
-{
-	nodet *point=malloc(sizeof(double)+sizeof(nodetCon));
-
-	if(!point)	yyerror("out of memory!");
-	point->type=tCon;
-	point->con.type='3';
-	point->con.dbl=value;
-
-	return point;
-}
-
 nodet *creat_oper(int oper, int count_oper, ...)
 {
 	va_list ap;
@@ -133,16 +120,12 @@ void ex(nodet *p)
 				sprintf(buf2, "%s", buf);
 				sprintf(buf, "%d%s", p->con.integer, buf2);
 				type='1';
-			} else
-			if (p->con.type=='2')
+			}
+			else
 			{
 				sprintf(buf2, "%s", buf);
 				sprintf(buf, "%s%s", p->con.string, buf2);
 				type='2';
-			} else {
-				sprintf(buf2, "%s", buf);
-				sprintf(buf, "%f%s", p->con.dbl, buf2);
-				type='3';
 			}
 			break;
 		default:
@@ -150,17 +133,14 @@ void ex(nodet *p)
 			{
 				printf("\tpush dword %d\n", p->con.integer);
 				type='1';
-			} else 
-			if (p->con.type=='3')
+			}
+			else
 			{
-				printf("\tpush dword %f\n", p->con.dbl);
-				type='3';
-			} else {
 				printf("SECTION .data\n");
 				if (strcmp((p->con.string),"%s")==0 || strcmp((p->con.string),"%d")==0)
 					printf("\tmsg%d db \"%s\", 0xA, 0\n", cstr, p->con.string);
 				else
-					printf("\tmsg%d db %s, ' ', 0\n", cstr, p->con.string);
+				printf("\tmsg%d db %s, ' ', 0\n", cstr, p->con.string);
 				printf("SECTION .text\n");
 				printf("\tpush dword msg%d\n", cstr++);
 				type='2';
@@ -190,14 +170,6 @@ void ex(nodet *p)
 					printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
 					type='2';
 				}
-				else if (found==NULL || found->type==TVAR3)
-				{
-					printf("\tpush dword _buf\n");
-					printf("\tpush dword ifmt\n");
-					printf("\tcall scanf\n\tadd esp, 8\n");
-					printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
-					type='3';
-				}
 			}
 			break;
 		case WRITE:
@@ -216,12 +188,6 @@ void ex(nodet *p)
 					printf("\tpush dword [%s]\n", p->id.name);
 					stack_del+=4;
 				}
-				else if (found->type==TVAR3)
-				{
-					sprintf(buf,"%s%s", "%f", buf2);
-					printf("\tpush dword [%s]\n", p->id.name);
-					stack_del+=4;
-				}
 			}
 			break;
 		case ASSIGN:
@@ -230,11 +196,9 @@ void ex(nodet *p)
 				if(found==NULL || found->type==TVAR1)
 				{
 					printf("\tpop dword [%s]\n", p->id.name);
-				} else
-				if(found==NULL || found->type==TVAR3)
+				}
+				else
 				{
-					printf("\tpop dword [%s]\n", p->id.name);
-				} else {
 					if (type=='2')
 						printf("\tpop dword [%s]\n", p->id.name);
 					sprintf(buf, "%s", p->id.name);
@@ -245,7 +209,6 @@ void ex(nodet *p)
 			{
 				a *found=table_find(p->id.name);
 				if (found==NULL || found->type==TVAR1)	type='1';
-				else if (found==NULL || found->type==TVAR3)	type='3';
 				else type='2';
 				printf("\tpush dword [%s]\n", p->id.name);
 			}
@@ -259,11 +222,6 @@ void ex(nodet *p)
 			ex(p->oper.nodes[0]);
 			printf("\t%s dd 0\n", p->oper.nodes[1]->id.name);
 			break;
-		case 'D':
-			// ex(p->oper.nodes[0]);
-			// printf("SECTION .bss\n");
-			// printf("\t%s dd 0\n\n", p->oper.nodes[1]->id.name);
-			break; 
 		case 'S':
 			ex(p->oper.nodes[0]);
 			printf("SECTION .bss\n");
@@ -319,7 +277,7 @@ void ex(nodet *p)
 			stack_del=4;
 			ex(p->oper.nodes[0]);
 			printf("SECTION .data\n");
-			if (strcmp(buf,"%s")==0 || strcmp(buf,"%d")==0 || strcmp(buf,"%f")==0)
+			if (strcmp(buf,"%s")==0 || strcmp(buf,"%d")==0)
 				printf("\tmsg%d db \"%s\", 0xA, 0\n", cstr, buf);
 			else
 				printf("\tmsg%d db %s, ' ', 0\n", cstr, buf);

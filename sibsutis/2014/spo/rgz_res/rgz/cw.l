@@ -22,9 +22,9 @@ ws [ \t\n]
 
 (\")[^(\")]*(\") { yylval=(YYSTYPE)strdup(yytext);	return STR; }
 
-"int" return TVAR1;
+"int" {printf ("MOTHERFUCKER: INT\n" );return TVAR1;}
 "string" return TVAR2;
-"double" return TVAR3;
+"double" {printf ("MOTHERFUCKER: DOUBLE\n" );return TVAR3;}
 "write" return WRITE;
 "read" return READ;
 
@@ -32,25 +32,28 @@ ws [ \t\n]
 	if (strcmp("while",yytext)==0) { return WHILE; }
 	else if (strcmp("if",yytext)==0) { return IF; }
 	else if (strcmp("else",yytext)==0) { return ELSE; }
-	else { yylval=(YYSTYPE)strdup(yytext); return ID; }
+	else { yylval=(YYSTYPE)strdup(yytext); return ID; 
+		printf ("ELSE MOTHERFUCKER: %s\n", yytext);}
 }
 
 {digit}+ {
 	yylval.integer=atoi(yytext);
+	printf ("INT MOTHERFUCKER: %d\n", yylval.integer);
 	return INTEGER;
 }
 
 {digit}*\.{digit}* {
 	yylval.dbl=atof(yytext);
-	return DBL;
+	printf ("DOUBLE MOTHERFUCKER: %f\n", yylval.dbl);
+	return DOUBLE;
 }
 
-{arifm}		return *yytext;
-{compare}	return *yytext;
-{bools}		return *yytext;
+{arifm}		{printf ("arifm MOTHERFUCKER: %s\n", yytext); return *yytext;}
+{compare}	{printf ("compare MOTHERFUCKER: %s\n", yytext);return *yytext;}
+{bools}		{printf ("bools MOTHERFUCKER: %s\n", yytext);return *yytext;}
 
-":=" return ASSIGN;
-"!=" return NEQ;
+":=" { printf ("MOTHERFUCKER: :=\n"); return ASSIGN; }
+"!=" { return NEQ; }
 
 {delim} { return *yytext; }
 

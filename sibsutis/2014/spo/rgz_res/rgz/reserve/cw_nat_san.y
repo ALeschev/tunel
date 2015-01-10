@@ -7,7 +7,7 @@
 
 #define MAX_NAME_ID 32
 
-#include "cw.tab.h"
+#include "cw_nat_san.tab.h"
 #include "chaintable.h"
 #include "assemgener.h"
 
@@ -22,14 +22,12 @@ int yylex();
 %union {
 	struct node *nodet;
 	int integer;
-	double dbl;
 	char *string;
 }
 
 %token IF WHILE READ WRITE TVAR1 TVAR2 TVAR3
 %token <integer> INTEGER
 %token <string> STR ID
-%token <double> DBL
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -56,36 +54,30 @@ program:
 			ex($1);
 			freeNode($1);
 			printf("\n");
-
+			
 			printf("SECTION .text\n\tmain:\n");
 			ex($2);
 			printf("\t;Завершение\n\tpush 0\n\tcall exit\n"); 
 			freeNode($2);
 		}
 	;
-
-declar:
+	
+declar: 
 	  declar TVAR1 ID ';' {
 			if (!table_add($3, TVAR1))
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Redefined identifier: %s", yylineno, $3);
+				yyerror(_buf);
 			}
 			$$=creat_oper('I', 2, $1, creat_Id($3));
-		}
-	| declar TVAR3 ID ';' {
-			if (!table_add($3, TVAR3))
-			{
-				char _buf[MAX_NAME_BUF];
-				sprintf(_buf, "line:%d Redefined identifier: %s", yylineno, $3);
-			}
-			$$=creat_oper('D', 2, $1, creat_Id($3));
 		}
 	| declar TVAR2 ID ';' {
 			if (!table_add($3, TVAR2))
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Redefined identifier: %s", yylineno, $3);
+				yyerror(_buf);
 			}
 			$$=creat_oper('S', 2, $1, creat_Id($3));
 		}
@@ -103,6 +95,7 @@ state:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Undefined identifier: %s", yylineno, $1);
+				yyerror(_buf);
 			}
 			$$=creat_oper(ASSIGN, 2, creat_Id($1), $3);
 		}
@@ -111,6 +104,7 @@ state:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Undefined identifier: %s", yylineno, $3);
+				yyerror(_buf);
 			}
 			$$=creat_oper(WRITE, 1, creat_Id($3));
 		}
@@ -120,6 +114,7 @@ state:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Undefined identifier: %s", yylineno, $3);
+				yyerror(_buf);
 			}
 			$$=creat_oper(READ, 1, creat_Id($3));
 		}
@@ -127,11 +122,11 @@ state:
 	| IF '(' bool ')' block %prec IFX {$$=creat_oper(IF, 2, $3, $5);}
 	| IF '(' bool ')' block ELSE block {$$=creat_oper(ELSE, 3, $3, $5, $7);}
 	;
-
+		
 block:
 	  '{' funct '}' {$$=$2;}
 	;
-
+		
 expr:
 	  expr '+' expr {$$=creat_oper('+', 2, $1, $3);}
 	| expr '-' expr {$$=creat_oper('-', 2, $1, $3);}
@@ -140,10 +135,9 @@ expr:
 	| ID {$$=creat_Id($1);}
 	| STR {$$=creat_string($1);}
 	| INTEGER {$$=creat_int($1);}
-	| DBL {$$=creat_double($1);}
 	| '(' expr ')' {$$=$2;}
 	;
-
+	
 bool:
 	  expr '=' expr {$$=creat_oper('=', 2, $1, $3);}
 	| expr '<' expr {$$=creat_oper('<', 2, $1, $3);}
@@ -152,7 +146,7 @@ bool:
 	| bool '&' bool {$$=creat_oper('&', 2, $1, $3);}
 	| bool '|' bool {$$=creat_oper('|', 2, $1, $3);}
 	;
-
+		
 %%
 void yyerror(char *s)
 {

@@ -28,8 +28,8 @@ int yylex();
 
 %token IF WHILE READ WRITE TVAR1 TVAR2 TVAR3
 %token <integer> INTEGER
+%token <double> DOUBLE
 %token <string> STR ID
-%token <double> DBL
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -45,6 +45,7 @@ int yylex();
 %%
 program:
 	  declar block {
+	  printf ("[%d] ---- \n", __LINE__);
 			printf("global main\n");
 			printf("extern printf\n");
 			printf("extern scanf\n");
@@ -70,7 +71,10 @@ declar:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Redefined identifier: %s", yylineno, $3);
+				yyerror(__LINE__, _buf);
 			}
+			printf ("[%d] ---- \n", __LINE__);
+			yyerror(__LINE__, "int NNNOOORRRMM\n");
 			$$=creat_oper('I', 2, $1, creat_Id($3));
 		}
 	| declar TVAR3 ID ';' {
@@ -78,7 +82,10 @@ declar:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Redefined identifier: %s", yylineno, $3);
+				yyerror(__LINE__, _buf);
 			}
+			printf ("[%d] ---- \n", __LINE__);
+			yyerror(__LINE__, "double NNNOOORRRMM\n");
 			$$=creat_oper('D', 2, $1, creat_Id($3));
 		}
 	| declar TVAR2 ID ';' {
@@ -86,7 +93,10 @@ declar:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Redefined identifier: %s", yylineno, $3);
+				yyerror(__LINE__, _buf);
 			}
+			printf ("[%d] ---- \n", __LINE__);
+			yyerror(__LINE__, "string NNNOOORRRMM\n");
 			$$=creat_oper('S', 2, $1, creat_Id($3));
 		}
 	| {$$=NULL;}
@@ -103,7 +113,9 @@ state:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Undefined identifier: %s", yylineno, $1);
+				yyerror(__LINE__, _buf);
 			}
+			printf ("[%d] ---- \n", __LINE__);
 			$$=creat_oper(ASSIGN, 2, creat_Id($1), $3);
 		}
 	| WRITE '(' ID ')' ';' {
@@ -111,7 +123,9 @@ state:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Undefined identifier: %s", yylineno, $3);
+				yyerror(__LINE__, _buf);
 			}
+			printf ("[%d] ---- \n", __LINE__);
 			$$=creat_oper(WRITE, 1, creat_Id($3));
 		}
 	| WRITE '(' STR ')' ';' { $$=creat_oper(WRITE, 1, creat_string($3));}
@@ -120,6 +134,7 @@ state:
 			{
 				char _buf[MAX_NAME_BUF];
 				sprintf(_buf, "line:%d Undefined identifier: %s", yylineno, $3);
+				yyerror(__LINE__, _buf);
 			}
 			$$=creat_oper(READ, 1, creat_Id($3));
 		}
@@ -138,9 +153,9 @@ expr:
 	| expr '*' expr {$$=creat_oper('*', 2, $1, $3);}
 	| expr '/' expr {$$=creat_oper('/', 2, $1, $3);}
 	| ID {$$=creat_Id($1);}
-	| STR {$$=creat_string($1);}
-	| INTEGER {$$=creat_int($1);}
-	| DBL {$$=creat_double($1);}
+	| STR {printf ("[%d] ---- \n", __LINE__); $$=creat_string($1);}
+	| INTEGER {printf ("[%d] ---- \n", __LINE__); $$=creat_int($1);}
+	| DOUBLE {printf ("[%d] ---- \n", __LINE__); $$=creat_double($1);}
 	| '(' expr ')' {$$=$2;}
 	;
 
@@ -154,9 +169,9 @@ bool:
 	;
 
 %%
-void yyerror(char *s)
+void yyerror(int line, char *s)
 {
-	fprintf(stderr, "error: %s\n", s);
+	fprintf(stderr, "[%d] error: %s\n", line, s);
 }
 
 int main(int argc, char **argv)
