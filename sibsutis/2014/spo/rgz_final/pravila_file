@@ -1,0 +1,13 @@
+S int main ( ) { A }
+A B ; A | B ; | F ; A | M ; A | N ; A | P ; A | R ; A | F ; | M ; | N ; | P ; | R ;
+F a = K
+K K + K | K - K | K * K | K / K | K == K | K != K | K > K | K < K | K <= K | K >= K |  K or K |  K and K | L | - K
+L ( K ) | b | a
+B int C | string C
+C a , C | a
+M if ( K ) { A } | if ( K ) { A } else { A }
+N for ( F ; K ; F ) { A } | while ( K ) { A }
+P cin >> Q
+Q a >> Q | a
+R cout << T
+T K << T | endl | K

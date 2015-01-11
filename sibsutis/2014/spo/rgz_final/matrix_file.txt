@@ -1,0 +1,34 @@
+main ( =
+cin >> =
+cout << =
+if ( =
+else { =
+and ( < a < b <
+or ( < a < b <
+while ( =
+for ( =
+int main = a <
+string a <
+endl ; > << >
+( ( < ) = ; = a < b < << >
+) and > or > ) > { = ; > + > - > * > / > == > != > > > < > <= > >= > << >
+{ cin < cout < if < while < for < int < string < } = a <
+} else = ; > end >
+, a <
+; cin < cout < if < while < for < int < string < ( < ) = } > a < b <
+= ( < a < b <
++ ( < a < b <
+- ( < a < b <
+* ( < a < b <
+/ ( < a < b <
+== ( < a < b <
+!= ( < a < b <
+> ( < a < b <
+< ( < a < b <
+<= ( < a < b <
+>= ( < a < b <
+>> a <
+<< endl < ( < a < b <
+a and > or > ) > , = ; > = = + > - > * > / > == > != > > > < > <= > >= > >> = << >
+b and > or > ) > ; > + > - > * > / > == > != > > > < > <= > >= > << >
+begin int <

@@ -1,0 +1,21 @@
+int a,b,c;
+scan(a);
+c=4;
+if (a>5) then b=a*5+(23+c)/3;
+print(b);
+a=1;
+while (a<10)
+{
+	if (a<=5)
+	then
+		c=b-3*a;
+	else
+	{
+		b=b-4;
+		c=(a+125)/5-b+(a*a);
+	}
+	a=a+1;
+	print(a);
+	print(c);
+}
+print(b);
