@@ -9,7 +9,14 @@ SECTION .bss
 SECTION .data
 	ifmt db "%d", 0
 	sfmt db "%d", 0
-	dbl: dq 1.123
+	dfmt db "%lf", 0
+	h dd 0
+	r dd 0
+	a dd 0
+	b dd 0
+	c dd 0
+	dou dq 0
+
 
 SECTION .text
 	main:
@@ -30,23 +37,51 @@ SECTION .text
 	pop dword [b]
 
 	;Присваивание
-	push dword dbl
+SECTION .data
+	dou_tmp dq 1.123000
+SECTION .text
+	fld qword [dou_tmp]
+	fstp qword [dou]
 
 	;WRITE()
 SECTION .data
-	msg0 db "dou:", ' ', 0
+	msg0 db "double:", ' ', 0
 SECTION .text
 	push dword msg0
 	call printf
 	add esp, 4
 	;WRITE()
+	push dword [dou+4]
 	push dword [dou]
 SECTION .data
 	msg1 db "%f", 0xA, 0
 SECTION .text
 	push dword msg1
 	call printf
+	add esp, 12
+	;READ()
+	push dword _buf
+	push dword dfmt
+	call scanf
 	add esp, 8
+	fld qword [_buf]
+	fstp qword [dou]
+	;WRITE()
+SECTION .data
+	msg2 db "your:", ' ', 0
+SECTION .text
+	push dword msg2
+	call printf
+	add esp, 4
+	;WRITE()
+	push dword [dou+4]
+	push dword [dou]
+SECTION .data
+	msg3 db "%f", 0xA, 0
+SECTION .text
+	push dword msg3
+	call printf
+	add esp, 12
 	;цикл WHILE
 L000:
 	push dword [r]
@@ -63,13 +98,6 @@ L002:
 	pop eax
 	cmp eax, 0
 	je	L001
-	;WRITE()
-SECTION .data
-	msg2 db "do{}while test", ' ', 0
-SECTION .text
-	push dword msg2
-	call printf
-	add esp, 4
 	;READ()
 	push dword _buf
 	push dword ifmt
@@ -89,39 +117,39 @@ SECTION .text
 
 	;WRITE()
 SECTION .data
-	msg3 db " r:", ' ', 0
+	msg4 db " r:", ' ', 0
 SECTION .text
-	push dword msg3
+	push dword msg4
 	call printf
 	add esp, 4
 	;WRITE()
 	push dword [r]
 SECTION .data
-	msg4 db "%d", 0xA, 0
+	msg5 db "%d", 0xA, 0
 SECTION .text
-	push dword msg4
+	push dword msg5
 	call printf
 	add esp, 8
 	;WRITE()
 SECTION .data
-	msg5 db " h:", ' ', 0
+	msg6 db " h:", ' ', 0
 SECTION .text
-	push dword msg5
+	push dword msg6
 	call printf
 	add esp, 4
 	;WRITE()
 	push dword [h]
 SECTION .data
-	msg6 db "%d", 0xA, 0
+	msg7 db "%d", 0xA, 0
 SECTION .text
-	push dword msg6
+	push dword msg7
 	call printf
 	add esp, 8
 	;WRITE()
 SECTION .data
-	msg7 db "25/5: ", ' ', 0
+	msg8 db "25/5: ", ' ', 0
 SECTION .text
-	push dword msg7
+	push dword msg8
 	call printf
 	add esp, 4
 	;Присваивание
@@ -137,17 +165,17 @@ SECTION .text
 
 	;WRITE()
 SECTION .data
-	msg8 db " c:", ' ', 0
+	msg9 db " c:", ' ', 0
 SECTION .text
-	push dword msg8
+	push dword msg9
 	call printf
 	add esp, 4
 	;WRITE()
 	push dword [c]
 SECTION .data
-	msg9 db "%d", 0xA, 0
+	msg10 db "%d", 0xA, 0
 SECTION .text
-	push dword msg9
+	push dword msg10
 	call printf
 	add esp, 8
 	jmp	L000
@@ -176,18 +204,18 @@ L005:
 	mov [r], eax
 	;WRITE()
 SECTION .data
-	msg10 db "if test", ' ', 0
+	msg11 db "if test", ' ', 0
 SECTION .text
-	push dword msg10
+	push dword msg11
 	call printf
 	add esp, 4
 	jmp	L004
 L003:
 	;WRITE()
 SECTION .data
-	msg11 db "else test", ' ', 0
+	msg12 db "else test", ' ', 0
 SECTION .text
-	push dword msg11
+	push dword msg12
 	call printf
 	add esp, 4
 L004:

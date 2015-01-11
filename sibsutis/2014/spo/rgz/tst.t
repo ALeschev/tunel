@@ -2,8 +2,8 @@ int h;
 int r;
 int a; int b;
 int c;
-
 double dou;
+
 {
 	h := 5;
 	r := 1;
@@ -11,12 +11,16 @@ double dou;
 	b := 5;
 	dou := 1.123;
 
-	write("dou:");
+	write("double:");
+	write(dou);
+
+	read(dou);
+
+	write("your:");
 	write(dou);
 
 	while (r < 5)
 	{
-		write("do{}while test");
 		read(r);
 
 		h := h + r;

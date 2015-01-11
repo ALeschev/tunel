@@ -465,10 +465,10 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    47,    47,    68,    76,    84,    92,    96,    97,   101,
-     109,   117,   118,   126,   127,   128,   132,   136,   137,   138,
-     139,   140,   141,   142,   143,   144,   148,   149,   150,   151,
-     152,   153
+       0,    47,    47,    69,    77,    85,    93,    97,    98,   102,
+     110,   118,   119,   127,   128,   129,   133,   137,   138,   139,
+     140,   141,   142,   143,   144,   145,   149,   150,   151,   152,
+     153,   154
 };
 #endif
 
@@ -1451,6 +1451,7 @@ yyreduce:
 			printf("SECTION .data\n");
 			printf("\tifmt db \"%cd\", 0\n",'%');
 			printf("\tsfmt db \"%cd\", 0\n",'%');
+			printf("\tdfmt db \"%clf\", 0\n",'%');
 			ex((yyvsp[(1) - (2)].nodet));
 			freeNode((yyvsp[(1) - (2)].nodet));
 			printf("\n");
@@ -1465,7 +1466,7 @@ yyreduce:
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 68 "cw.y"
+#line 69 "cw.y"
     {
 			if (!table_add((yyvsp[(3) - (4)].string), TVAR1))
 			{
@@ -1479,7 +1480,7 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 76 "cw.y"
+#line 77 "cw.y"
     {
 			if (!table_add((yyvsp[(3) - (4)].string), TVAR3))
 			{
@@ -1493,7 +1494,7 @@ yyreduce:
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 84 "cw.y"
+#line 85 "cw.y"
     {
 			if (!table_add((yyvsp[(3) - (4)].string), TVAR2))
 			{
@@ -1507,28 +1508,28 @@ yyreduce:
   case 6:
 
 /* Line 1806 of yacc.c  */
-#line 92 "cw.y"
+#line 93 "cw.y"
     {(yyval.nodet)=NULL;}
     break;
 
   case 7:
 
 /* Line 1806 of yacc.c  */
-#line 96 "cw.y"
+#line 97 "cw.y"
     {(yyval.nodet)=creat_oper('F', 2, (yyvsp[(1) - (2)].nodet), (yyvsp[(2) - (2)].nodet));}
     break;
 
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 97 "cw.y"
+#line 98 "cw.y"
     {(yyval.nodet)=NULL;}
     break;
 
   case 9:
 
 /* Line 1806 of yacc.c  */
-#line 101 "cw.y"
+#line 102 "cw.y"
     {
 			if (table_find((yyvsp[(1) - (4)].string))==NULL)
 			{
@@ -1542,7 +1543,7 @@ yyreduce:
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 109 "cw.y"
+#line 110 "cw.y"
     {
 			if (table_find((yyvsp[(3) - (5)].string))==NULL)
 			{
@@ -1556,14 +1557,14 @@ yyreduce:
   case 11:
 
 /* Line 1806 of yacc.c  */
-#line 117 "cw.y"
+#line 118 "cw.y"
     { (yyval.nodet)=creat_oper(WRITE, 1, creat_string((yyvsp[(3) - (5)].string)));}
     break;
 
   case 12:
 
 /* Line 1806 of yacc.c  */
-#line 118 "cw.y"
+#line 119 "cw.y"
     {
 			if (table_find((yyvsp[(3) - (5)].string))==NULL)
 			{
@@ -1577,140 +1578,140 @@ yyreduce:
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 126 "cw.y"
+#line 127 "cw.y"
     {(yyval.nodet)=creat_oper(WHILE, 2, (yyvsp[(3) - (5)].nodet), (yyvsp[(5) - (5)].nodet));}
     break;
 
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 127 "cw.y"
+#line 128 "cw.y"
     {(yyval.nodet)=creat_oper(IF, 2, (yyvsp[(3) - (5)].nodet), (yyvsp[(5) - (5)].nodet));}
     break;
 
   case 15:
 
 /* Line 1806 of yacc.c  */
-#line 128 "cw.y"
+#line 129 "cw.y"
     {(yyval.nodet)=creat_oper(ELSE, 3, (yyvsp[(3) - (7)].nodet), (yyvsp[(5) - (7)].nodet), (yyvsp[(7) - (7)].nodet));}
     break;
 
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 132 "cw.y"
+#line 133 "cw.y"
     {(yyval.nodet)=(yyvsp[(2) - (3)].nodet);}
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 136 "cw.y"
+#line 137 "cw.y"
     {(yyval.nodet)=creat_oper('+', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 137 "cw.y"
+#line 138 "cw.y"
     {(yyval.nodet)=creat_oper('-', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 138 "cw.y"
+#line 139 "cw.y"
     {(yyval.nodet)=creat_oper('*', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 139 "cw.y"
+#line 140 "cw.y"
     {(yyval.nodet)=creat_oper('/', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 140 "cw.y"
+#line 141 "cw.y"
     {(yyval.nodet)=creat_Id((yyvsp[(1) - (1)].string));}
     break;
 
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 141 "cw.y"
+#line 142 "cw.y"
     {(yyval.nodet)=creat_string((yyvsp[(1) - (1)].string));}
     break;
 
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 142 "cw.y"
+#line 143 "cw.y"
     {(yyval.nodet)=creat_int((yyvsp[(1) - (1)].integer));}
     break;
 
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 143 "cw.y"
+#line 144 "cw.y"
     {(yyval.nodet)=creat_double((yyvsp[(1) - (1)].dbl));}
     break;
 
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 144 "cw.y"
+#line 145 "cw.y"
     {(yyval.nodet)=(yyvsp[(2) - (3)].nodet);}
     break;
 
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 148 "cw.y"
+#line 149 "cw.y"
     {(yyval.nodet)=creat_oper('=', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 149 "cw.y"
+#line 150 "cw.y"
     {(yyval.nodet)=creat_oper('<', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 150 "cw.y"
+#line 151 "cw.y"
     {(yyval.nodet)=creat_oper('>', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 151 "cw.y"
+#line 152 "cw.y"
     {(yyval.nodet)=creat_oper('!', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 152 "cw.y"
+#line 153 "cw.y"
     {(yyval.nodet)=creat_oper('&', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
   case 31:
 
 /* Line 1806 of yacc.c  */
-#line 153 "cw.y"
+#line 154 "cw.y"
     {(yyval.nodet)=creat_oper('|', 2, (yyvsp[(1) - (3)].nodet), (yyvsp[(3) - (3)].nodet));}
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1714 "cw.tab.c"
+#line 1715 "cw.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1941,7 +1942,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 156 "cw.y"
+#line 157 "cw.y"
 
 void yyerror(char *s)
 {

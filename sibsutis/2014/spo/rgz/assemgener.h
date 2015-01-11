@@ -118,6 +118,7 @@ static int type;
 void ex(nodet *p)
 {
 	int lbl1, lbl2, toper1, toper2;
+	static double t_double = 0.0;
 	if (!p) return ;
 	switch(p->type)
 	{
@@ -153,7 +154,7 @@ void ex(nodet *p)
 			} else 
 			if (p->con.type=='3')
 			{
-				printf("\tpush dword %f\n", p->con.dbl);
+				t_double = p->con.dbl;
 				type='3';
 			} else {
 				printf("SECTION .data\n");
@@ -181,21 +182,23 @@ void ex(nodet *p)
 					printf("\tcall scanf\n\tadd esp, 8\n");
 					printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
 					type='1';
-				}
-				else if (found==NULL || found->type==TVAR2)
+				} else
+				if (found==NULL || found->type==TVAR2)
 				{
 					printf("\tpush dword _buf\n");
 					printf("\tpush dword ifmt\n");
 					printf("\tcall scanf\n\tadd esp, 8\n");
 					printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
 					type='2';
-				}
-				else if (found==NULL || found->type==TVAR3)
+				} else
+				if (found==NULL || found->type==TVAR3)
 				{
-					printf("\tpush dword _buf\n");
-					printf("\tpush dword ifmt\n");
-					printf("\tcall scanf\n\tadd esp, 8\n");
-					printf("\tmov eax, [_buf]\n\tmov [%s], eax\n", p->id.name);
+					printf("\tpush dword _buf\n\t"
+					       "push dword dfmt\n\t"
+					       "call scanf\n\tadd esp, 8\n\t"
+					       "fld qword [_buf]\n\t"
+					       "fstp qword [%s]\n",
+					       p->id.name);
 					type='3';
 				}
 			}
@@ -219,8 +222,9 @@ void ex(nodet *p)
 				else if (found->type==TVAR3)
 				{
 					sprintf(buf,"%s%s", "%f", buf2);
+					printf("\tpush dword [%s+4]\n", p->id.name);
 					printf("\tpush dword [%s]\n", p->id.name);
-					stack_del+=4;
+					stack_del+=8;
 				}
 			}
 			break;
@@ -233,7 +237,15 @@ void ex(nodet *p)
 				} else
 				if(found==NULL || found->type==TVAR3)
 				{
-					printf("\tpop dword [%s]\n", p->id.name);
+					//printf("\tfstp qword [%s]\n", p->id.name);
+
+					printf ("SECTION .data\n\t"
+				        "%s_tmp dq %f\n"
+				        "SECTION .text\n\t"
+				        "fld qword [%s_tmp]\n\t"
+				        "fstp qword [%s]\n",
+				        p->id.name, t_double,
+				        p->id.name, p->id.name);
 				} else {
 					if (type=='2')
 						printf("\tpop dword [%s]\n", p->id.name);
@@ -260,9 +272,8 @@ void ex(nodet *p)
 			printf("\t%s dd 0\n", p->oper.nodes[1]->id.name);
 			break;
 		case 'D':
-			// ex(p->oper.nodes[0]);
-			// printf("SECTION .bss\n");
-			// printf("\t%s dd 0\n\n", p->oper.nodes[1]->id.name);
+			ex(p->oper.nodes[0]);
+			printf("\t%s dq 0\n\n", p->oper.nodes[1]->id.name);
 			break; 
 		case 'S':
 			ex(p->oper.nodes[0]);
@@ -317,12 +328,16 @@ void ex(nodet *p)
 			op=p->oper.oper;
 			buf[0]='\0';
 			stack_del=4;
+			// if (strcmp(buf,"%f")==0)
+			// 	stack_del=12;
 			ex(p->oper.nodes[0]);
 			printf("SECTION .data\n");
 			if (strcmp(buf,"%s")==0 || strcmp(buf,"%d")==0 || strcmp(buf,"%f")==0)
+			{
 				printf("\tmsg%d db \"%s\", 0xA, 0\n", cstr, buf);
-			else
+			} else {
 				printf("\tmsg%d db %s, ' ', 0\n", cstr, buf);
+			}
 			printf("SECTION .text\n");
 			printf("\tpush dword msg%d\n\tcall printf\n\tadd esp, %d\n", cstr, stack_del);
 			++cstr;

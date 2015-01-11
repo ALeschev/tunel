@@ -53,6 +53,7 @@ program:
 			printf("SECTION .data\n");
 			printf("\tifmt db \"%cd\", 0\n",'%');
 			printf("\tsfmt db \"%cd\", 0\n",'%');
+			printf("\tdfmt db \"%clf\", 0\n",'%');
 			ex($1);
 			freeNode($1);
 			printf("\n");
