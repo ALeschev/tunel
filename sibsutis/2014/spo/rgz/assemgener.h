@@ -119,7 +119,7 @@ void ex(nodet *p)
 {
 	int lbl1, lbl2, toper1, toper2;
 	static double t_double = 0.0;
-	static int prev_oper = -1;
+	static int prev_oper = 0;
 	static char prev_devide_oper[64] = {0};
 	if (!p) return ;
 	switch(p->type)
@@ -242,6 +242,8 @@ void ex(nodet *p)
 				{
 					//printf("\tfstp qword [%s]\n", p->id.name);
 
+					printf ("; t_double %f\n", t_double);
+
 					if (t_double == 99999.99999)
 					{
 						if ((prev_oper >> 1) == '+' ||
@@ -249,18 +251,41 @@ void ex(nodet *p)
 						    (prev_oper >> 1) == '*' ||
 						    (prev_oper >> 1) == '/')
 						{
-							printf ("\tfstp qword [%s]\n", p->id.name);;
+							printf ("\tfstp qword [%s]\n", p->id.name);
 						}
 						break;
+					} else {
+						if ((prev_oper >> 1) == '+' ||
+						    (prev_oper >> 1) == '-' ||
+						    (prev_oper >> 1) == '*' ||
+						    (prev_oper >> 1) == '/')
+						{
+							printf ("SECTION .data\n\t"
+							    "%s_tmp%d dq %f\n"
+							    "SECTION .text\n\t"
+							    "fld qword [%s_tmp%d]\n\t"
+							    "%s\n\t"
+							    "fstp qword [%s]\n",
+							    p->id.name, cstr, t_double,
+							    p->id.name, cstr,
+							    ((prev_oper >> 1) == '+')? "fadd st0, st1":
+							    ((prev_oper >> 1) == '-')? "fsubp st1, st0":
+							    ((prev_oper >> 1) == '*')? "fmul st0, st1":
+							    ((prev_oper >> 1) == '/')? "fdiv st1, st0": "ERR",
+							    p->id.name);
+							++cstr;
+							t_double = 99999.99999;
+							break;
+						}
 					}
 
 					printf ("SECTION .data\n\t"
-				        "%s_tmp%d dq %f\n"
-				        "SECTION .text\n\t"
-				        "fld qword [%s_tmp%d]\n\t"
-				        "fstp qword [%s]\n",
-				        p->id.name, cstr, t_double,
-				        p->id.name, cstr, p->id.name);
+					    "%s_tmp%d dq %f\n"
+					    "SECTION .text\n\t"
+					    "fld qword [%s_tmp%d]\n\t"
+					    "fstp qword [%s]\n",
+					    p->id.name, cstr, t_double,
+					    p->id.name, cstr, p->id.name);
 					++cstr;
 					t_double = 99999.99999;
 				} else {
@@ -282,6 +307,10 @@ void ex(nodet *p)
 					if ((prev_oper >> 1) != '/')
 					{
 						printf("\tfld qword [%s]\n", p->id.name);
+						if (prev_oper & 1)
+							prev_oper &= ~1;
+						else
+							prev_oper |= 1;
 					} else {
 						if (!(prev_oper & 1))
 						{
@@ -385,6 +414,7 @@ void ex(nodet *p)
 			break;
 		case ASSIGN:
 			printf("\t;Присваивание\n");
+			prev_oper = 99999.99999;
 			op=0;
 			ex(p->oper.nodes[1]);
 			op=p->oper.oper;
@@ -420,7 +450,8 @@ void ex(nodet *p)
 				} else
 				if (toper1=='3' && toper2=='3')
 				{
-					printf("\tfadd st0, st1\n");
+					if (!(prev_oper & 1))
+						printf("\tfadd st0, st1\n");
 					type='3';
 				}
 				break;
@@ -442,7 +473,8 @@ void ex(nodet *p)
 				} else
 				if (toper1=='3' && toper2=='3')
 				{
-					printf("\tfsubp st1, st0\n");
+					if (!(prev_oper & 1))
+						printf("\tfsubp st1, st0\n");
 					type='3';
 				}
 				break;
@@ -464,7 +496,8 @@ void ex(nodet *p)
 				} else
 				if (toper1=='3' && toper2=='3')
 				{
-					printf("\tfmul st0, st1\n");
+					if (!(prev_oper & 1))
+						printf("\tfmul st0, st1\n");
 					type='3';
 				}
 				break;
@@ -542,7 +575,7 @@ void ex(nodet *p)
 				printf("\tpush ebx\n");
 				break;
 			default:
-				prev_oper = -1;
+				prev_oper = 0;
 				ex(p->oper.nodes[0]);
 				ex(p->oper.nodes[1]);
 				break;

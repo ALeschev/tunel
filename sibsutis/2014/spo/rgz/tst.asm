@@ -19,6 +19,8 @@ SECTION .data
 
 	dou_temp dq 0
 
+	t_D dq 0
+
 
 SECTION .text
 	main:
@@ -39,6 +41,7 @@ SECTION .text
 	pop dword [b]
 
 	;Присваивание
+; t_double 2.123000
 SECTION .data
 	dou_tmp0 dq 2.123000
 SECTION .text
@@ -46,53 +49,36 @@ SECTION .text
 	fstp qword [dou]
 
 	;Присваивание
+; t_double 0.000000
 SECTION .data
-	dou_temp_tmp1 dq 100.123456
+	t_D_tmp1 dq 0.000000
 SECTION .text
-	fld qword [dou_temp_tmp1]
+	fld qword [t_D_tmp1]
+	fstp qword [t_D]
+
+	;Присваивание
+; t_double 100.123456
+SECTION .data
+	dou_temp_tmp2 dq 100.123456
+SECTION .text
+	fld qword [dou_temp_tmp2]
 	fstp qword [dou_temp]
 
 	;WRITE()
 SECTION .data
-	msg2 db "enter double value for sum test:", ' ', 0
-SECTION .text
-	push dword msg2
-	call printf
-	add esp, 4
-	;READ()
-	push dword _buf
-	push dword dfmt
-	call scanf
-	add esp, 8
-	fld qword [_buf]
-	fstp qword [dou]
-	;WRITE()
-SECTION .data
-	msg3 db "sum test: 100.123456 + ", ' ', 0
+	msg3 db "static sum: 100.123456 + 75.123 = ", ' ', 0
 SECTION .text
 	push dword msg3
 	call printf
 	add esp, 4
-	;WRITE()
-	push dword [dou+4]
-	push dword [dou]
-SECTION .data
-	msg4 db "%f", 0xA, 0
-SECTION .text
-	push dword msg4
-	call printf
-	add esp, 12
-	;WRITE()
-SECTION .data
-	msg5 db "= ", ' ', 0
-SECTION .text
-	push dword msg5
-	call printf
-	add esp, 4
 	;Присваивание
 	fld qword [dou_temp]
-	fld qword [dou]
 	;Сложение [3][3]
+; t_double 75.123000
+SECTION .data
+	dou_temp_tmp4 dq 75.123000
+SECTION .text
+	fld qword [dou_temp_tmp4]
 	fadd st0, st1
 	fstp qword [dou_temp]
 
@@ -100,52 +86,34 @@ SECTION .text
 	push dword [dou_temp+4]
 	push dword [dou_temp]
 SECTION .data
-	msg6 db "%f", 0xA, 0
+	msg5 db "%f", 0xA, 0
 SECTION .text
-	push dword msg6
+	push dword msg5
 	call printf
 	add esp, 12
+	;Присваивание
+; t_double 100.123456
+SECTION .data
+	dou_temp_tmp6 dq 100.123456
+SECTION .text
+	fld qword [dou_temp_tmp6]
+	fstp qword [dou_temp]
+
 	;WRITE()
 SECTION .data
-	msg7 db "enter double value for sub test:", ' ', 0
+	msg7 db "static sub: 100.123456 - 75.123 = ", ' ', 0
 SECTION .text
 	push dword msg7
 	call printf
 	add esp, 4
-	;READ()
-	push dword _buf
-	push dword dfmt
-	call scanf
-	add esp, 8
-	fld qword [_buf]
-	fstp qword [dou]
-	;WRITE()
-SECTION .data
-	msg8 db "sub test: 100.123456 - ", ' ', 0
-SECTION .text
-	push dword msg8
-	call printf
-	add esp, 4
-	;WRITE()
-	push dword [dou+4]
-	push dword [dou]
-SECTION .data
-	msg9 db "%f", 0xA, 0
-SECTION .text
-	push dword msg9
-	call printf
-	add esp, 12
-	;WRITE()
-SECTION .data
-	msg10 db "= ", ' ', 0
-SECTION .text
-	push dword msg10
-	call printf
-	add esp, 4
 	;Присваивание
 	fld qword [dou_temp]
-	fld qword [dou]
 	;Вычитание [3][3]
+; t_double 75.123000
+SECTION .data
+	dou_temp_tmp8 dq 75.123000
+SECTION .text
+	fld qword [dou_temp_tmp8]
 	fsubp st1, st0
 	fstp qword [dou_temp]
 
@@ -153,60 +121,70 @@ SECTION .text
 	push dword [dou_temp+4]
 	push dword [dou_temp]
 SECTION .data
-	msg11 db "%f", 0xA, 0
+	msg9 db "%f", 0xA, 0
 SECTION .text
-	push dword msg11
+	push dword msg9
 	call printf
 	add esp, 12
-	;WRITE()
-SECTION .data
-	msg12 db "enter double value for mul test:", ' ', 0
-SECTION .text
-	push dword msg12
-	call printf
-	add esp, 4
-	;READ()
-	push dword _buf
-	push dword dfmt
-	call scanf
-	add esp, 8
-	fld qword [_buf]
-	fstp qword [dou]
 	;Присваивание
+; t_double 100.123456
 SECTION .data
-	dou_temp_tmp13 dq 100.123456
+	dou_temp_tmp10 dq 100.123456
 SECTION .text
-	fld qword [dou_temp_tmp13]
+	fld qword [dou_temp_tmp10]
 	fstp qword [dou_temp]
 
 	;WRITE()
 SECTION .data
-	msg14 db "mul test: 100.123456 * ", ' ', 0
+	msg11 db "static mul: 100.123456 * 75.123 = ", ' ', 0
 SECTION .text
-	push dword msg14
-	call printf
-	add esp, 4
-	;WRITE()
-	push dword [dou+4]
-	push dword [dou]
-SECTION .data
-	msg15 db "%f", 0xA, 0
-SECTION .text
-	push dword msg15
-	call printf
-	add esp, 12
-	;WRITE()
-SECTION .data
-	msg16 db "= ", ' ', 0
-SECTION .text
-	push dword msg16
+	push dword msg11
 	call printf
 	add esp, 4
 	;Присваивание
 	fld qword [dou_temp]
-	fld qword [dou]
 	;Умножение [3][3]
+; t_double 75.123000
+SECTION .data
+	dou_temp_tmp12 dq 75.123000
+SECTION .text
+	fld qword [dou_temp_tmp12]
 	fmul st0, st1
+	fstp qword [dou_temp]
+
+	;WRITE()
+	push dword [dou_temp+4]
+	push dword [dou_temp]
+SECTION .data
+	msg13 db "%f", 0xA, 0
+SECTION .text
+	push dword msg13
+	call printf
+	add esp, 12
+	;Присваивание
+; t_double 100.123456
+SECTION .data
+	dou_temp_tmp14 dq 100.123456
+SECTION .text
+	fld qword [dou_temp_tmp14]
+	fstp qword [dou_temp]
+
+	;WRITE()
+SECTION .data
+	msg15 db "static div: 100.123456 / 75.123 = ", ' ', 0
+SECTION .text
+	push dword msg15
+	call printf
+	add esp, 4
+	;Присваивание
+	fld qword [dou_temp]
+	;Деление [3][3]
+; t_double 75.123000
+SECTION .data
+	dou_temp_tmp16 dq 75.123000
+SECTION .text
+	fld qword [dou_temp_tmp16]
+	fdiv st1, st0
 	fstp qword [dou_temp]
 
 	;WRITE()
@@ -220,9 +198,25 @@ SECTION .text
 	add esp, 12
 	;WRITE()
 SECTION .data
-	msg18 db "enter double value for div test:", ' ', 0
+	msg18 db "----------------------------------------", ' ', 0
 SECTION .text
 	push dword msg18
+	call printf
+	add esp, 4
+	;WRITE()
+	push dword [t_D+4]
+	push dword [t_D]
+SECTION .data
+	msg19 db "%f", 0xA, 0
+SECTION .text
+	push dword msg19
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg20 db "enter double value for sum test:", ' ', 0
+SECTION .text
+	push dword msg20
 	call printf
 	add esp, 4
 	;READ()
@@ -233,48 +227,236 @@ SECTION .text
 	fld qword [_buf]
 	fstp qword [dou]
 	;Присваивание
+; t_double 100.123456
 SECTION .data
-	dou_temp_tmp19 dq 100.123456
+	dou_temp_tmp21 dq 100.123456
 SECTION .text
-	fld qword [dou_temp_tmp19]
+	fld qword [dou_temp_tmp21]
 	fstp qword [dou_temp]
 
 	;WRITE()
 SECTION .data
-	msg20 db "div test: 100.123456 / ", ' ', 0
+	msg22 db "sum test: 100.123456 + ", ' ', 0
 SECTION .text
-	push dword msg20
+	push dword msg22
 	call printf
 	add esp, 4
 	;WRITE()
 	push dword [dou+4]
 	push dword [dou]
 SECTION .data
-	msg21 db "%f", 0xA, 0
+	msg23 db "%f", 0xA, 0
 SECTION .text
-	push dword msg21
+	push dword msg23
 	call printf
 	add esp, 12
 	;WRITE()
 SECTION .data
-	msg22 db "= ", ' ', 0
+	msg24 db "= ", ' ', 0
 SECTION .text
-	push dword msg22
+	push dword msg24
 	call printf
 	add esp, 4
 	;Присваивание
 	fld qword [dou_temp]
-	fdiv qword [dou]
-	;Деление [3][3]
+	fld qword [dou]
+	;Сложение [3][3]
+	fadd st0, st1
+; t_double 99999.999990
 	fstp qword [dou_temp]
 
 	;WRITE()
 	push dword [dou_temp+4]
 	push dword [dou_temp]
 SECTION .data
-	msg23 db "%f", 0xA, 0
+	msg25 db "%f", 0xA, 0
 SECTION .text
-	push dword msg23
+	push dword msg25
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg26 db "enter double value for sub test:", ' ', 0
+SECTION .text
+	push dword msg26
+	call printf
+	add esp, 4
+	;READ()
+	push dword _buf
+	push dword dfmt
+	call scanf
+	add esp, 8
+	fld qword [_buf]
+	fstp qword [dou]
+	;Присваивание
+; t_double 100.123456
+SECTION .data
+	dou_temp_tmp27 dq 100.123456
+SECTION .text
+	fld qword [dou_temp_tmp27]
+	fstp qword [dou_temp]
+
+	;WRITE()
+SECTION .data
+	msg28 db "sub test: 100.123456 - ", ' ', 0
+SECTION .text
+	push dword msg28
+	call printf
+	add esp, 4
+	;WRITE()
+	push dword [dou+4]
+	push dword [dou]
+SECTION .data
+	msg29 db "%f", 0xA, 0
+SECTION .text
+	push dword msg29
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg30 db "= ", ' ', 0
+SECTION .text
+	push dword msg30
+	call printf
+	add esp, 4
+	;Присваивание
+	fld qword [dou_temp]
+	fld qword [dou]
+	;Вычитание [3][3]
+	fsubp st1, st0
+; t_double 99999.999990
+	fstp qword [dou_temp]
+
+	;WRITE()
+	push dword [dou_temp+4]
+	push dword [dou_temp]
+SECTION .data
+	msg31 db "%f", 0xA, 0
+SECTION .text
+	push dword msg31
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg32 db "enter double value for mul test:", ' ', 0
+SECTION .text
+	push dword msg32
+	call printf
+	add esp, 4
+	;READ()
+	push dword _buf
+	push dword dfmt
+	call scanf
+	add esp, 8
+	fld qword [_buf]
+	fstp qword [dou]
+	;Присваивание
+; t_double 100.123456
+SECTION .data
+	dou_temp_tmp33 dq 100.123456
+SECTION .text
+	fld qword [dou_temp_tmp33]
+	fstp qword [dou_temp]
+
+	;WRITE()
+SECTION .data
+	msg34 db "mul test: 100.123456 * ", ' ', 0
+SECTION .text
+	push dword msg34
+	call printf
+	add esp, 4
+	;WRITE()
+	push dword [dou+4]
+	push dword [dou]
+SECTION .data
+	msg35 db "%f", 0xA, 0
+SECTION .text
+	push dword msg35
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg36 db "= ", ' ', 0
+SECTION .text
+	push dword msg36
+	call printf
+	add esp, 4
+	;Присваивание
+	fld qword [dou_temp]
+	fld qword [dou]
+	;Умножение [3][3]
+	fmul st0, st1
+; t_double 99999.999990
+	fstp qword [dou_temp]
+
+	;WRITE()
+	push dword [dou_temp+4]
+	push dword [dou_temp]
+SECTION .data
+	msg37 db "%f", 0xA, 0
+SECTION .text
+	push dword msg37
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg38 db "enter double value for div test:", ' ', 0
+SECTION .text
+	push dword msg38
+	call printf
+	add esp, 4
+	;READ()
+	push dword _buf
+	push dword dfmt
+	call scanf
+	add esp, 8
+	fld qword [_buf]
+	fstp qword [dou]
+	;Присваивание
+; t_double 100.123456
+SECTION .data
+	dou_temp_tmp39 dq 100.123456
+SECTION .text
+	fld qword [dou_temp_tmp39]
+	fstp qword [dou_temp]
+
+	;WRITE()
+SECTION .data
+	msg40 db "div test: 100.123456 / ", ' ', 0
+SECTION .text
+	push dword msg40
+	call printf
+	add esp, 4
+	;WRITE()
+	push dword [dou+4]
+	push dword [dou]
+SECTION .data
+	msg41 db "%f", 0xA, 0
+SECTION .text
+	push dword msg41
+	call printf
+	add esp, 12
+	;WRITE()
+SECTION .data
+	msg42 db "= ", ' ', 0
+SECTION .text
+	push dword msg42
+	call printf
+	add esp, 4
+	;Присваивание
+	fld qword [dou_temp]
+	fdiv qword [dou]
+	;Деление [3][3]
+; t_double 99999.999990
+	fstp qword [dou_temp]
+
+	;WRITE()
+	push dword [dou_temp+4]
+	push dword [dou_temp]
+SECTION .data
+	msg43 db "%f", 0xA, 0
+SECTION .text
+	push dword msg43
 	call printf
 	add esp, 12
 	;цикл WHILE
@@ -312,39 +494,39 @@ L002:
 
 	;WRITE()
 SECTION .data
-	msg24 db " r:", ' ', 0
+	msg44 db " r:", ' ', 0
 SECTION .text
-	push dword msg24
+	push dword msg44
 	call printf
 	add esp, 4
 	;WRITE()
 	push dword [r]
 SECTION .data
-	msg25 db "%d", 0xA, 0
+	msg45 db "%d", 0xA, 0
 SECTION .text
-	push dword msg25
+	push dword msg45
 	call printf
 	add esp, 8
 	;WRITE()
 SECTION .data
-	msg26 db " h:", ' ', 0
+	msg46 db " h:", ' ', 0
 SECTION .text
-	push dword msg26
+	push dword msg46
 	call printf
 	add esp, 4
 	;WRITE()
 	push dword [h]
 SECTION .data
-	msg27 db "%d", 0xA, 0
+	msg47 db "%d", 0xA, 0
 SECTION .text
-	push dword msg27
+	push dword msg47
 	call printf
 	add esp, 8
 	;WRITE()
 SECTION .data
-	msg28 db "25/5: ", ' ', 0
+	msg48 db "25/5: ", ' ', 0
 SECTION .text
-	push dword msg28
+	push dword msg48
 	call printf
 	add esp, 4
 	;Присваивание
@@ -361,9 +543,9 @@ SECTION .text
 	;WRITE()
 	push dword [c]
 SECTION .data
-	msg29 db "%d", 0xA, 0
+	msg49 db "%d", 0xA, 0
 SECTION .text
-	push dword msg29
+	push dword msg49
 	call printf
 	add esp, 8
 	jmp	L000
@@ -392,18 +574,18 @@ L005:
 	mov [r], eax
 	;WRITE()
 SECTION .data
-	msg30 db "if test", ' ', 0
+	msg50 db "if test", ' ', 0
 SECTION .text
-	push dword msg30
+	push dword msg50
 	call printf
 	add esp, 4
 	jmp	L004
 L003:
 	;WRITE()
 SECTION .data
-	msg31 db "else test", ' ', 0
+	msg51 db "else test", ' ', 0
 SECTION .text
-	push dword msg31
+	push dword msg51
 	call printf
 	add esp, 4
 L004:
