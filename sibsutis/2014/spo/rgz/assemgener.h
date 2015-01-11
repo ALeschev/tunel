@@ -119,6 +119,8 @@ void ex(nodet *p)
 {
 	int lbl1, lbl2, toper1, toper2;
 	static double t_double = 0.0;
+	static int prev_oper = -1;
+	static char prev_devide_oper[64] = {0};
 	if (!p) return ;
 	switch(p->type)
 	{
@@ -165,6 +167,7 @@ void ex(nodet *p)
 				printf("SECTION .text\n");
 				printf("\tpush dword msg%d\n", cstr++);
 				type='2';
+				t_double = 99999.99999;
 			}
 			break;
 		}
@@ -239,13 +242,27 @@ void ex(nodet *p)
 				{
 					//printf("\tfstp qword [%s]\n", p->id.name);
 
+					if (t_double == 99999.99999)
+					{
+						if ((prev_oper >> 1) == '+' ||
+						    (prev_oper >> 1) == '-' ||
+						    (prev_oper >> 1) == '*' ||
+						    (prev_oper >> 1) == '/')
+						{
+							printf ("\tfstp qword [%s]\n", p->id.name);;
+						}
+						break;
+					}
+
 					printf ("SECTION .data\n\t"
-				        "%s_tmp dq %f\n"
+				        "%s_tmp%d dq %f\n"
 				        "SECTION .text\n\t"
-				        "fld qword [%s_tmp]\n\t"
+				        "fld qword [%s_tmp%d]\n\t"
 				        "fstp qword [%s]\n",
-				        p->id.name, t_double,
-				        p->id.name, p->id.name);
+				        p->id.name, cstr, t_double,
+				        p->id.name, cstr, p->id.name);
+					++cstr;
+					t_double = 99999.99999;
 				} else {
 					if (type=='2')
 						printf("\tpop dword [%s]\n", p->id.name);
@@ -259,7 +276,25 @@ void ex(nodet *p)
 				if (found==NULL || found->type==TVAR1)	type='1';
 				else if (found==NULL || found->type==TVAR3)	type='3';
 				else type='2';
-				printf("\tpush dword [%s]\n", p->id.name);
+
+				if (type == '3')
+				{
+					if ((prev_oper >> 1) != '/')
+					{
+						printf("\tfld qword [%s]\n", p->id.name);
+					} else {
+						if (!(prev_oper & 1))
+						{
+							printf("\tfld qword [%s]\n", p->id.name);
+							prev_oper |= 1;
+						} else {
+							printf("\tfdiv qword [%s]\n", p->id.name);
+						}
+					}
+					strcpy (prev_devide_oper, p->id.name);
+				} else {
+					printf("\tpush dword [%s]\n", p->id.name);
+				}
 			}
 			break;
 		}
@@ -360,12 +395,13 @@ void ex(nodet *p)
 			switch(p->oper.oper)
 			{
 			case '+':
+				prev_oper = p->oper.oper << 1;
 				op=p->oper.oper;
 				ex(p->oper.nodes[0]);
 				toper1=type;
 				ex(p->oper.nodes[1]);
 				toper2=type;
-				printf("\t;Сложение\n");
+				printf("\t;Сложение [%c][%c]\n", toper1, toper2);
 				if (toper1=='1' && toper2=='1')
 				{
 					printf("\tpop ecx\n");
@@ -373,23 +409,29 @@ void ex(nodet *p)
 					printf("\tadd eax, ecx\n");
 					printf("\tpush eax\n");
 					type='1';
-				}
-				else if (toper1=='2' && toper2=='2')
+				} else
+				if (toper1=='2' && toper2=='2')
 				{
 					printf("\tpop ecx\n");
 					printf("\tpop eax\n");
 					printf("\tadd eax, ecx\n");
 					printf("\tpush eax\n");
 					type='2';
+				} else
+				if (toper1=='3' && toper2=='3')
+				{
+					printf("\tfadd st0, st1\n");
+					type='3';
 				}
 				break;
 			case '-':
+				prev_oper = p->oper.oper << 1;
 				op=p->oper.oper;
 				ex(p->oper.nodes[0]);
 				toper1=type;
 				ex(p->oper.nodes[1]);
 				toper2=type;
-				printf("\t;Вычитание\n");
+				printf("\t;Вычитание [%c][%c]\n", toper1, toper2);
 				if (toper1=='1' && toper2=='1')
 				{
 					printf("\tpop ecx\n");
@@ -397,15 +439,21 @@ void ex(nodet *p)
 					printf("\tsub eax, ecx\n");
 					printf("\tpush eax\n");
 					type='1';
+				} else
+				if (toper1=='3' && toper2=='3')
+				{
+					printf("\tfsubp st1, st0\n");
+					type='3';
 				}
 				break;
 			case '*':
+				prev_oper = p->oper.oper << 1;
 				op=p->oper.oper;
 				ex(p->oper.nodes[0]);
 				toper1=type;
 				ex(p->oper.nodes[1]);
 				toper2=type;
-				printf("\t;Умножение\n");
+				printf("\t;Умножение [%c][%c]\n", toper1, toper2);
 				if (toper1=='1' && toper2=='1')
 				{
 					printf("\tpop ecx\n");
@@ -413,23 +461,34 @@ void ex(nodet *p)
 					printf("\tmul ecx\n");
 					printf("\tpush eax\n");
 					type='1';
+				} else
+				if (toper1=='3' && toper2=='3')
+				{
+					printf("\tfmul st0, st1\n");
+					type='3';
 				}
 				break;
 			case '/':
+				prev_oper = p->oper.oper << 1;
 				op=p->oper.oper;
 				ex(p->oper.nodes[0]);
 				toper1=type;
 				ex(p->oper.nodes[1]);
 				toper2=type;
-				printf("\t;Деление\n");
-				printf("\txor edx, edx\n");
+				printf("\t;Деление [%c][%c]\n", toper1, toper2);
 				if (toper1=='1' && toper2=='1')
 				{
+					printf("\txor edx, edx\n");
 					printf("\tpop ecx\n");
 					printf("\tpop eax\n");
 					printf("\tdiv ecx\n");
 					printf("\tpush eax\n");
 					type='1';
+				} else
+				if (toper1=='3' && toper2=='3')
+				{
+					//printf("\tfdiv st1, st0\n");
+					type='3';
 				}
 				break;
 			case '|':
@@ -483,7 +542,7 @@ void ex(nodet *p)
 				printf("\tpush ebx\n");
 				break;
 			default:
-				printf("\nFuuu\n");
+				prev_oper = -1;
 				ex(p->oper.nodes[0]);
 				ex(p->oper.nodes[1]);
 				break;
