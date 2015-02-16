@@ -196,6 +196,15 @@
 # }
 # 
 # alias cd=cd_func
+source /etc/bash_completion.d/git
+export PS1='[\[\e[01;32m\]\u\[\e[00m\]@\h \w$(__git_ps1 " (%s)")]\$ '
 
-source ~/bin/git-prompt.sh
-export PS1='[\t \W$(__git_ps1 " (%s)")]\$ '
+#source /etc/bash_completion.d/git
+#export PS1='[\t \W$(__git_ps1 " (%s)")]\$ '
+#export PS1='[\u@\h \W]\$ '
+
+#export PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w $(__git_ps1 "(%s)") \$\[\033[00m\] '
+#export PS1='\[\e[4;33m\]\w\[\e[m\]\[\e[0;36m\]$(__git_ps1)\[\e[m\] \[\e[1;37m\]$\[\e[m\] '
+
+# source /etc/bash_completion.d/git
+# export PS1='\w$(__git_ps1 "(%s)") > '
