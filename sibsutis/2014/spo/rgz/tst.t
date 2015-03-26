@@ -14,7 +14,6 @@ double t_D;
 	dou := 2.123;
 	t_D := 0.0;
 
-
 	dou_temp := 100.123456;
 	write("static sum: 100.123456 + 75.123 = ");
 	dou_temp := dou_temp + 75.123;

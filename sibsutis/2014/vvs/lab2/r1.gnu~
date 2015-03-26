@@ -1,0 +1,15 @@
+set terminal png enhanced font "arial, 12" size 1080, 710
+set output 'R1.png'
+set title ""
+set grid x y
+set style line 1 lt 1 pt 9
+set style line 2 lt 3 pt 7
+set style line 3 lt 2 pt 5
+set style line 4 lt 4 pt 2
+set yrange [0:2.5]
+set xrange [10:16]
+set xtics  0, 2
+set ytics 0, 0.2
+set ylabel "S"
+set xlabel "n"
+plot "res.res" using 1:2 with linespoints linestyle 1 title ""
