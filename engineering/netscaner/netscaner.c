@@ -13,12 +13,17 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
+#include <sys/time.h>
+#include <time.h>
+
 #include <sys/select.h>
 
 /* According to earlier standards */
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#if 1
 
 #if 0
 typedef unsigned char u8;
@@ -242,12 +247,50 @@ unsigned short in_cksum(unsigned short *ptr, int nbytes)
 
 #include "icmp_core.h"
 
-void icmp_send ()
+int pb_clockgettime(struct timeval* tv)
+{
+    int ret = -1;
+    struct timespec ts;
+
+    if (!tv)
+        return ret;
+
+    ret = clock_gettime(CLOCK_MONOTONIC, &ts);
+
+    if (ret == 0)
+    {
+        tv->tv_sec = ts.tv_sec;
+        tv->tv_usec = ts.tv_nsec / 1000;
+
+        if (ts.tv_nsec % 1000 >= 500)
+        {
+            if (++tv->tv_usec == 1000000)
+            {
+                tv->tv_usec = 0;
+                ++tv->tv_sec;
+            }
+        }
+    }
+
+    return ret;
+}
+
+#define MAX_DEST_ADDR 5
+
+void ping_result (char *dest_address, int send_result)
+{
+    if (send_result)
+        printf ("%s: ping '%s' failed. error: %d\n", __func__, dest_address, send_result);
+    else
+        printf ("%s: ping '%s' success\n", __func__, dest_address);
+}
+
+void icmp_try_send (void)
 {
     int dest_count = 0;
 
     icmp_addr_t icmp_source;
-    icmp_addr_t icmp_dest[5];
+    icmp_addr_t icmp_dest[MAX_DEST_ADDR];
 
     strcpy (icmp_source.addr, "192.168.23.51");
 
@@ -263,20 +306,54 @@ void icmp_send ()
 
     icmp_addr_in.source = &icmp_source;
     icmp_addr_in.dest = icmp_dest;
-    icmp_addr_in.dest_count = sizeof (icmp_dest) / MAX_DEST_ADDR_LEN;
+    icmp_addr_in.dest_count = MAX_DEST_ADDR;
 
-    icmp_send_packet (&icmp_addr_in, NULL);
+    icmp_send (&icmp_addr_in, &ping_result);
 
     printf ("%s - done\n", __func__);
 }
 
 int main (void)
 {
-    icmp_send();
+    struct timeval start;
+    struct timeval finish;
+    struct timeval diff;
 
-    sleep(10);
+    pb_clockgettime (&start);
+
+    icmp_try_send();
+
+    pb_clockgettime (&finish);
+
+    timersub(&finish, &start, &diff);
+
+    printf ("Time debug: %ld.%06ld sec\n", diff.tv_sec, diff.tv_usec);
+
+    sleep(2);
 
     return 0;
 }
 
+#endif
+
+#else
+#include <pthread.h>
+#include <stdio.h>
+
+void print_thread_id(pthread_t id)
+{
+    size_t i;
+    for (i = sizeof(i); i; --i)
+        printf("%02x", *(((unsigned char*) &id) + i - 1));
+}
+
+int main()
+{
+    pthread_t id = pthread_self();
+
+    printf("%08x\n", id);
+    print_thread_id(id);
+
+    return 0;
+}
 #endif

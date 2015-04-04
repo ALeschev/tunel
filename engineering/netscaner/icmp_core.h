@@ -3,9 +3,9 @@
 
 typedef void (*icmp_result_t)(char *dest_address, int send_result);
 
-#define T100MS 1000000
+#define ICMP_TIMEOUT 1
 
-#define ADDR_BY_PULL 3
+#define ADDR_BY_PULL 2
 
 #define MAX_DEST_ADDR_LEN 64
 
@@ -19,20 +19,14 @@ typedef struct {
 	int dest_count;
 } icmp_addr_in_t;
 
-int icmp_send_packet
-(
-	icmp_addr_in_t *addr_in,
-	/* added wait reply timeout */
-	icmp_result_t request_result
-);
+int icmp_send (icmp_addr_in_t *addr_in,
+               /* added wait reply timeout */
+               icmp_result_t request_result);
 
-int icmp_send_periodical
-(
-	icmp_addr_in_t *addr_in,
-	/* added wait reply timeout */
-	int send_period_ms, /* milliseconds */
-	int send_count,
-	icmp_result_t request_result
-);
+int icmp_send_periodical (icmp_addr_in_t *addr_in,
+                          /* added wait reply timeout */
+                          int send_period_ms, /* milliseconds */
+                          int send_count,
+                          icmp_result_t request_result);
 
 #endif /* _ICMP_CORE_H_ */
