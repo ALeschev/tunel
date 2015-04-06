@@ -247,6 +247,8 @@ unsigned short in_cksum(unsigned short *ptr, int nbytes)
 
 #include "icmp_core.h"
 
+struct timeval start;
+
 int pb_clockgettime(struct timeval* tv)
 {
     int ret = -1;
@@ -275,15 +277,118 @@ int pb_clockgettime(struct timeval* tv)
     return ret;
 }
 
-#define MAX_DEST_ADDR 5
-
-void ping_result (char *dest_address, int send_result)
+void ping_result (char *dest_address, icmp_result_t *error)
 {
-    if (send_result)
-        printf ("%s: ping '%s' failed. error: %d\n", __func__, dest_address, send_result);
-    else
-        printf ("%s: ping '%s' success\n", __func__, dest_address);
+    static int ip_count = 0;
+
+    // if (!error->err_total)
+    // {
+    //     printf ("%d] ping '%s' success. delay %ld.%06ld sec\n", ip_count++,
+    //             dest_address, error->delay.tv_sec, error->delay.tv_usec);
+    // } else {
+    //     printf ("%d] ping '%s' failed. error: %d [err: %s%s%s%s%s] delay %ld.%06ld sec\n", ip_count++,
+    //             dest_address, error->err_total,
+    //             error->err_type? " type":"",
+    //             error->err_code? " code":"",
+    //             error->err_timeout? " timeout":"",
+    //             error->err_send? " send":"",
+    //             error->err_mem? " memory":"",
+    //             error->delay.tv_sec, error->delay.tv_usec);
+    // }
+
+    // if (send_result)
+    //     printf ("%s: ping '%s' failed. error: %d\n", __func__, dest_address, send_result);
+    // else
+    //     printf ("%s: ping '%s' success\n", __func__, dest_address);
 }
+
+void send_ended (void)
+{
+    struct timeval finish;
+    struct timeval diff;
+
+    pb_clockgettime (&finish);
+
+    timersub(&finish, &start, &diff);
+
+    printf ("Time debug: %ld.%06ld sec\n", diff.tv_sec, diff.tv_usec);
+
+    exit(0);
+}
+
+uint32_t bit_mask (int bits)
+{
+    int i = 0;
+    uint32_t bitmask = 0;
+
+    for (i = 0; i < bits; i++)
+    {
+        bitmask |= 1 << i;
+    }
+
+    return bitmask;
+}
+
+void send_ping_range (char *ip_source, char *ip_start, char *ip_end, char *mask)
+{
+    int i, mask_bits;
+    icmp_callback_t callbacks;
+    icmp_addr_in_t icmp_addr_in;
+    icmp_addr_t icmp_source;
+    icmp_addr_t *icmp_dest;
+    uint32_t net_source, net_start;
+    uint32_t net_end, net_mask;
+    uint32_t host_count;
+    struct in_addr dest_ip;
+
+    net_source = inet_addr(ip_source);
+    net_start = inet_addr(ip_start);
+    net_end = inet_addr(ip_end);
+
+    if (mask[0] == '/')
+    {
+        mask++; /* cat '/' */
+        mask_bits = atoi (mask);
+        net_mask = bit_mask(mask_bits);
+    } else {
+        net_mask = inet_addr(mask);
+    }
+
+    strcpy (icmp_source.addr, ip_source);
+
+    host_count = ntohl(net_end - (net_start & net_mask));
+
+    icmp_dest = (icmp_addr_t *) calloc (1, sizeof (icmp_addr_t) * host_count);
+    if (!icmp_dest)
+    {
+        printf ("!!!!!!!!!!!!!!!!1\n");
+        return;
+    }
+
+    for (i = 0; i < host_count; i++)
+    {
+        dest_ip.s_addr = net_start + (i << mask_bits);
+        inet_ntop(AF_INET, &dest_ip, icmp_dest[i].addr, INET_ADDRSTRLEN);
+        // printf ("translate: %d\n", );
+
+        // printf ("dest_ip.s_addr 0x%08x : %s\n", dest_ip.s_addr, icmp_dest[i].addr);
+    }
+
+    memset (&icmp_addr_in, 0, sizeof (icmp_addr_in));
+
+    icmp_addr_in.source = &icmp_source;
+    icmp_addr_in.dest = icmp_dest;
+    icmp_addr_in.dest_count = host_count;
+
+    callbacks.req_result = &ping_result;
+    callbacks.send_finished = &send_ended;
+
+    icmp_send (&icmp_addr_in, &callbacks);
+
+    free(icmp_dest);
+}
+
+#define MAX_DEST_ADDR 5
 
 void icmp_try_send (void)
 {
@@ -308,28 +413,20 @@ void icmp_try_send (void)
     icmp_addr_in.dest = icmp_dest;
     icmp_addr_in.dest_count = MAX_DEST_ADDR;
 
-    icmp_send (&icmp_addr_in, &ping_result);
+    // icmp_send (&icmp_addr_in, &ping_result);
 
     printf ("%s - done\n", __func__);
 }
 
 int main (void)
 {
-    struct timeval start;
-    struct timeval finish;
-    struct timeval diff;
-
     pb_clockgettime (&start);
 
-    icmp_try_send();
+    // icmp_try_send();
+    send_ping_range ("192.168.23.51", "192.168.23.1",
+                     "192.168.23.140", /*"255.255.255.0"*/"/24");
 
-    pb_clockgettime (&finish);
-
-    timersub(&finish, &start, &diff);
-
-    printf ("Time debug: %ld.%06ld sec\n", diff.tv_sec, diff.tv_usec);
-
-    sleep(2);
+    sleep(60);
 
     return 0;
 }

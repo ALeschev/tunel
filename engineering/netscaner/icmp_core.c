@@ -19,31 +19,32 @@
 
 #include "icmp_core.h"
 
-#define LOGING_DEBUG
-#define INIT_SYNCH_DEBUG
+// #define LOGING_DEBUG
+// #define INIT_SYNCH_DEBUG
 
 typedef struct {
-	icmp_addr_in_t addr_in;
-	int send_period_ms;
-	int send_count;
-	icmp_result_t request_result;
+    icmp_addr_in_t addr_in;
+    int send_period_ms;
+    int send_count;
+    icmp_result_cb_t request_result;
+    icmp_notify_cb_t send_finished;
 
-	int init_result;
+    int init_result;
 } icmp_settings_t;
 
 typedef struct {
-	icmp_addr_t *source;
-	icmp_addr_t *dest;
-	int dest_count;
+    icmp_addr_t *source;
+    icmp_addr_t *dest;
+    int dest_count;
 
-	icmp_result_t request_result;
+    icmp_result_cb_t request_result;
 
-	pid_t pid;
+    pid_t pid;
 } icmp_pull_t;
 
 typedef struct {
-	pthread_t thread_id;
-	pid_t pid;
+    pthread_t thread_id;
+    pid_t pid;
 } icmp_thread_t;
 
 /*----------------------------------------------------------------------------*/
@@ -55,11 +56,13 @@ pthread_mutex_t thread_init_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int  icmp_sock_init (int *sockfd);
 static int  icmp_sock_deinit (int *sockfd);
 
-static int  icmp_packet_init (uint8_t **icmp_packet, int *packet_size);
+static int  icmp_packet_init (uint8_t **icmp_packet, int *packet_size,
+                              icmp_result_t *icmp_result);
 static void icmp_packet_deinit (uint8_t *icmp_packet);
 
 static int  icmp_send_packet (uint8_t *icmp_packet, int packet_size,
-                              char *source, char *dest);
+                              char *source, char *dest,
+                              icmp_result_t *icmp_result);
 
 void *icmp_control_thread(void *arg);
 void *icmp_send_packet_thread (void *arg);
@@ -73,55 +76,84 @@ static void icmp_log_ext (const char *func, char *format, ...)
 static void icmp_log (char *format, ...)
 #endif
 {
-	va_list	ap;
-	int length, size;
-	char str[4096] = {0}, *p = "";
-	char timestamp[100] = {0};
-	struct timeval tp;
-	struct tm *pt;
-	time_t t;
+    va_list ap;
+    int length, size;
+    char str[4096] = {0}, *p = "";
+    char timestamp[100] = {0};
+    struct timeval tp;
+    struct tm *pt;
+    time_t t;
 
-	gettimeofday(&tp, NULL);
-	t = (time_t)tp.tv_sec;
-	pt = localtime(&t);
-	sprintf(timestamp, " %02d:%02d:%02d.%06lu",
-	        pt->tm_hour, pt->tm_min, pt->tm_sec, tp.tv_usec);
+    gettimeofday(&tp, NULL);
+    t = (time_t)tp.tv_sec;
+    pt = localtime(&t);
+    sprintf(timestamp, " %02d:%02d:%02d.%06lu",
+            pt->tm_hour, pt->tm_min, pt->tm_sec, tp.tv_usec);
 
-	// switch(level)
-	// {
-	// 	case PBYTE_CRIT: p = "[CRIT] "; break;
-	// 	case PBYTE_ERR:  p = "[ERR ] "; break;
-	// 	case PBYTE_WARN: p = "[WARN] "; break;
-	// 	case PBYTE_INFO: p = "[INFO] "; break;
-	// 	case PBYTE_CUT:  p = "[CUT ] "; break;
-	// 	case PBYTE_FULL: p = "[FULL] "; break;
+    // switch(level)
+    // {
+    //  case PBYTE_CRIT: p = "[CRIT] "; break;
+    //  case PBYTE_ERR:  p = "[ERR ] "; break;
+    //  case PBYTE_WARN: p = "[WARN] "; break;
+    //  case PBYTE_INFO: p = "[INFO] "; break;
+    //  case PBYTE_FULL: p = "[FULL] "; break;
 
-	// 	default:         p = ""; break;
-	// }
+    //  default:         p = ""; break;
+    // }
 
-	sprintf(str, "%s icmp core [%ld]: "
+    sprintf(str, "%s icmp core [%ld]: "
 #ifdef LOGING_DEBUG
-	        "%s: "
+            "%s: "
 #endif
-	        "%s", timestamp, syscall(SYS_gettid),
+            "%s", timestamp, syscall(SYS_gettid),
 #ifdef LOGING_DEBUG
-	        func,
+            func,
 #endif
-	        p);
+            p);
 
-	length = strlen(str);
-	size = sizeof(str) - length - 10;
-	va_start(ap, format);
-	length = vsnprintf(&str[length], size, format, ap);
-	va_end(ap);
+    length = strlen(str);
+    size = sizeof(str) - length - 10;
+    va_start(ap, format);
+    length = vsnprintf(&str[length], size, format, ap);
+    va_end(ap);
 
-	size = strlen(str);
-	while(size && (str[size-1] == '\n')) size--;
-	//str[size++] = '\r';
-	str[size++] = '\n';
-	str[size++] = 0;
+    size = strlen(str);
+    while(size && (str[size-1] == '\n')) size--;
+    //str[size++] = '\r';
+    str[size++] = '\n';
+    str[size++] = 0;
 
-	printf ("%s", str);
+    printf ("%s", str);
+}
+
+/*----------------------------------------------------------------------------*/
+
+static int icmp_clockgettime(struct timeval* tv)
+{
+    int ret = -1;
+    struct timespec ts;
+
+    if (!tv)
+        return ret;
+
+    ret = clock_gettime(CLOCK_MONOTONIC, &ts);
+
+    if (ret == 0)
+    {
+        tv->tv_sec = ts.tv_sec;
+        tv->tv_usec = ts.tv_nsec / 1000;
+
+        if (ts.tv_nsec % 1000 >= 500)
+        {
+            if (++tv->tv_usec == 1000000)
+            {
+                tv->tv_usec = 0;
+                ++tv->tv_sec;
+            }
+        }
+    }
+
+    return ret;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -133,87 +165,91 @@ static inline void icmp_wait_thread_initing_ext (const char *func)
 static inline void icmp_wait_thread_initing (void)
 #endif
 {
-	pthread_yield();
+    pthread_yield();
 
-	/* 
-	 * insert some delay for mutex locking
-	 * from thread for initialization
-	 */
-	usleep(10);
+    /* 
+     * insert some delay for mutex locking
+     * from thread for initialization
+     */
+    usleep(10);
 
-	/* 
-	 * waiting when thread initialization was be finished
-	 */
+    /* 
+     * waiting when thread initialization was be finished
+     */
 #ifdef INIT_SYNCH_DEBUG
-	icmp_log ("Wait thread from: %s  - LOCK", func);
+    icmp_log ("Wait thread from: %s  - LOCK", func);
 #endif
 
-	pthread_mutex_lock(&thread_init_mutex);
+    pthread_mutex_lock(&thread_init_mutex);
 
 #ifdef INIT_SYNCH_DEBUG
-	icmp_log ("Wait thread from: %s  - UNLOCK", func);
+    icmp_log ("Wait thread from: %s  - UNLOCK", func);
 #endif
 
-	pthread_mutex_unlock(&thread_init_mutex);
+    pthread_mutex_unlock(&thread_init_mutex);
 }
 
 /*----------------------------------------------------------------------------*/
 
-int icmp_send (icmp_addr_in_t *addr_in, icmp_result_t request_result)
+int icmp_send (icmp_addr_in_t *addr_in, icmp_callback_t *callbacks)
 {
-	return icmp_send_periodical (addr_in, 0, 1, request_result);
+    return icmp_send_periodical (addr_in, 0, 1, callbacks);
 }
 
 /*----------------------------------------------------------------------------*/
 
 int icmp_send_periodical (icmp_addr_in_t *addr_in, int send_period_ms,
-                          int send_count, icmp_result_t request_result)
+                          int send_count, icmp_callback_t *callbacks)
 {
-	int rc;
-	pthread_t icmp_main_thread;
-	icmp_settings_t icmp_settings;
+    int rc;
+    pthread_t icmp_main_thread;
+    icmp_settings_t icmp_settings;
 
-	if (!addr_in)
-		return -1;
+    if (!addr_in)
+        return -1;
 
-	if (!addr_in->source)
-		return -2;
+    if (!addr_in->source)
+        return -2;
 
-	if (!addr_in->dest)
-		return -3;
+    if (!addr_in->dest)
+        return -3;
 
-	if (addr_in->dest_count <= 0)
-		return -4;
+    if (addr_in->dest_count <= 0)
+        return -4;
 
-	// memset (&icmp_settings, 0, sizeof (icmp_settings));
+    // memset (&icmp_settings, 0, sizeof (icmp_settings));
 
-	icmp_settings.addr_in.source = addr_in->source;
-	icmp_settings.addr_in.dest = addr_in->dest;
-	icmp_settings.addr_in.dest_count = addr_in->dest_count;
-	icmp_settings.send_period_ms = send_period_ms;
-	icmp_settings.send_count = send_count;
-	icmp_settings.request_result = request_result;
-	icmp_settings.init_result = 0;
+    icmp_settings.addr_in.source = addr_in->source;
+    icmp_settings.addr_in.dest = addr_in->dest;
+    icmp_settings.addr_in.dest_count = addr_in->dest_count;
+    icmp_settings.send_period_ms = send_period_ms;
+    icmp_settings.send_count = send_count;
 
-	rc = pthread_create(&icmp_main_thread,
-	                    NULL,
-	                    &icmp_control_thread,
-	                    (void *)&icmp_settings);
-	if(rc < 0)
-	{
-		icmp_log ("Failed to start. "
-		        "Can't create recv/send thread: %s",
-		        strerror(errno));
-	}
+    if (callbacks)
+    {
+        icmp_settings.request_result = callbacks->req_result;
+        icmp_settings.send_finished = callbacks->send_finished;
+    }
 
-	icmp_wait_thread_initing();
+    icmp_settings.init_result = 0;
 
-	if (rc < 0)
-		icmp_settings.init_result = rc;
+    rc = pthread_create(&icmp_main_thread,
+                        NULL,
+                        &icmp_control_thread,
+                        (void *)&icmp_settings);
+    if(rc < 0)
+    {
+        icmp_log ("Failed to start. "
+                "Can't create recv/send thread: %s",
+                strerror(errno));
+    }
 
-	icmp_log ("icmp_settings.init_result: %d\n", icmp_settings.init_result);
+    icmp_wait_thread_initing();
 
-	return icmp_settings.init_result;
+    if (rc < 0)
+        icmp_settings.init_result = rc;
+
+    return icmp_settings.init_result;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -221,487 +257,525 @@ int icmp_send_periodical (icmp_addr_in_t *addr_in, int send_period_ms,
 static inline void icmp_proc_pull (icmp_pull_t *icmp_pull,
                                    icmp_thread_t *icmp_send_thread)
 {
-	int rc;
+    int rc;
 
-	rc = pthread_create(&icmp_send_thread->thread_id,
-	                    NULL,
-	                    &icmp_send_packet_thread,
-	                    (void *)icmp_pull);
-	if(rc < 0)
-	{
-		icmp_log ("Failed to start. "
-		          "Can't create recv/send thread: %s",
-		          strerror(errno));
-	}
+    rc = pthread_create(&icmp_send_thread->thread_id,
+                        NULL,
+                        &icmp_send_packet_thread,
+                        (void *)icmp_pull);
+    if(rc < 0)
+    {
+        icmp_log ("Failed to start. "
+                  "Can't create recv/send thread: %s",
+                  strerror(errno));
+    }
 
-	icmp_wait_thread_initing();
+    icmp_wait_thread_initing();
 
-	icmp_send_thread->pid = icmp_pull->pid;
+    icmp_send_thread->pid = icmp_pull->pid;
 }
 
 /*----------------------------------------------------------------------------*/
 
 static void icmp_start_sending (icmp_settings_t *icmp_settings)
 {
-	int i, rc;
-	uint8_t pulls_count = 0, cur_pull = -1;
-	icmp_thread_t *icmp_send_threads;
-	icmp_addr_in_t *addr_in;
-	icmp_pull_t icmp_pull;
+    int i, rc;
+    uint8_t pulls_count = 0, cur_pull = -1;
+    icmp_thread_t *icmp_send_threads;
+    icmp_addr_in_t *addr_in;
+    icmp_pull_t icmp_pull;
 
-	addr_in = &icmp_settings->addr_in;
+    addr_in = &icmp_settings->addr_in;
 
-	for (i = 0; i < addr_in->dest_count; i++)
-	{
-		icmp_log ("%d: %s\n", i, icmp_settings->addr_in.dest[i].addr);
-	}
+    // for (i = 0; i < addr_in->dest_count; i++)
+    // {
+    //  icmp_log ("%d: %s\n", i, icmp_settings->addr_in.dest[i].addr);
+    // }
 
-	icmp_pull.source = addr_in->source;
+    icmp_pull.source = addr_in->source;
 
-	pulls_count = (uint8_t)(addr_in->dest_count / ADDR_BY_PULL) + 1;
+    pulls_count = (uint8_t)(addr_in->dest_count / ADDR_BY_PULL) + 1;
 
-	icmp_send_threads = (icmp_thread_t *) calloc (1, sizeof (icmp_thread_t) * pulls_count);
-	if (!icmp_send_threads)
-	{
-		icmp_log ("!!!!!!!!!!!!");
-		return;
-	}
+    icmp_send_threads = (icmp_thread_t *) calloc (1, sizeof (icmp_thread_t) * pulls_count);
+    if (!icmp_send_threads)
+    {
+        icmp_log ("%d failed to allocated memory: %s\n",
+                  __LINE__, strerror(errno));
+        return;
+    }
 
-	icmp_pull.request_result = icmp_settings->request_result;
+    icmp_pull.request_result = icmp_settings->request_result;
 
-	for (i = 0; i < addr_in->dest_count; i += ADDR_BY_PULL)
-	{
-		cur_pull = (uint8_t)(i / ADDR_BY_PULL);
+    for (i = 0; i < addr_in->dest_count; i += ADDR_BY_PULL)
+    {
+        cur_pull = (uint8_t)(i / ADDR_BY_PULL);
 
-		if (i + ADDR_BY_PULL >= addr_in->dest_count)
-			break;
+        if (i + ADDR_BY_PULL >= addr_in->dest_count)
+            break;
 
-		icmp_pull.dest = &addr_in->dest[i];
-		icmp_pull.dest_count = ADDR_BY_PULL;
+        icmp_pull.dest = &addr_in->dest[i];
+        icmp_pull.dest_count = ADDR_BY_PULL;
 
-		icmp_proc_pull (&icmp_pull, &icmp_send_threads[cur_pull]);
-	}
+        icmp_proc_pull (&icmp_pull, &icmp_send_threads[cur_pull]);
 
-	icmp_pull.dest = &addr_in->dest[i];
-	icmp_pull.dest_count = addr_in->dest_count - i;
+        icmp_log ("pull%d: %s - %s thread %ld",
+                    cur_pull, addr_in->dest[i].addr,
+                    &addr_in->dest[i + ADDR_BY_PULL].addr,
+                    icmp_send_threads[cur_pull].pid);
+    }
 
-	/* processing residue */
-	icmp_proc_pull (&icmp_pull, &icmp_send_threads[cur_pull]);
+    icmp_pull.dest = &addr_in->dest[i];
+    icmp_pull.dest_count = addr_in->dest_count - i;
 
-	for (i = 0; i < pulls_count; i++)
-	{
-		icmp_log ("Wait thread %ld pull %d", icmp_send_threads[i].pid, i);
-		rc = pthread_join (icmp_send_threads[i].thread_id, NULL);
-		if (rc)
-		{
-			switch (rc)
-			{
-				case EDEADLK:
-					icmp_log ("A deadlock was detected");
-				break;
-				case EINVAL: 
-					icmp_log ("Another thread is already waiting to join with this thread");
-				break;
-				case ESRCH:  
-					icmp_log ("No thread with the ID thread could be found");
-				break;
-				default:
-					icmp_log ("Unknown err: %d", rc);
-			}
-		} else {
-			icmp_log ("Thread %ld pull %d - exit success", icmp_send_threads[i].pid, i);
-		}
-	}
+    /* processing residue */
+    icmp_proc_pull (&icmp_pull, &icmp_send_threads[cur_pull]);
 
-	free (icmp_send_threads);
+    icmp_log ("pull%d: %s - %s thread %ld",
+                cur_pull, addr_in->dest[i].addr,
+                &addr_in->dest[addr_in->dest_count - 1].addr,
+                icmp_send_threads[cur_pull].pid);
 
-	icmp_log ("%s - exit", __func__);
+    for (i = 0; i < pulls_count; i++)
+    {
+        // icmp_log ("Wait thread %ld pull %d", icmp_send_threads[i].pid, i);
+        rc = pthread_join (icmp_send_threads[i].thread_id, NULL);
+        if (rc)
+        {
+            switch (rc)
+            {
+                case EDEADLK:
+                    icmp_log ("A deadlock was detected");
+                break;
+                case EINVAL: 
+                    icmp_log ("Another thread is already waiting to join with this thread");
+                break;
+                case ESRCH:  
+                    icmp_log ("No thread with the ID thread could be found");
+                break;
+                default:
+                    icmp_log ("Unknown err: %d", rc);
+            }
+        } else {
+            // icmp_log ("Thread %ld pull %d - exit success", icmp_send_threads[i].pid, i);
+        }
+    }
+
+    if (icmp_settings->send_finished)
+        icmp_settings->send_finished();
+
+    free (icmp_send_threads);
 }
 
 /*----------------------------------------------------------------------------*/
 
 void *icmp_control_thread(void *arg)
 {
-	pthread_mutex_lock(&thread_init_mutex);
+    pthread_mutex_lock(&thread_init_mutex);
 
-	int i;
-	int send_count = 0;
-	icmp_addr_in_t *addr_in;
-	icmp_settings_t *icmp_st_tmp;
-	icmp_settings_t icmp_st_static;
+    int i;
+    int send_count = 0;
+    icmp_addr_in_t *addr_in;
+    icmp_settings_t *icmp_st_tmp;
+    icmp_settings_t icmp_st_static;
 
-	if (!arg)
-	{
-		icmp_st_tmp->init_result = -1;
-		pthread_mutex_unlock(&thread_init_mutex);
-		return;
-	}
+    if (!arg)
+    {
+        icmp_st_tmp->init_result = -1;
+        pthread_mutex_unlock(&thread_init_mutex);
+        return;
+    }
 
-	icmp_st_tmp = (icmp_settings_t *)arg;
+    icmp_st_tmp = (icmp_settings_t *)arg;
 
-	memset (&icmp_st_static, 0, sizeof (icmp_st_static));
+    memset (&icmp_st_static, 0, sizeof (icmp_st_static));
 
-	addr_in = &icmp_st_static.addr_in;
+    addr_in = &icmp_st_static.addr_in;
 
-	/*
-	 * START COPYING FOR SAVING ICMP SETTINGS ON THREAD LEVEL
-	 */
+    /*
+     * START COPYING FOR SAVING ICMP SETTINGS ON THREAD LEVEL
+     */
 
-	/* saving "source address" */
+    /* saving "source address" */
 
-	addr_in->source = (icmp_addr_t *) calloc (1, sizeof (icmp_addr_t));
-	if (!addr_in->source)
-	{
-		icmp_st_tmp->init_result = 1;
-		pthread_mutex_unlock(&thread_init_mutex);
-		return;
-	}
+    addr_in->source = (icmp_addr_t *) calloc (1, sizeof (icmp_addr_t));
+    if (!addr_in->source)
+    {
+        icmp_log ("%d failed to allocated memory: %s\n",
+                  __LINE__, strerror(errno));
 
-	memcpy(addr_in->source, icmp_st_tmp->addr_in.source, sizeof (icmp_addr_t));
+        icmp_st_tmp->init_result = 1;
+        pthread_mutex_unlock(&thread_init_mutex);
+        return;
+    }
 
-	/* saving "dest addresses" */
+    memcpy(addr_in->source, icmp_st_tmp->addr_in.source, sizeof (icmp_addr_t));
 
-	addr_in->dest_count = icmp_st_tmp->addr_in.dest_count;
+    /* saving "dest addresses" */
 
-	addr_in->dest = (icmp_addr_t *) calloc (1, sizeof (icmp_addr_t) * addr_in->dest_count);
-	if (!addr_in->dest)
-	{
-		icmp_st_tmp->init_result = 2;
-		free (addr_in->source);
-		pthread_mutex_unlock(&thread_init_mutex);
-		return;
-	}
+    addr_in->dest_count = icmp_st_tmp->addr_in.dest_count;
 
-	for (i = 0; i < addr_in->dest_count; i++)
-	{
-		memcpy(&addr_in->dest[i],
-		       &icmp_st_tmp->addr_in.dest[i],
-		       sizeof (icmp_addr_t));
-	}
+    addr_in->dest = (icmp_addr_t *) calloc (1, sizeof (icmp_addr_t) * addr_in->dest_count);
+    if (!addr_in->dest)
+    {
+        icmp_log ("%d failed to allocated memory: %s\n",
+                  __LINE__, strerror(errno));
 
-	/* saving "send parameters" */
+        icmp_st_tmp->init_result = 2;
+        free (addr_in->source);
+        pthread_mutex_unlock(&thread_init_mutex);
+        return;
+    }
 
-	icmp_st_static.send_period_ms = icmp_st_tmp->send_period_ms;
-	icmp_st_static.send_count = icmp_st_tmp->send_count;
-	icmp_st_static.request_result = icmp_st_tmp->request_result;
+    for (i = 0; i < addr_in->dest_count; i++)
+    {
+        memcpy(&addr_in->dest[i],
+               &icmp_st_tmp->addr_in.dest[i],
+               sizeof (icmp_addr_t));
+    }
 
-	/* init success */
+    /* saving "send parameters" */
 
-	icmp_st_tmp->init_result = 0;
-	pthread_mutex_unlock(&thread_init_mutex);
+    icmp_st_static.send_period_ms = icmp_st_tmp->send_period_ms;
+    icmp_st_static.send_count = icmp_st_tmp->send_count;
+    icmp_st_static.request_result = icmp_st_tmp->request_result;
+    icmp_st_static.send_finished = icmp_st_tmp->send_finished;
 
-	icmp_log ("%s - inited\n", __func__);
+    /* init success */
 
-	if (icmp_st_static.send_period_ms < 0)
-		icmp_st_static.send_period_ms = 0;
+    icmp_st_tmp->init_result = 0;
+    pthread_mutex_unlock(&thread_init_mutex);
 
-	while (send_count++ != icmp_st_static.send_count)
-	{
-		icmp_start_sending(&icmp_st_static);
+    // icmp_log ("%s - inited\n", __func__);
 
-		if ((send_count + 1) < icmp_st_static.send_count)
-			usleep (icmp_st_static.send_period_ms);
-	}
+    if (icmp_st_static.send_period_ms < 0)
+        icmp_st_static.send_period_ms = 0;
 
-	if (addr_in->source)
-		free (addr_in->source);
+    while (send_count++ != icmp_st_static.send_count)
+    {
+        icmp_start_sending(&icmp_st_static);
 
-	if (addr_in->dest)
-		free (addr_in->dest);
+        if ((send_count + 1) < icmp_st_static.send_count)
+            usleep (icmp_st_static.send_period_ms);
+    }
 
-	icmp_log ("%s - done\n", __func__);
+    if (addr_in->source)
+        free (addr_in->source);
 
-	return NULL;
+    if (addr_in->dest)
+        free (addr_in->dest);
+
+    return NULL;
 }
 
 void *icmp_send_packet_thread (void *arg)
 {
-	pthread_mutex_lock(&thread_init_mutex);
+    pthread_mutex_lock(&thread_init_mutex);
 
-	int i = 0, rc, packet_size;
-	icmp_pull_t *icmp_pull = (icmp_pull_t *)arg;;
-	icmp_addr_t *source = icmp_pull->source;
-	icmp_addr_t *dest = icmp_pull->dest;
-	icmp_result_t request_result = icmp_pull->request_result;
-	int dest_count = icmp_pull->dest_count;
+    int i = 0, rc, packet_size;
+    icmp_pull_t *icmp_pull = (icmp_pull_t *)arg;;
+    icmp_addr_t *source = icmp_pull->source;
+    icmp_addr_t *dest = icmp_pull->dest;
+    icmp_result_cb_t request_result = icmp_pull->request_result;
+    int dest_count = icmp_pull->dest_count;
+    icmp_result_t icmp_result = {0};
 
-	icmp_pull->pid = syscall(SYS_gettid);
+    icmp_pull->pid = syscall(SYS_gettid);
 
-	pthread_mutex_unlock(&thread_init_mutex);
+    icmp_log ("%s inited", __func__);
 
-	icmp_log ("%s - inited\n", __func__);
+    pthread_mutex_unlock(&thread_init_mutex);
 
-	uint8_t *icmp_packet;
+    uint8_t *icmp_packet;
 
-	rc = icmp_packet_init (&icmp_packet, &packet_size);
-	if (rc != 0)
-	{
-		icmp_log ("failed to init icmp packet");
-		return NULL;
-	}
+    rc = icmp_packet_init (&icmp_packet, &packet_size, &icmp_result);
+    if (rc != 0)
+    {
+        return NULL;
+    }
 
-	for (i = 0; i < dest_count; i++)
-	{
-		icmp_log ("%s -> %s", source->addr, dest->addr);
+    for (i = 0; i < dest_count; i++)
+    {
 
-		rc = icmp_send_packet (icmp_packet, packet_size,
-		                       source->addr, dest->addr);
+        icmp_log ("%s -> %s", source->addr, dest->addr);
 
-		icmp_log(" rc %d request_result %p", rc, request_result);
+        rc = icmp_send_packet (icmp_packet, packet_size,
+                               source->addr, dest->addr,
+                               &icmp_result);
 
-		if (request_result)
-		{
-			request_result (dest->addr, rc);
-		}
+        if (request_result)
+        {
+            icmp_log ("%s -> %s - %s", source->addr, dest->addr, icmp_result.err_total? "FAILED":"SUCCESS");
+            /* maybe make a addr-pull notify? */
+            request_result (dest->addr, &icmp_result);
+        }
 
-		dest++;
-	}
+        dest++;
+    }
 
-	icmp_packet_deinit (icmp_packet);
+    icmp_packet_deinit (icmp_packet);
 
-	icmp_log ("%s - done\n", __func__);
-
-	return NULL;
+    return NULL;
 }
 
 static int icmp_sock_init (int *sockfd)
 {
-	int on = 1, rc;
+    int on = 1, rc;
 
-	*sockfd = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if (*sockfd < 0) 
-	{
-		icmp_log("could not create socket: %s", strerror(errno));
-		return -1;
-	}
+    *sockfd = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (*sockfd < 0) 
+    {
+        icmp_log ("%d failed to create socket: %s\n",
+                  __LINE__, strerror(errno));
+        return -1;
+    }
 
-	// We shall provide IP headers
-	rc = setsockopt (*sockfd, IPPROTO_IP, IP_HDRINCL, (const char*)&on, sizeof (on));
-	if (rc == -1)
-	{
-		icmp_log("IP_HDR: %s", strerror(errno));
-		return -2;
-	}
+    // We shall provide IP headers
+    rc = setsockopt (*sockfd, IPPROTO_IP, IP_HDRINCL, (const char*)&on, sizeof (on));
+    if (rc == -1)
+    {
+        icmp_log ("%d failed to tune socket: %s\n",
+                  __LINE__, strerror(errno));
+        return -2;
+    }
 
-	// //allow socket to send datagrams to broadcast addresses
-	// rc = setsockopt (*sockfd, SOL_SOCKET, SO_BROADCAST, (const char*)&on, sizeof (on));
-	// if (rc == -1)
-	// {
-	// 	icmp_log("BROADCAST: %s", strerror(errno));
-	// 	return -3;
-	// }
+    // //allow socket to send datagrams to broadcast addresses
+    // rc = setsockopt (*sockfd, SOL_SOCKET, SO_BROADCAST, (const char*)&on, sizeof (on));
+    // if (rc == -1)
+    // {
+        // icmp_log ("%d failed to tune socket: %s\n",
+        //           __LINE__, strerror(errno));
+    //  return -3;
+    // }
 
-	return 0;
+    return 0;
 }
 
 static int icmp_sock_deinit (int *sockfd)
 {
-	close(*sockfd);
+    close(*sockfd);
 
-	return 0;
+    return 0;
 }
 
 static unsigned short in_cksum(unsigned short *ptr, int nbytes)
 {
-	register long sum;
-	u_short oddbyte;
-	register u_short answer;
+    register long sum;
+    u_short oddbyte;
+    register u_short answer;
 
-	sum = 0;
-	while (nbytes > 1)
-	{
-		sum += *ptr++;
-		nbytes -= 2;
-	}
+    sum = 0;
+    while (nbytes > 1)
+    {
+        sum += *ptr++;
+        nbytes -= 2;
+    }
 
-	if (nbytes == 1)
-	{
-		oddbyte = 0;
-		*((u_char *) & oddbyte) = *(u_char *) ptr;
-		sum += oddbyte;
-	}
+    if (nbytes == 1)
+    {
+        oddbyte = 0;
+        *((u_char *) & oddbyte) = *(u_char *) ptr;
+        sum += oddbyte;
+    }
 
-	sum = (sum >> 16) + (sum & 0xffff);
-	sum += (sum >> 16);
-	answer = ~sum;
+    sum = (sum >> 16) + (sum & 0xffff);
+    sum += (sum >> 16);
+    answer = ~sum;
 
-	return (answer);
+    return (answer);
 }
 
-static int icmp_packet_init (uint8_t **icmp_packet, int *packet_size)
+static int icmp_packet_init (uint8_t **icmp_packet, int *packet_size,
+                             icmp_result_t *icmp_result)
 {
-	struct iphdr *ip_hdr;
-	struct icmphdr *icmp_hdr;
-	int payload_size = 10;
+    struct iphdr *ip_hdr;
+    struct icmphdr *icmp_hdr;
+    int payload_size = 10;
 
-	*packet_size = sizeof (struct iphdr) + sizeof (struct icmphdr) + payload_size;
+    *packet_size = sizeof (struct iphdr) + sizeof (struct icmphdr) + payload_size;
 
-	*icmp_packet = (uint8_t *) malloc (*packet_size);
-	if (!*icmp_packet) 
-	{
-		icmp_log("%s", strerror(errno));
-		return -1;
-	}
+    *icmp_packet = (uint8_t *) calloc (1, *packet_size);
+    if (!*icmp_packet) 
+    {
+        icmp_log ("%d failed to allocated memory: %s\n",
+                  __LINE__, strerror(errno));
 
-	ip_hdr = (struct iphdr *) (*icmp_packet);
-	icmp_hdr = (struct icmphdr *) ((*icmp_packet) + sizeof (struct iphdr));
+        if (icmp_result)
+            icmp_result->err_mem = 1;
 
-	memset (*icmp_packet, 0, *packet_size);
+        return -1;
+    }
 
-	ip_hdr->version = 4;
-	ip_hdr->ihl = 5;
-	ip_hdr->tos = 0;
-	ip_hdr->tot_len = htons (*packet_size);
-	ip_hdr->id = rand ();
-	ip_hdr->frag_off = 0;
-	ip_hdr->ttl = 255;
-	ip_hdr->protocol = IPPROTO_ICMP;
+    ip_hdr = (struct iphdr *) (*icmp_packet);
+    icmp_hdr = (struct icmphdr *) ((*icmp_packet) + sizeof (struct iphdr));
 
-	// ip_hdr->saddr = saddr;
-	// ip_hdr->daddr = daddr;
+    memset (*icmp_packet, 0, *packet_size);
 
-	//ip->check = in_cksum ((u16 *) ip, sizeof (struct iphdr));
+    ip_hdr->version = 4;
+    ip_hdr->ihl = 5;
+    ip_hdr->tos = 0;
+    ip_hdr->tot_len = htons (*packet_size);
+    ip_hdr->id = rand ();
+    ip_hdr->frag_off = 0;
+    ip_hdr->ttl = 255;
+    ip_hdr->protocol = IPPROTO_ICMP;
 
-	icmp_hdr->type = ICMP_ECHO;
-	icmp_hdr->code = 0;
-	icmp_hdr->un.echo.sequence = rand();
-	icmp_hdr->un.echo.id = rand();
+    //ip_hdr->check = in_cksum ((u16 *) ip_hdr, sizeof (struct iphdr));
 
-	memset((*icmp_packet) + sizeof(struct iphdr) + sizeof(struct icmphdr),
-	        rand() % 255,
-	        payload_size);
+    icmp_hdr->type = ICMP_ECHO;
+    icmp_hdr->code = 0;
+    icmp_hdr->un.echo.sequence = rand();
+    icmp_hdr->un.echo.id = rand();
 
-	icmp_hdr->checksum = 0;
-	icmp_hdr->checksum = in_cksum((unsigned short *)icmp_hdr,
-	                          sizeof(struct icmphdr) + payload_size);
+    memset((*icmp_packet) + sizeof(struct iphdr) + sizeof(struct icmphdr),
+            rand() % 255,
+            payload_size);
 
-	return 0;
+    icmp_hdr->checksum = 0;
+    icmp_hdr->checksum = in_cksum((unsigned short *)icmp_hdr,
+                              sizeof(struct icmphdr) + payload_size);
+
+    return 0;
 }
 
 static void icmp_packet_deinit (uint8_t *icmp_packet)
 {
-	if (!icmp_packet)
-		return;
+    if (!icmp_packet)
+        return;
 
-	free (icmp_packet);
+    free (icmp_packet);
 }
 
 static int icmp_send_packet (uint8_t *icmp_packet, int packet_size,
-                             char *source, char *dest)
+                             char *source, char *dest,
+                             icmp_result_t *icmp_result)
 {
-	int rc, ping_result = 0;
-	int addrlen = 0;
-	int sockfd;
-	struct sockaddr_in servaddr;
-	struct timeval tv;
-	struct iphdr *ip_hdr;
-	uint8_t icmp_recv_packet[128] = {0};
-	uint32_t net_source, net_dest;
-	fd_set rfds;
+    int rc, ping_result = 0;
+    int addrlen = 0;
+    int sockfd;
+    struct sockaddr_in servaddr;
+    struct timeval tv;
+    struct iphdr *ip_hdr;
+    uint8_t icmp_recv_packet[128] = {0};
+    uint32_t net_source, net_dest;
+    struct timeval send_req;
+    struct timeval recv_repl;
 
-	rc = icmp_sock_init (&sockfd);
-	if (rc != 0)
-	{
-		icmp_log ("failed to init socket");
-		return -1;
-	}
+    fd_set rfds;
 
-	FD_ZERO(&rfds);
-	FD_SET(sockfd, &rfds);
+    rc = icmp_sock_init (&sockfd);
+    if (rc != 0)
+    {
+        icmp_log ("%d failed to allocated memory: %s\n",
+                  __LINE__, strerror(errno));
 
-	net_source = inet_addr(source);
-	net_dest = inet_addr(dest);
+        if (icmp_result)
+            icmp_result->err_mem = 1;
 
-	ip_hdr = (struct iphdr *)icmp_packet;
-	ip_hdr->saddr = net_source;
-	ip_hdr->daddr = net_dest;
+        return -1;
+    }
 
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = net_dest;
-	memset(&servaddr.sin_zero, 0, sizeof (servaddr.sin_zero));
+    FD_ZERO(&rfds);
+    FD_SET(sockfd, &rfds);
 
-	icmp_log ("SEND packet:\n");
-	// icmp_log ("ip->version %d\n", ip_hdr->version);
-	// icmp_log ("ip_hdr->ihl %d\n", ip_hdr->ihl);
-	// icmp_log ("ip_hdr->tos %d\n", ip_hdr->tos);
-	// icmp_log ("ip_hdr->tot_len %d\n", ip_hdr->tot_len);
-	// icmp_log ("ip_hdr->id %d\n", ip_hdr->id);
-	// icmp_log ("ip_hdr->frag_off %d\n", ip_hdr->frag_off);
-	// icmp_log ("ip_hdr->ttl %d\n", ip_hdr->ttl);
-	// icmp_log ("ip_hdr->protocol %d\n", ip_hdr->protocol);
-	icmp_log ("ip_hdr->saddr %08x\n", ip_hdr->saddr);
-	icmp_log ("ip_hdr->daddr %08x\n", ip_hdr->daddr);
+    net_source = inet_addr(source);
+    net_dest = inet_addr(dest);
 
-	/* loopback */
-	if (ip_hdr->saddr == ip_hdr->daddr)
-	{
-		icmp_sock_deinit (&sockfd);
-		return 0;
-	}
+    ip_hdr = (struct iphdr *)icmp_packet;
+    ip_hdr->saddr = net_source;
+    ip_hdr->daddr = net_dest;
 
-	rc = sendto(sockfd, icmp_packet, packet_size, 0,
-	            (struct sockaddr*) &servaddr, sizeof (servaddr));
-	if (rc < 1)
-	{
-		icmp_log("send failed: %s", strerror(errno));
-		icmp_sock_deinit (&sockfd);
-		return -3;
-	}
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = net_dest;
+    memset(&servaddr.sin_zero, 0, sizeof (servaddr.sin_zero));
 
-	tv.tv_sec = 1;
-	tv.tv_usec = 0;
+    /* loopback */
+    if (ip_hdr->saddr == ip_hdr->daddr)
+    {
+        icmp_sock_deinit (&sockfd);
+        return 0;
+    }
+
+    rc = sendto (sockfd, icmp_packet, packet_size, 0,
+                (struct sockaddr*) &servaddr, sizeof (servaddr));
+    if (rc < 1)
+    {
+        icmp_log ("%d: %s -> %s: failed to send icmp packet: %s\n",
+                  __LINE__, source, dest, strerror(errno));
+
+        if (icmp_result)
+            icmp_result->err_send = 1;
+
+        icmp_sock_deinit (&sockfd);
+        return -3;
+    }
+
+    icmp_clockgettime (&send_req);
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 100000;
 
 retry:
-	if(select (sockfd + 1, &rfds, NULL, NULL, &tv))
-	{
-		if(FD_ISSET(sockfd, &rfds))
-		{
-			rc = recvfrom(sockfd, (void *)icmp_recv_packet,
-			              sizeof (icmp_recv_packet), 0,
-			              (struct sockaddr*) &servaddr, &addrlen);
-			if (rc > 1)
-			{
-				// struct icmphdr *icmp_hdr;
+    if(select (sockfd + 1, &rfds, NULL, NULL, &tv))
+    {
+        if(FD_ISSET (sockfd, &rfds))
+        {
+            rc = recvfrom (sockfd, (void *)icmp_recv_packet,
+                          sizeof (icmp_recv_packet), 0,
+                          (struct sockaddr*) &servaddr, &addrlen);
+            if (rc > 1)
+            {
+                struct icmphdr *icmp_hdr;
 
-				ip_hdr = (struct iphdr *) icmp_recv_packet;
-				// icmp_hdr = (struct icmphdr *) (ip_hdr + sizeof (struct iphdr));
+                ip_hdr = (struct iphdr *) icmp_recv_packet;
+                icmp_hdr = (struct icmphdr *) (ip_hdr + sizeof (struct iphdr));
 
-				icmp_log ("<%p> RECV packet: %d from %08x", ip_hdr, sockfd, ip_hdr->saddr);
+                // if (ip_hdr->saddr != net_dest)
+                // {
+                //     FD_ZERO(&rfds);
+                //     FD_SET(sockfd, &rfds);
+                //     tv.tv_sec = 0;
+                //     tv.tv_usec = 100000;
+                //     goto retry;
+                // }
 
-				if (ip_hdr->saddr != net_dest)
-				{
-					icmp_log ("FFFFFFUUUUU: MYSTA FAKIG BLYADISH SYKEN! %08x -> %08x !!", ip_hdr->saddr, net_dest);
-					FD_ZERO(&rfds);
-					FD_SET(sockfd, &rfds);
-					tv.tv_sec = 1;
-					tv.tv_usec = 0;
-					goto retry;
-				}
+                if (ip_hdr->saddr == net_dest)
+                {
+                    icmp_clockgettime (&recv_repl);
 
-				// icmp_log ("ip->version %d\n", ip_hdr->version);
-				// icmp_log ("ip_hdr->ihl %d\n", ip_hdr->ihl);
-				// icmp_log ("ip_hdr->tos %d\n", ip_hdr->tos);
-				// icmp_log ("ip_hdr->tot_len %d\n", ip_hdr->tot_len);
-				// icmp_log ("ip_hdr->id %d\n", ip_hdr->id);
-				// icmp_log ("ip_hdr->frag_off %d\n", ip_hdr->frag_off);
-				// icmp_log ("ip_hdr->ttl %d\n", ip_hdr->ttl);
-				// icmp_log ("ip_hdr->protocol %d\n", ip_hdr->protocol);
-				icmp_log ("ip_hdr->saddr %08x\n", ip_hdr->saddr);
-				icmp_log ("ip_hdr->daddr %08x\n", ip_hdr->daddr);
-				// icmp_log ("icmp_hdr->type %d\n", icmp_hdr->type);
-				// icmp_log ("icmp_hdr->code %d\n", icmp_hdr->code);
-				// icmp_log ("icmp_hdr->un.echo.sequence %d\n", icmp_hdr->un.echo.sequence);
-				// icmp_log ("icmp_hdr->un.echo.id %d\n", icmp_hdr->un.echo.id);
-				// icmp_log ("icmp_hdr->checksum %x\n", icmp_hdr->checksum);
+                    if (icmp_result)
+                    {
+                        icmp_result->err_type = icmp_hdr->type;
+                        icmp_result->err_code = icmp_hdr->code;
 
-				// ping_result = 0;
-			}
-		}
-	} else {
-		ping_result = ICMP_TIMEOUT;
-	}
+                        timersub(&recv_repl, &send_req, &icmp_result->delay);
+                    }
+                } else {
+                    icmp_log ("%s -> %s - source 192.168.23.%d dest 192.168.23.%d ?!",
+                        source, dest, ip_hdr->saddr >> 24, net_dest >> 24);
+                }
+            } else {
+                icmp_log("rc < 1 [%d]", rc);
+            }
+        }
 
-	icmp_sock_deinit (&sockfd);
+        FD_ZERO(&rfds);
+        FD_SET(sockfd, &rfds);
+        tv.tv_sec = 0;
+        tv.tv_usec = 100000;
+        goto retry;
 
-	return ping_result;
+    } else {
+        icmp_log("%s -> %s - timeout", source, dest);
+        if (icmp_result)
+        {
+            icmp_clockgettime (&recv_repl);
+            timersub(&recv_repl, &send_req, &icmp_result->delay);
+
+            icmp_result->err_timeout = 1;
+        }
+    }
+
+    icmp_sock_deinit (&sockfd);
+
+    return 0;
 }
