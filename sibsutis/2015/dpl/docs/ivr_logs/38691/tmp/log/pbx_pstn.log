@@ -1,0 +1,1060 @@
+SMG-1016M. SN: VI1F000130 Software Version: V.3.2.1.1230. M/PBX/SORM/H323/RCM/VAS/REC/IVR Build: Dec 23 2014 18:12:19
+Log started at:  15:07:52.863077
+  15:07:54.425974  [INFO]  TRK. Incomming message detected.
+  15:07:54.426117  [INFO]  ASN. Message 'ACK'. Encode success
+  15:07:54.426199  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:07:54.426256  [INFO]  ZMQ. RX. Incomming message detected.
+  15:07:54.426309  [INFO]  ASN. Try decode message
+  15:07:54.426436  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:07:54.426507  [INFO]  ASN. Decode success
+  15:07:54.426565  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:07:54.426634  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:07:54.426709  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:07:54.426875  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:07:54.426947  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:07:54.427071  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:07:54.427162  [INFO]  TRK. Callref ffffffff. Message 'Connection Update Response' was sent
+  15:07:54.625143  [INFO]  TRK. Incomming message detected.
+  15:07:54.625270  [INFO]  ZMQ. RX. ACK callback detected.
+  15:07:54.625329  [INFO]  ASN. Try decode message
+  15:07:54.625407  [INFO]  ASN. Decode success
+  15:07:54.625462  [INFO]  ZMQ. RX. ACK decoded.
+  15:07:59.435805  [INFO]  TRK. Incomming message detected.
+  15:07:59.435951  [INFO]  ASN. Message 'ACK'. Encode success
+  15:07:59.436034  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:07:59.436090  [INFO]  ZMQ. RX. Incomming message detected.
+  15:07:59.436143  [INFO]  ASN. Try decode message
+  15:07:59.436271  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:07:59.436341  [INFO]  ASN. Decode success
+  15:07:59.436399  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:07:59.436468  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:07:59.436529  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:07:59.436695  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:07:59.436766  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:07:59.436891  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:07:59.436982  [INFO]  TRK. Callref ffffffff. Message 'Connection Update Response' was sent
+  15:07:59.635160  [INFO]  TRK. Incomming message detected.
+  15:07:59.635287  [INFO]  ZMQ. RX. ACK callback detected.
+  15:07:59.635345  [INFO]  ASN. Try decode message
+  15:07:59.635423  [INFO]  ASN. Decode success
+  15:07:59.635476  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:00.973026  [INFO]  SIP. RX. Callref 0043. Mode [8006:-1]. [192.168.0.24:5060] [5060]. Call-ID: '6fe84925-7ab6-122d-23bf-a8f94b09a6fc'
+  15:08:00.973314  [INFO]  SIP. RX. Callref 0043.   IAM- Initial Address Message
+			## Nature of connection: 11
+			# 	Satellite: one
+			# 	Continuity Check: not required
+			# 	Echo control: included
+			## Forward Call Indicators: 20 00 
+			# 	Call to be treated as national call
+			# 	EndToEnd method: no end-to-end(only link-by-link)
+			# 	Interworking: no encountered
+			# 	EndToEnd info: not available
+			# 	ISUP: used all the way
+			# 	ISUP indicator: preferred all way
+			# 	Originating access: non-ISDN
+			# Calling party category:  0x0a
+			# Transmission medium req: 0x03 - 3.1 kHz audio
+			## Called party number: 82 10 43 43 0F 
+			# 	Nature of address: 0x82 - unknown
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Number:            3434 <ST>
+			[Optional params]
+			# Hop counter: 1E.
+			## Calling party number: 82 13 01 01 
+			# 	Nature of address: 0x82 - unknown
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Screening:         0x03 - network prov
+			# 	Presentation:      0x00 - presentation allowed
+			# 	Number:            101
+			[end of optional params]
+  15:08:00.973513  [INFO]  SIP. Callref 0043. New state 'SIPT_WAIT_MEDIA'
+  15:08:00.973647  [INFO]  SIP. Callref 0043. Incoming seize mode 'SIP-user':
+			# source host <192.168.0.24:5060> 
+			# Port SIPT:0043. UserID 6. Intf: 3.
+			# CCR(none). Category 0a (10). 
+			# Calling <101> Called <3434> Generic <none> GenericNotify 0x0
+			# Orig called <none> Redirecting <none>. Redirecting count 0
+			# cplt=y; pres=allow; nature=not subscriber. 
+			# SS7 all way: y, ISUP all way: y, ISDN orig: n, ISDN pref: 0
+			# RADIUS: seize-time [0x549a8270], return-code [0x0] credit-time [0x0] [OK]
+			# RADIUS: session-ID [11000043 549a8270 00000000 00000000]
+			RawCalled: -not filled-
+  15:08:00.973714  [INFO]  SIP. Callref 0043. Interface 3, mode 3, reg-mode 0, sdp_18x: 1
+  15:08:00.973773  [INFO]  SIP. Callref 0043. Update category-AON for SIP-user: cat <1>
+  15:08:00.973827  [INFO]  SIP. Callref 0043. Update calling for SIP-user: type <subscriber>
+  15:08:00.973921  [INFO]  Port SIPT:0043. Seize - redirect cfu cfb cfnr cfoos, transfer allowed.
+  15:08:00.973983  [INFO]  Port SIPT:0043. Seize (v-chan:-1, TG:-2). Cld:'<none>'(0). (Subscr) . Clg-len: 3. clg-set: y. COS: -1. RADIUS=-1
+  15:08:00.974046  [INFO]  Port SIPT:0043. ModTable in [-1:-1], out [-1:-1], out redir:orig [-1:-1]
+  15:08:00.974112  [INFO]  Port SIPT:0043. CgPN: <101>(3) <set> <subscriber> <isdn/telephony> <allowed> <net.provided>. cat [1].
+  15:08:00.974189  [INFO]  Port SIPT:0043. Calling number: 101, use for sorm: all digits
+  15:08:00.974255  [INFO]  Port SIPT:0043. Calling Info (pres allowed): <101>. <Category=1>
+  15:08:00.974311  [INFO]  Port SIPT:0043. CgPN: <101>(3) <set> <subscriber> <isdn/telephony> <allowed> <net.provided>. cat [1].
+  15:08:00.974372  [INFO]  Port SIPT:0043. Check number dir-type for <101>[0x01] (3)
+  15:08:00.974434  [INFO]  Port SIPT:0043. Number <101> detected as local to [6]
+  15:08:00.974489  [INFO]  Port SIPT:0043. COPM: Check for activate local port
+  15:08:00.974546  [INFO]  Port SIPT:0043. Set state 'In-Dial'
+  15:08:00.974599  [INFO]  SIP. Callref 0043. Set display name: <>(0)
+  15:08:00.974682  [INFO]  Port SIPT:0043. Create msp-conn Conn[005d].
+  15:08:00.974735  [INFO]  Conn[005d]: Set state 'Idle'->'AllocReq'
+  15:08:00.974868  [INFO]  Port SIPT:0043. Set new IP-conn [005d]
+  15:08:00.974941  [INFO]  Conn[005d]: set network interface in state 'AllocReq'. IP <192.168.0.20>. net-dev [2]
+  15:08:00.974996  [INFO]  SIP. Callref 0043. IP-conn [005d] created
+  15:08:00.975115  [INFO]  SIP. Callref 0043. Incoming seize - access code [0x0], mask [0x90]
+  15:08:00.975178  [INFO]  SIP. Callref 0043. Incoming seize - PLAN 0. COS 0
+  15:08:00.975257  [INFO]  Port SIPT:0043. Dial In (in=05, need rm=0): <3><4><3><4>[.]
+  15:08:00.975344  [INFO]  Port SIPT:0043. In Digit 5 sym: called buf <3434.>
+  15:08:00.975404  [INFO]  Port SIPT:0043. Dial buf <3434>(4)
+  15:08:00.975462  [INFO]  Port SIPT:0043. SIPT seize chan. Prefix data: type: not set;  called type: unknown
+  15:08:00.975519  [INFO]  SIP. Callref 0043. New state 'SIPT_PRESENTED'
+  15:08:00.975583  [INFO]  Port SIPT:0043. Check sip-user ID[6] Idx[1] upper register.
+  15:08:00.975640  [INFO]  Port SIPT:0043. SIP-intrf ID[0] Idx[-1], status [0], state [0], expires [0]
+  15:08:00.975711  [INFO]  Port SIPT:0043. Proc Modifier from RADIUS at 'outgoing'. inMod[-1:-1], outMod[-1:-1]
+  15:08:00.975797  [INFO]  Port SIPT:0043. Proc Modifier from RADIUS at 'incoming'. inMod[-1:-1], outMod[-1:-1]
+  15:08:00.975973  [INFO]  SIP. RX. Callref 0043.   MediaInfo
+			## IP: <192.168.0.24> 
+			## Offer: <1> 
+			## m=audio 35022 RTP/AVP 0 8 18 
+			## a=rtpmap:0 PCMU/8000 
+			## a=rtpmap:8 PCMA/8000 
+			## a=rtpmap:18 G729/8000 
+			## a=fmtp:18 annexb=no 
+			## a=silenceSupp:off - - - - 
+  15:08:00.976127  [INFO]  SIP. Callref 0043. Set Media-Info. Count[1]
+  15:08:00.976198  [INFO]  SIP. Callref 0043. Media-Info (offer): [192.168.0.24]
+  15:08:00.976279  [INFO]  Valid
+			 m[0]: audio 35022 RTP/AVP 0 8 18
+			 a[0]:0 G711.U [set]
+			 a[1]:8 G711.A [set]
+			 a[2]:18 G729.A [set]
+			 a[3]:silenceSupp:off - - - -
+			 a[4]:sendrecv
+  15:08:00.976339  [INFO]  SIP. Callref 0043. Media negotiate. Interface: 3
+  15:08:00.976402  [INFO]  SIP. Callref 0043. Media negotiate <offer>. [192.168.0.24]. List-count: 1
+  15:08:00.976460  [INFO]  SIP. Callref 0043. Media negotiate. Codec found: G711.U. PT 0. m[1], a[0]. sendrecv
+  15:08:00.976522  [INFO]  Port SIPT:0043. Set IP-conn [005d] recvonly
+  15:08:00.976577  [INFO]  Conn[005d]: SendRecv set 'recvonly' in state 'AllocReq'
+  15:08:00.976656  [INFO]  Conn[005d]: set rtp-cfg.  <192.168.0.20:30306>:[02.31.52.63.74.80] <-> <0.0.0.0:0>:[00.00.00.00.00.00]. flg[11]
+  15:08:00.976734  [INFO]  Port SIPT:0043. IP-conn [005d]. Set Tune
+  15:08:00.976792  [INFO]  Conn[005d]: Set tune: vad 'off', cng 'off', ecan 'on'
+			 pte [20], rtcp_period [0], rtcp_ctrl [0], dscp [2]
+			 dtmf_mode 'sip-info' dtmf_pt rx [101] dtmf_pt tx [101] fax_mode [3]
+			 use_vbd 'off' vbd_codec [2] vbd_pt [255]
+			 NAT: N, t38transit: 0
+  15:08:00.976859  [INFO]  SIP. Callref 0043. Use codec: G711.U sendrecv. PT 0.
+  15:08:00.976925  [INFO]  Port SIPT:0043. IP-conn [005d]. Set Media-Info: [192.168.0.24:35022]
+  15:08:00.976987  [INFO]  Conn[005d]: Set media-info in state 'AllocReq'. [192.168.0.24:35022]
+  15:08:00.977050  [INFO]  Conn[005d]: [192.168.0.20:30306] <-> [192.168.0.24:35022]
+  15:08:00.977107  [INFO]  Conn[005d]: Codec: G.711U , payload [0], DTMF-PT: 101
+  15:08:00.977168  [INFO]  Conn[005d]: try get remote MAC for <192.168.0.24>
+  15:08:00.977348  [INFO]  Conn[005d]: found   remote MAC for <192.168.0.24> - [a8:f9:4b:09:a6:fc]. net-dev [2]
+  15:08:00.977418  [INFO]  Conn[005d]: Set codecs-info in state 'AllocReq'. Count: 1
+  15:08:00.977477  [INFO]  Conn[005d]: G711.U PT [0]
+  15:08:00.977534  [INFO]  SIP. Callref 0043. New state 'SIPT_IN_PROCEEDING'
+  15:08:00.977597  [INFO]  Port SIPT:0043. Dial Proc (state In-Dial, called len 05): <3434.> Compl.
+  15:08:00.977656  [INFO]  Port SIPT:0043. Dial Proc. RADIUS return-code: [0].
+  15:08:00.977717  [INFO]  Port SIPT:0043. Search route. Mode: 'calling'. Num: <101>(3).# Complete
+  15:08:00.977797  [INFO]  Port SIPT:0043. Search route. result: route not found. res (-1)
+  15:08:00.977864  [INFO]  Port SIPT:0043. Check number dir-type for <3434.>[0x01] (5)
+  15:08:00.977986  [INFO]  Port SIPT:0043. Number <3434.> detected as extern to prefix [32], but not trunk
+  15:08:00.978051  [INFO]  Port SIPT:0043. Search route. Mode: 'called'. Num: <3434.>(5).# Complete
+  15:08:00.978170  [INFO]  Port SIPT:0043. Search route. result: found route: prefix[32]. res (4)
+  15:08:00.978247  [INFO]  Port SIPT:0043. Process route to prefix [32].
+  15:08:00.978316  [INFO]  Port SIPT:0043. Prefix 32: type 'IVR.SCENARIO', idx=0
+  15:08:00.978393  [INFO]  Conn[005d]: No automated dtmf regeneration
+  15:08:00.978461  [INFO]  SRV. Callref 006c. out-Seize from port SIPT:0043.
+  15:08:00.978549  [INFO]  Port SRVC:006c. Set parent SIPT:0043
+  15:08:00.978612  [INFO]  Port SRVC:006c. loc 0, trunk-loc 0. peer-loc 1, peer-tunk-loc: 0
+  15:08:00.978669  [INFO]  Port SIPT:0043. loc 1, trunk-loc 0. peer-loc 0, peer-tunk-loc: 0
+  15:08:00.978724  [INFO]  SRV. Callref 006c.  CgPN: <101>(3) <set> <subscriber> <isdn/telephony> <allowed> <net.provided>. cat [1]
+  15:08:00.978785  [INFO]  Port SRVC:006c. Set state 'Service-Dial'
+  15:08:00.978843  [INFO]  SRV. Callref 006c. New state 'SRV_PRESENTED'
+  15:08:00.978926  [INFO]  Port SRVC:006c. Set in-band indication flag
+  15:08:00.978988  [INFO]  Port SRVC:006c. Stop Dial, reason 'complete'
+  15:08:00.979051  [INFO]  Port SIPT:0043. Send 'End of Dial' to incoming call
+  15:08:00.979111  [INFO]  Port SRVC:006c. GetISDN: allway[1], fwd[0], bwd[0], e2e[0]. ss7[1]
+  15:08:00.979166  [INFO]  SIP. Callref 0043. End Dial. (with in-band)
+  15:08:00.979219  [INFO]  SIP. Callref 0043. Media will be sent now. Flags: SDP in 18x: 1, NAT: 0, NAT-SDP: 0. 
+  15:08:00.979274  [INFO]  SIP. Callref 0043. Prepare media requested
+  15:08:00.979329  [INFO]  SIP. Callref 0043. Update Media-Info. [core/sipt_proc.c:1806]
+  15:08:00.979387  [INFO]  SIP. Callref 0043. Media-Info (answer): [192.168.0.20]
+  15:08:00.979452  [INFO]  Valid
+			 m[0]: audio 30306 RTP/AVP 0
+			 a[0]:0 G711.U [set]
+			 a[1]:silenceSupp:off - - - -
+			 a[2]:sendrecv
+  15:08:00.979505  [INFO]  SIP. Callref 0043. Prepare media finished (should send)
+  15:08:00.979702  [INFO]  Port SRVC:006c. Get CallerId: '-none-' (0) no set-flg
+  15:08:00.979758  [INFO]  SIP. Callref 0043. Get display name: <>(0)
+  15:08:00.979946  [INFO]  SIP. Callref 0043. Media-Info prepare
+  15:08:00.980009  [INFO]  SIP. Callref 0043. Media-Info encode. Media-list size: 1 
+  15:08:00.980182  [INFO]  SIP. TX. Callref 0043.   ACM-Address Complete
+			## Backward call Indicators: 12 01 
+			# 	Called party's status indicator: No indication
+			# 	Interworking: encountered
+			# 	ISUP: not used all the way
+			# 	Terminating access: non-ISDN
+			[Optional params]
+			# Optional backward call indicators: 01.
+			[end of optional params]
+  15:08:00.980283  [INFO]  SIP. TX. Callref 0043.   MediaInfo
+			## IP: <192.168.0.20> 
+			## Offer: <0> 
+			## m=audio 30306 RTP/AVP 0 
+			## a=rtpmap:0 PCMU/8000 
+			## a=silenceSupp:off - - - - 
+			## a=sendrecv 
+  15:08:00.980641  [INFO]  Port SIPT:0043. LinkUp to SRVC:006c
+  15:08:00.980719  [INFO]  Port SIPT:0043. Activate IP-conn [005d]
+  15:08:00.980779  [INFO]  Conn[005d]: try activate. state 'AllocReq'. (media not connected)
+  15:08:00.980838  [INFO]  SRV. Callref 006c. Set IVR ref [0060]
+  15:08:00.980899  [INFO]  IVR. Try find IVRScenario-2.ivr_script in /tmp/disk
+  15:08:00.981079  [INFO]  IVR. Script found. Full path: /tmp/disk/ivr_scenario/IVRScenario-2.ivr_script
+  15:08:00.981154  [INFO]  IVR. Callref 0060. Mapped on SRVC:006c (Peer SIPT:0043)
+  15:08:00.981218  [INFO]  ZMQ. TX Callref 0060. Try send 'Seize'
+  15:08:00.981296  [INFO]  ASN. Added 'Seize' to message body
+  15:08:00.981393  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Seize
+				 BASIC params:
+				 applicationCfg: . . . . /tmp/disk/ivr_scenario/IVRScenario-2.ivr_script
+				 vatsId: . . . . . . . . no_vats
+				 applicationId:  . . . . 0
+				 timestamp:  . . . . . . 1419.412080.0
+				 cdpn: . . . . . . . . . 
+				    nai: . . . . . . . . 2
+				    npi: . . . . . . . . 1
+				    inn: . . . . . . . . 0
+				    address: . . . . . . 3434
+				 OPTIONAL params:
+				 cgpn: . . . . . . . . . 
+				    nai: . . . . . . . . 1
+				    screening: . . . . . 3
+				    apri:  . . . . . . . 0
+				    npi: . . . . . . . . 2
+				    ni:  . . . . . . . . 0
+				    address: . . . . . . 101
+				 callRef:  . . . . . . . no
+				 category: . . . . . . . 1
+				 tgId: . . . . . . . . . no
+				 originalCDPN: . . . . . no
+				 genericNumber:  . . . . no
+				 redirectingNumber:  . . no
+				 redirectionInformation: no
+				 callingAccess:  . . . . 0
+				 fci . . . . . . . . . . no
+				 usi . . . . . . . . . . no
+				 uti . . . . . . . . . . no
+				 tmr . . . . . . . . . . 3
+				 noCDR . . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+  15:08:00.981850  [INFO]  ASN. Message 'Seize'. Encode success
+  15:08:00.981922  [INFO]  ZMQ. Callref 0060. State changed: 'disconnected' -> 'wait connection'
+  15:08:00.981980  [INFO]  ZMQ. Callref 0060. New session added
+  15:08:00.982059  [INFO]  ZMQ. TX. Message 'Seize' was sent
+  15:08:00.982140  [INFO]  IVR. Callref 0060. State changed 'null_state' -> 'new'
+  15:08:00.982209  [INFO]  Port SIPT:0043. Prefix linked: called len 05, proceed 00
+  15:08:00.986666  [INFO]  TRK. Callref 0060. Message 'Seize' was sent
+  15:08:00.998342  [INFO]  Conn[005d]: Set state 'AllocReq'->'Allocated'
+  15:08:00.998456  [INFO]  Conn[005d]: Created. Need activate [YES]
+  15:08:00.998525  [INFO]  Port SIPT:0043. Created IP-conn [005d]. in-call
+  15:08:00.998587  [INFO]  Conn[005d]: try activate. state 'Allocated'. (media not connected)
+  15:08:00.998649  [INFO]  Conn[005d]: Set state 'Allocated'->'DisableReq'
+  15:08:00.998805  [INFO]  SIP. RX. Callref 0043.   MediaConnected
+  15:08:00.998872  [INFO]  SIP. Callref 0043. Media connected. Mode: 'sendrecv'
+  15:08:00.998935  [INFO]  Port SIPT:0043. Media-connected for IP-conn [005d]
+  15:08:00.998993  [INFO]  Conn[005d]: Media connected indication
+  15:08:00.999049  [INFO]  Conn[005d]: try activate. state 'DisableReq'.
+  15:08:00.999107  [INFO]  Conn[005d]: Set quick-reactivate flag
+  15:08:00.999166  [INFO]  Port SIPT:0043. Set IP-conn [005d] sendrecv
+  15:08:00.999222  [INFO]  Conn[005d]: SendRecv set 'sendrecv' in state 'DisableReq'
+  15:08:01.015256  [INFO]  Conn[005d]: Created (disabled). State 'DisableReq'
+  15:08:01.015392  [INFO]  Conn[005d]: Set state 'DisableReq'->'Disabled'
+  15:08:01.015469  [INFO]  Port SIPT:0043. Created IP-conn [005d]. in-call
+  15:08:01.015529  [INFO]  Conn[005d]: try activate. state 'Disabled'.
+  15:08:01.015602  [INFO]  Conn[005d]: Activate [192.168.0.20:30306] <-> [192.168.0.24:35022]
+			 MAC_loc.src [02:31:52:63:74:80], MAC_loc.dst [02:00:04:00:00:02]
+			 MAC_ext.src [a8:f9:4b:81:78:f0], MAC_ext.dst [a8:f9:4b:09:a6:fc]
+  15:08:01.015677  [INFO]  Conn[005d]: Start voice. Codec G711U, vad=off, cng=off. Ptime=20 ms. PT [0] SSRC=141dde47
+  15:08:01.015833  [INFO]  Conn[005d]: Set state 'Disabled'->'ActivateReq'
+  15:08:01.035247  [INFO]  Conn[005d]: Params set. State 'ActivateReq'
+  15:08:01.035359  [INFO]  Conn[005d]: Enable connection
+  15:08:01.045146  [INFO]  TRK. Incomming message detected.
+  15:08:01.045290  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:01.045365  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:01.045422  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:01.045474  [INFO]  ASN. Try decode message
+  15:08:01.045625  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1419.412081.10193
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:01.045724  [INFO]  ASN. Decode success
+  15:08:01.045784  [INFO]  ZMQ. RX Callref 0060. Message 'Progress'
+  15:08:01.045846  [INFO]  ZMQ. Callref 0060. Mapped to '34343035-3061-6632-6130-653064313536'
+  15:08:01.045902  [INFO]  ZMQ. Callref 0060. State changed: 'wait connection' -> 'connected'
+  15:08:01.045972  [INFO]  TRK. Incomming message detected.
+  15:08:01.046031  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:01.046084  [INFO]  ASN. Try decode message
+  15:08:01.046146  [INFO]  ASN. Decode success
+  15:08:01.046197  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:01.055311  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:01.059497  [INFO]  Conn[005d]: Activated
+  15:08:01.059603  [INFO]  Conn[005d]: Set state 'ActivateReq'->'Active'
+  15:08:01.059727  [INFO]  Conn[005d]: set rtp-cfg.  <192.168.0.20:30306>:[02.31.52.63.74.80] <-> <192.168.0.24:35022>:[A8.F9.4B.09.A6.FC]. flg[1]
+  15:08:01.059807  [INFO]  Port SIPT:0043. Changed IP-conn [005d]
+  15:08:01.173389  [INFO]  Conn[005d]: Event 'SSRC Change': new [0x091FF127], prev [0x00000000]
+  15:08:01.245183  [INFO]  TRK. Incomming message detected.
+  15:08:01.245330  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:01.245411  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:01.245467  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:01.245520  [INFO]  ASN. Try decode message
+  15:08:01.245718  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 1
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1419.412081.42767
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    tone:  . . . . . . . 18
+				        duration:  . . . 2000
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:01.245841  [INFO]  ASN. Decode success
+  15:08:01.245901  [INFO]  ZMQ. RX Callref 0060. Message 'Progress'
+  15:08:01.246042  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:01.246160  [INFO]  IVR. Callref 0060. Play status: Play '18'. Repeat 1 of 1. Play position 1 of 1
+  15:08:01.246242  [INFO]  Port SIPT:0043. Set signal: 'RING_BACK'
+  15:08:01.246309  [INFO]  Conn[0000]: Switch tone '21' for port SIPT:0043: 04:00 -> 04:93
+  15:08:01.687664  [INFO]  Port SIPT:0043. Signal RING_BACK active
+  15:08:01.687775  [INFO]  Conn[0002]: Switch tone '23' for port SIPT:0043: 04:02 -> 04:93
+  15:08:03.365122  [INFO]  IVR. Callref 0060. Playlist: All files in playlist already played. err_buff: 'none'
+  15:08:03.365240  [INFO]  IVR. Callref 0060. Playlist: send playlist notify
+  15:08:03.365301  [INFO]  IVR. Callref 0060. Play status: Stopped.
+  15:08:03.365384  [INFO]  ZMQ. TX Callref 0060. Try send 'Progress'
+  15:08:03.365479  [INFO]  ASN. Added 'Progress' to message body
+  15:08:03.365580  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1419.412083.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . 
+				    0:  . . . . . . . . 250
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    tone:  . . . . . . . 18
+				        duration:  . . . 0
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:03.365929  [INFO]  ASN. Message 'Progress'. Encode success
+  15:08:03.366021  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:08:03.366458  [INFO]  TRK. Callref 0060. Message 'Progress' was sent
+  15:08:03.416090  [INFO]  TRK. Incomming message detected.
+  15:08:03.416239  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:03.416316  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:03.416372  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:03.416456  [INFO]  ASN. Try decode message
+  15:08:03.416650  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1419.412083.403510
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    file:  . . . . . . . 4_13.wav
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:03.416768  [INFO]  ASN. Decode success
+  15:08:03.416829  [INFO]  ZMQ. RX Callref 0060. Message 'Progress'
+  15:08:03.416908  [INFO]  TRK. Incomming message detected.
+  15:08:03.416967  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:03.417020  [INFO]  ASN. Try decode message
+  15:08:03.417080  [INFO]  ASN. Decode success
+  15:08:03.417131  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:03.417256  [INFO]  IVR. Callref 0060. Play status: Play '4_13.wav'. Repeat 1 of 1. Play position 1 of 1
+  15:08:03.417366  [INFO]  IVR. Callref 0060. Try find file '4_13.wav' in '/mnt/sda/ivr_sound'
+  15:08:03.417678  [INFO]  IVR. Callref 0060. File found. Full path '/mnt/sda/ivr_sound/4_13.wav'
+  15:08:03.417752  [INFO]  Port SRVC:006c. Play file start. <out>. (ext). Peer SIPT:0043
+  15:08:03.417818  [INFO]  Port SIPT:0043. Start play file to <RTP> (ext)
+  15:08:03.417892  [INFO]  Port SIPT:0043. Start play file: /mnt/sda/ivr_sound/4_13.wav
+  15:08:03.417960  [INFO]  Conn[005d]: Play file. Play from file
+  15:08:03.418019  [INFO]  Conn[005d]: Play file. term is RTP(1) G711U(1) reconfig(1)
+  15:08:03.418144  [INFO]  Conn[005d]: Play file: /mnt/sda/ivr_sound/4_13.wav to RTP
+  15:08:03.418278  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:04.446059  [INFO]  TRK. Incomming message detected.
+  15:08:04.446206  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:04.446287  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:04.446343  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:04.446396  [INFO]  ASN. Try decode message
+  15:08:04.446525  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:04.446593  [INFO]  ASN. Decode success
+  15:08:04.446652  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:08:04.446720  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:04.446780  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:04.446946  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:04.447018  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:04.447139  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:04.447230  [INFO]  TRK. Callref ffffffff. Message 'Connection Update Response' was sent
+  15:08:04.645152  [INFO]  TRK. Incomming message detected.
+  15:08:04.645272  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:04.645331  [INFO]  ASN. Try decode message
+  15:08:04.645404  [INFO]  ASN. Decode success
+  15:08:04.645458  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:05.557688  [INFO]  Port SIPT:0043. File played
+  15:08:05.557800  [INFO]  IVR. Callref 0060. Playlist: All files in playlist already played. err_buff: 'none'
+  15:08:05.557895  [INFO]  IVR. Callref 0060. Playlist: send playlist notify
+  15:08:05.557965  [INFO]  Port SRVC:006c. Play file stop. <out>. (ext). Peer SIPT:0043
+  15:08:05.558029  [INFO]  Port SIPT:0043. Stop play file to <RTP> (ext)
+  15:08:05.558100  [INFO]  Port SIPT:0043. Stop play file
+  15:08:05.558162  [INFO]  IVR. Callref 0060. Play status: Stopped.
+  15:08:05.558241  [INFO]  ZMQ. TX Callref 0060. Try send 'Progress'
+  15:08:05.558323  [INFO]  ASN. Added 'Progress' to message body
+  15:08:05.558415  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1419.412085.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . 
+				    0:  . . . . . . . . 250
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    file:  . . . . . . . 4_13.wav
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:05.558748  [INFO]  ASN. Message 'Progress'. Encode success
+  15:08:05.558842  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:08:05.558970  [INFO]  TRK. Callref 0060. Message 'Progress' was sent
+  15:08:05.623156  [INFO]  TRK. Incomming message detected.
+  15:08:05.623304  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:05.623382  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:05.623437  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:05.623490  [INFO]  ASN. Try decode message
+  15:08:05.623727  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 
+				 body: . . . . . . . . . Seize
+				 BASIC params:
+				 applicationCfg: . . . . dialer from ivr
+				 vatsId: . . . . . . . . vatsId for virtual ATS
+				 applicationId:  . . . . 0
+				 timestamp:  . . . . . . 1419.412085.610094
+				 cdpn: . . . . . . . . . 
+				    nai: . . . . . . . . 0
+				    npi: . . . . . . . . 0
+				    inn: . . . . . . . . 0
+				    address: . . . . . . 100
+				 OPTIONAL params:
+				 cgpn: . . . . . . . . . 
+				    nai: . . . . . . . . 1
+				    screening: . . . . . 3
+				    apri:  . . . . . . . 0
+				    npi: . . . . . . . . 2
+				    ni:  . . . . . . . . 0
+				    address: . . . . . . 101
+				 callRef:  . . . . . . . no
+				 category: . . . . . . . 1
+				 tgId: . . . . . . . . . no
+				 originalCDPN: . . . . . no
+				 genericNumber:  . . . . no
+				 redirectingNumber:  . . no
+				 redirectionInformation: no
+				 callingAccess:  . . . . no
+				 fci . . . . . . . . . . no
+				 usi . . . . . . . . . . no
+				 uti . . . . . . . . . . no
+				 tmr . . . . . . . . . . 3
+				 noCDR . . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+  15:08:05.623847  [INFO]  ASN. Decode success
+  15:08:05.623906  [INFO]  ZMQ. RX Callref 0000 (empty). Message 'Seize'
+  15:08:05.623981  [INFO]  ZMQ. Callref 0061. State changed: 'disconnected' -> 'wait connection'
+  15:08:05.624037  [INFO]  ZMQ. Callref 0061. Mapped to 'in_34343035-3061-6632-6130-653064313536_with_sid_1'
+  15:08:05.624088  [INFO]  ZMQ. Callref 0061. State changed: 'wait connection' -> 'connected'
+  15:08:05.624161  [INFO]  TRK. Incomming message detected.
+  15:08:05.624219  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:05.624271  [INFO]  ASN. Try decode message
+  15:08:05.624332  [INFO]  ASN. Decode success
+  15:08:05.624383  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:05.624527  [INFO]  IVR. Callref 0061. Progress without early media
+  15:08:05.624601  [INFO]  ZMQ. TX Callref 0061. Try send 'Progress'
+  15:08:05.624667  [INFO]  ASN. Added 'Progress' to message body
+  15:08:05.624745  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 97
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1419.412085.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:05.624968  [INFO]  ASN. Message 'Progress'. Encode success
+  15:08:05.625104  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:05.625212  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:08:05.625281  [INFO]  SRV. Callref 006d. New state 'SRV_PRESENTED'
+  15:08:05.625341  [INFO]  SRV. Callref 006d. Set IVR ref [0061]
+  15:08:05.625400  [INFO]  IVR. Callref 0061. Incoming seize
+			# Category 0 (48). COS 0.
+			# Calling <101> Called <100> Generic <none> GenericNotify 0x0
+			# Orig called <none> Redirecting <none> Reason 0x00 Info 0x00 Count 0
+			# cplt=n; pres=allow; nature=subscriber			# Transmission medium req 0x01
+  15:08:05.625469  [INFO]  SRV. Callref 006d. Invoke second-seize
+  15:08:05.625525  [INFO]  SRV. Callref 006d. Incoming seize
+			# Category 0 (48).
+			# Calling <101> Called <none> Generic <none> GenericNotify 0x0
+			# Orig called <none> Redirecting <none>. Redirecting count 0
+			# cplt=n; pres=allow; nature=subscriber
+  15:08:05.625632  [INFO]  Port SRVC:006d. Seize (v-chan:-1, TG:-1). Cld:'<none>'(0). (Subscr) . Clg-len: 3. clg-set: y. COS: -1. RADIUS=-1
+  15:08:05.625698  [INFO]  Port SRVC:006d. ModTable in [-1:-1], out [-1:-1], out redir:orig [-1:-1]
+  15:08:05.625763  [INFO]  Port SRVC:006d. CgPN: <101>(3) <set> <subscriber> <isdn/telephony> <allowed> <net.provided>. cat [0].
+  15:08:05.625825  [INFO]  Port SRVC:006d. Calling number: 101, use for sorm: all digits
+  15:08:05.625887  [INFO]  Port SRVC:006d. Calling Info (pres allowed): <101>. <Category=0>
+  15:08:05.625943  [INFO]  Port SRVC:006d. CgPN: <101>(3) <set> <subscriber> <isdn/telephony> <allowed> <net.provided>. cat [0].
+  15:08:05.626006  [INFO]  Port SRVC:006d. Check number dir-type for <101>[0x01] (3)
+  15:08:05.626068  [INFO]  Port SRVC:006d. Number <101> detected as local to [6]
+  15:08:05.626124  [INFO]  Port SRVC:006d. COPM: Check for activate local port
+  15:08:05.626181  [INFO]  Port SRVC:006d. Set state 'In-Dial'
+  15:08:05.626232  [INFO]  SRV. Callref 006d. Incoming seize - access code [0x0], mask [0x90]
+  15:08:05.626283  [INFO]  SRV. Callref 006d. Incoming seize - PLAN 0. COS 0
+  15:08:05.626356  [INFO]  Port SRVC:006d. Dial In (in=03, need rm=0): <1><0><0>
+  15:08:05.626416  [INFO]  Port SRVC:006d. In Digit 3 sym: called buf <100>
+  15:08:05.626471  [INFO]  Port SRVC:006d. Dial buf <100>(3)
+  15:08:05.626530  [INFO]  Port SRVC:006d. Dial Proc (state In-Dial, called len 03): <100> Compl.
+  15:08:05.626586  [INFO]  Port SRVC:006d. Dial Proc. RADIUS return-code: [0].
+  15:08:05.626645  [INFO]  Port SRVC:006d. Search route. Mode: 'calling'. Num: <101>(3).# Complete
+  15:08:05.626722  [INFO]  Port SRVC:006d. Search route. result: route not found. res (-1)
+  15:08:05.626785  [INFO]  Port SRVC:006d. Check number dir-type for <100>[0x01] (3)
+  15:08:05.626844  [INFO]  Port SRVC:006d. Number <100> detected as local to [8]
+  15:08:05.626903  [INFO]  Port SRVC:006d. Search route. Mode: 'called'. Num: <100>(3).# Complete
+  15:08:05.626991  [INFO]  Port SRVC:006d. Search route. result: found route: user[8]. res (3)
+  15:08:05.627056  [INFO]  Port SRVC:006d. Process route to sip-user-ID [08].
+  15:08:05.627124  [INFO]  Port SRVC:006d. Dial In (in=01, need rm=0): [.]
+  15:08:05.627178  [INFO]  Port SRVC:006d. In Digit 1 sym: called buf <100.>
+  15:08:05.627232  [INFO]  Port SRVC:006d. Dial buf <100>(3)
+  15:08:05.627292  [INFO]  Port SRVC:006d. Link to SIPuser ID[8]. Index [3].
+  15:08:05.627351  [INFO]  Port SRVC:006d. Check Access. 0 => 0. Y. (0x00.0x00.0x00.0x00.0x00.0x00.0xFF.0xFF)
+  15:08:05.627414  [INFO]  Port SRVC:006d. Accs on
+  15:08:05.627475  [INFO]  Port SRVC:006d. Outgoing setup to SIPu:0003 [0008].
+  15:08:05.627540  [INFO]  Port SIPu:0003 [0008]. Seize from SRVC:006d. Port access mode: <on>
+  15:08:05.627609  [INFO]  SIPT[03]. Seize from port SRVC:006d.
+  15:08:05.627711  [INFO]  Port SIPT:042f. Set CallerId: 'Subscriber#003' (14).
+  15:08:05.627779  [INFO]  Port SIPT:042f. Check out-calling-modify: '101'(3). ModTable[-1], ClgMod[-1]
+  15:08:05.627842  [INFO]  Port SIPT:042f. Check out-calling-from-RADIUS-modify: '101'(3). ClgMod[-1]
+  15:08:05.627921  [INFO]  Port SIPT:042f. Set parent SRVC:006d
+  15:08:05.627981  [INFO]  Port SIPT:042f. loc 1, trunk-loc 0. peer-loc 1, peer-tunk-loc: 0
+  15:08:05.628038  [INFO]  Port SRVC:006d. loc 1, trunk-loc 0. peer-loc 1, peer-tunk-loc: 0
+  15:08:05.628121  [INFO]  Port SIPT:042f. Create msp-conn Conn[005e].
+  15:08:05.628175  [INFO]  Conn[005e]: Set state 'Idle'->'AllocReq'
+  15:08:05.628306  [INFO]  Port SIPT:042f. Set new IP-conn [005e]
+  15:08:05.628380  [INFO]  Conn[005e]: set network interface in state 'AllocReq'. IP <192.168.0.20>. net-dev [2]
+  15:08:05.628438  [INFO]  SIPT[03]. Seize  - dst '192.168.0.24:5060' src-port 0
+  15:08:05.628494  [INFO]  SIPT[03]. Seize  CgPN: <101>(3) <set> <subscriber> <isdn/telephony> <allowed> <net.provided>. cat [0](0x30)
+  15:08:05.628554  [INFO]  SIPT[03]. Seize  - calling category: '0' convert to ISUP category 224
+  15:08:05.628611  [INFO]  SIPT[03]. Seize  - enblock mode
+  15:08:05.628669  [INFO]  Port SIPT:042f. Set state 'Wait-Num'
+  15:08:05.628735  [INFO]  Port SIPT:042f. Query Next Digit - peer SRVC:006d (next.digit=n). Called len 04, proceed 00
+  15:08:05.628792  [INFO]  Port SIPT:042f. Dial Out=1 (loc)
+  15:08:05.628853  [INFO]  Port SIPT:042f. Check out-called-modify: '1'(1). ModTable[-1], CldMod[-1]
+  15:08:05.628913  [INFO]  SIP. Callref 042f. Dial 1
+  15:08:05.628969  [INFO]  Port SIPT:042f. Dial Out: called len 00, append 01 (max digit 30)
+  15:08:05.629037  [INFO]  Port SIPT:042f. Query Next Digit - peer SRVC:006d (next.digit=n). Called len 04, proceed 01
+  15:08:05.629093  [INFO]  Port SIPT:042f. Dial Out=0 (loc)
+  15:08:05.629151  [INFO]  SIP. Callref 042f. Dial 0
+  15:08:05.629207  [INFO]  Port SIPT:042f. Dial Out: called len 01, append 01 (max digit 30)
+  15:08:05.629274  [INFO]  Port SIPT:042f. Query Next Digit - peer SRVC:006d (next.digit=n). Called len 04, proceed 02
+  15:08:05.629331  [INFO]  Port SIPT:042f. Dial Out=0. (loc)
+  15:08:05.629417  [INFO]  SIP. Callref 042f. Dial 0.
+  15:08:05.629475  [INFO]  Port SIPT:042f. Dial Out: called len 02, append 02 (max digit 30)
+  15:08:05.629532  [INFO]  Port SIPT:042f. Dial Out: 'End_of_Dial' digit/stop dial
+  15:08:05.629587  [INFO]  SIP. Callref 042f. New state 'SIPT_OVL_SENDING'
+  15:08:05.629648  [INFO]  Port SIPT:042f. Setup Ack (peer=SRVC:006d)
+  15:08:05.629704  [INFO]  Port SIPT:042f. Set state 'Out-Dial'
+  15:08:05.629761  [INFO]  Port SRVC:006d. Setup Acked in state In-Dial. (peer=SIPT:042f)
+  15:08:05.629819  [INFO]  Port SRVC:006d. LinkUp to SIPT:042f
+  15:08:05.629878  [INFO]  Port SIPT:042f. Activate IP-conn [005e]
+  15:08:05.629951  [INFO]  Conn[005e]: try activate. state 'AllocReq'. (no media)
+  15:08:05.630013  [INFO]  SIP. Callref 042f. Prepare media requested
+  15:08:05.630078  [INFO]  SIP. Callref 042f. Update Media-Info. [core/sipt_proc.c:1806]
+  15:08:05.630136  [INFO]  SIP. Callref 042f. Media-Info (offer): [192.168.0.20]
+  15:08:05.630230  [INFO]  Valid
+			 m[0]: audio 30308 RTP/AVP 8 0
+			 a[0]:8 G711.A [set]
+			 a[1]:0 G711.U [set]
+			 a[2]:ptime:30
+			 a[3]:sendrecv
+  15:08:05.630288  [INFO]  SIP. Callref 042f. Prepare media finished (should send)
+  15:08:05.630351  [INFO]  SIP. TX. Callref 042f. Mode: 'SIPu[3][8]' Destination: [192.168.0.24:5060] localport [0] (with media)
+  15:08:05.630540  [INFO]  Port SRVC:006d. Get CallerId: '-none-' (0) no set-flg
+  15:08:05.630595  [INFO]  SIP. Callref 042f. Get display name: <>(0)
+  15:08:05.630846  [INFO]  SIP. Callref 042f. Media-Info prepare
+  15:08:05.630911  [INFO]  SIP. Callref 042f. Media-Info encode. Media-list size: 1 
+  15:08:05.631074  [INFO]  SIP. TX. Callref 042f. Mode [8008:0]. [192.168.0.24:5060]
+  15:08:05.631251  [INFO]  SIP. TX. Callref 042f.   IAM- Initial Address Message
+			## Nature of connection: 10
+			# 	Satellite: no
+			# 	Continuity Check: not required
+			# 	Echo control: included
+			## Forward Call Indicators: 08 00 
+			# 	Call to be treated as national call
+			# 	EndToEnd method: no end-to-end(only link-by-link)
+			# 	Interworking: encountered
+			# 	EndToEnd info: not available
+			# 	ISUP: not used all the way
+			# 	ISUP indicator: preferred all way
+			# 	Originating access: non-ISDN
+			# Calling party category:  0xe0
+			# Transmission medium req: 0x03 - 3.1 kHz audio
+			## Called party number: 82 90 01 00 
+			# 	Nature of address: 0x82 - unknown
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Number:            100
+			[Optional params]
+			## Calling party number: 81 13 01 01 
+			# 	Nature of address: 0x81 - subscriber
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Screening:         0x03 - network prov
+			# 	Presentation:      0x00 - presentation allowed
+			# 	Number:            101
+			[end of optional params]
+  15:08:05.631364  [INFO]  SIP. TX. Callref 042f.   MediaInfo
+			## IP: <192.168.0.20> 
+			## Offer: <1> 
+			## m=audio 30308 RTP/AVP 8 0 
+			## a=rtpmap:8 PCMA/8000 
+			## a=rtpmap:0 PCMU/8000 
+			## a=ptime:30 
+			## a=sendrecv 
+  15:08:05.631754  [INFO]  Port SRVC:006d. SIP-user linked: called len 04, proceed 04
+  15:08:05.631865  [INFO]  IVR. Callref 0061. State changed 'null_state' -> 'alerting'
+  15:08:05.632225  [INFO]  TRK. Callref 0061. Message 'Progress' was sent
+  15:08:05.635178  [INFO]  Conn[005e]: Set state 'AllocReq'->'Allocated'
+  15:08:05.635283  [INFO]  Conn[005e]: Set state 'Allocated'->'DisableReq'
+  15:08:05.636664  [INFO]  Conn[005e]: Created (disabled). State 'DisableReq'
+  15:08:05.636752  [INFO]  Conn[005e]: Set state 'DisableReq'->'Disabled'
+  15:08:05.636820  [INFO]  Port SIPT:042f. Created IP-conn [005e]. 
+  15:08:05.636880  [INFO]  Conn[005e]: try activate. state 'Disabled'. (no media)
+  15:08:05.707085  [INFO]  SIP. RX. Callref 042f. Call-ID: 1419-412085-634824
+  15:08:05.707231  [INFO]  SIP. RX. Callref 042f.   ACM-Address Complete
+			## Backward call Indicators: 16 01 
+			# 	Called party's status indicator: Subscriber free
+			# 	Interworking: encountered
+			# 	ISUP: not used all the way
+			# 	Terminating access: non-ISDN
+			[No optional params]
+  15:08:05.707313  [INFO]  SIP. Callref 042f. ISDN flg: BCI=0x80:    'Send' 
+  15:08:05.707372  [INFO]  SIP. Callref 042f. New state 'SIPT_DELIVERED'
+  15:08:05.707436  [INFO]  SIP. Callref 042f. ISDN flg: BCI=0x80:    'Send' 
+  15:08:05.707496  [INFO]  Port SIPT:042f. Alert (peer=SRVC:006d)
+  15:08:05.707552  [INFO]  Port SIPT:042f. Substate [0]
+  15:08:05.707609  [INFO]  Port SIPT:042f. Stop Dial, reason 'alert'
+  15:08:05.707679  [INFO]  Port SIPT:042f. Set state 'Out-Call'
+  15:08:05.707739  [INFO]  Port SRVC:006d. Alerting from peer SIPT:042f
+  15:08:05.707797  [INFO]  Port SRVC:006d. Set state 'In-Call'
+  15:08:05.707853  [INFO]  SRV. Callref 006d. Alerting in state 'SRV_PRESENTED'
+  15:08:05.707907  [INFO]  SRV. Callref 006d. Update v-chan. peer callref ffffffff
+  15:08:05.707965  [INFO]  Port SIPT:042f. GetISDN: allway[0], fwd[0], bwd[0], e2e[0]. ss7[0]
+  15:08:05.708026  [INFO]  IVR. Callref 0061. Alerting without early media
+  15:08:05.708120  [INFO]  ZMQ. TX Callref 0061. Try send 'Progress'
+  15:08:05.708185  [INFO]  ASN. Added 'Progress' to message body
+  15:08:05.708262  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 97
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 1
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1419.412085.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:08:05.708487  [INFO]  ASN. Message 'Progress'. Encode success
+  15:08:05.708566  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:08:05.708631  [INFO]  Port SIPT:042f. TDM-RingBack for IP-conn [005e], mode [0]
+  15:08:05.708687  [INFO]  Conn[005e]: RingBack. State 'Disabled', ip <not set>, flag <0>
+  15:08:05.800332  [INFO]  Conn[005e]: Start tone 'RINGBACKTONE'(23), direction 'TDM' in state 'Disabled'
+  15:08:05.802988  [INFO]  Conn[005e]: Tone started
+  15:08:05.815131  [INFO]  TRK. Incomming message detected.
+  15:08:05.815226  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:05.815284  [INFO]  ASN. Try decode message
+  15:08:05.815359  [INFO]  ASN. Decode success
+  15:08:05.815413  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:05.815593  [INFO]  TRK. Callref 0061. Message 'Progress' was sent
+  15:08:06.015244  [INFO]  TRK. Incomming message detected.
+  15:08:06.015359  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:06.015420  [INFO]  ASN. Try decode message
+  15:08:06.015498  [INFO]  ASN. Decode success
+  15:08:06.015552  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:08.426773  [INFO]  TRK. Incomming message detected.
+  15:08:08.426921  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:08.427002  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:08.427058  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:08.427111  [INFO]  ASN. Try decode message
+  15:08:08.427240  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:08.427311  [INFO]  ASN. Decode success
+  15:08:08.427371  [INFO]  ZMQ. RX Callref 0060. Message 'Connection Update Request'
+  15:08:08.427441  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:08.427503  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:08.427670  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:08.427741  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:08.427866  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:08.427957  [INFO]  TRK. Callref 0060. Message 'Connection Update Response' was sent
+  15:08:08.625159  [INFO]  TRK. Incomming message detected.
+  15:08:08.625249  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:08.625307  [INFO]  ASN. Try decode message
+  15:08:08.625381  [INFO]  ASN. Decode success
+  15:08:08.625435  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:09.456250  [INFO]  TRK. Incomming message detected.
+  15:08:09.456396  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:09.456477  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:09.456532  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:09.456620  [INFO]  ASN. Try decode message
+  15:08:09.456753  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:09.456824  [INFO]  ASN. Decode success
+  15:08:09.456883  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:08:09.456952  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:09.457013  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:09.457179  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:09.457251  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:09.457410  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:09.457507  [INFO]  TRK. Callref ffffffff. Message 'Connection Update Response' was sent
+  15:08:09.655384  [INFO]  TRK. Incomming message detected.
+  15:08:09.655499  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:09.655560  [INFO]  ASN. Try decode message
+  15:08:09.655636  [INFO]  ASN. Decode success
+  15:08:09.655690  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:10.656491  [INFO]  SIP. Interface[05]. Resolve srv tcp checks. Host 'smg2016', resolved into [0] srv-tcp records. ptr <(nil)>
+  15:08:10.657461  [INFO]  SIP. Interface[05]. Resolve srv tcp checks. Host 'smg2016', resolved into [0] srv-tcp records. ptr <(nil)>
+  15:08:10.848027  [INFO]  TRK. Incomming message detected.
+  15:08:10.848169  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:10.848252  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:10.848308  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:10.848361  [INFO]  ASN. Try decode message
+  15:08:10.848491  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 97
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:10.848562  [INFO]  ASN. Decode success
+  15:08:10.848621  [INFO]  ZMQ. RX Callref 0061. Message 'Connection Update Request'
+  15:08:10.848692  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:10.848754  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 97
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:10.848921  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:10.848992  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:10.849191  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:10.849291  [INFO]  TRK. Callref 0061. Message 'Connection Update Response' was sent
+  15:08:11.045220  [INFO]  TRK. Incomming message detected.
+  15:08:11.045334  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:11.045394  [INFO]  ASN. Try decode message
+  15:08:11.045468  [INFO]  ASN. Decode success
+  15:08:11.045522  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:13.436812  [INFO]  TRK. Incomming message detected.
+  15:08:13.436960  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:13.437040  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:13.437096  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:13.437150  [INFO]  ASN. Try decode message
+  15:08:13.437279  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:13.437415  [INFO]  ASN. Decode success
+  15:08:13.437482  [INFO]  ZMQ. RX Callref 0060. Message 'Connection Update Request'
+  15:08:13.437554  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:13.437617  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 34343035-3061-6632-6130-653064313536
+				 swSessionID:  . . . . . 96
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:13.437785  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:13.437857  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:13.437984  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:13.438076  [INFO]  TRK. Callref 0060. Message 'Connection Update Response' was sent
+  15:08:13.635169  [INFO]  TRK. Incomming message detected.
+  15:08:13.635293  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:13.635352  [INFO]  ASN. Try decode message
+  15:08:13.635427  [INFO]  ASN. Decode success
+  15:08:13.635480  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:14.466351  [INFO]  TRK. Incomming message detected.
+  15:08:14.466493  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:14.466578  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:14.466635  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:14.466689  [INFO]  ASN. Try decode message
+  15:08:14.466815  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:14.466885  [INFO]  ASN. Decode success
+  15:08:14.466944  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:08:14.467012  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:14.467073  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:14.467238  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:14.467310  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:14.467509  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:14.467608  [INFO]  TRK. Callref ffffffff. Message 'Connection Update Response' was sent
+  15:08:14.665170  [INFO]  TRK. Incomming message detected.
+  15:08:14.665314  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:14.665377  [INFO]  ASN. Try decode message
+  15:08:14.665453  [INFO]  ASN. Decode success
+  15:08:14.665507  [INFO]  ZMQ. RX. ACK decoded.
+  15:08:15.856679  [INFO]  TRK. Incomming message detected.
+  15:08:15.856826  [INFO]  ASN. Message 'ACK'. Encode success
+  15:08:15.856907  [INFO]  ZMQ. TX. Message 'ACK' was sent
+  15:08:15.856963  [INFO]  ZMQ. RX. Incomming message detected.
+  15:08:15.857016  [INFO]  ASN. Try decode message
+  15:08:15.857147  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 97
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:15.857218  [INFO]  ASN. Decode success
+  15:08:15.857277  [INFO]  ZMQ. RX Callref 0061. Message 'Connection Update Request'
+  15:08:15.857347  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:08:15.857445  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_34343035-3061-6632-6130-653064313536_with_sid_1
+				 swSessionID:  . . . . . 97
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:08:15.857651  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:08:15.857728  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:08:15.857859  [INFO]  TRK. Callref UNKNOWN. Message 'ACK' was sent
+  15:08:15.857951  [INFO]  TRK. Callref 0061. Message 'Connection Update Response' was sent
+  15:08:16.055106  [INFO]  TRK. Incomming message detected.
+  15:08:16.055221  [INFO]  ZMQ. RX. ACK callback detected.
+  15:08:16.055281  [INFO]  ASN. Try decode message
+  15:08:16.055356  [INFO]  ASN. Decode success
+  15:08:16.055409  [INFO]  ZMQ. RX. ACK decoded.
+SMG-1016M. SN: VI1F000130 Software Version: V.3.2.1.1230. M/PBX/SORM/H323/RCM/VAS/REC/IVR Build: Dec 23 2014 18:12:19
+Log stopped at:  15:08:16.341793

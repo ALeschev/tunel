@@ -1,0 +1,551 @@
+
+SMG1016M> 
+SMG1016M> 
+SMG1016M> sh
+/home/admin # 
+/home/admin # 
+/home/admin # -------------------------
+/bin/sh: -------------------------: not found
+/home/admin # top
+Mem: 278672K used, 228636K free, 0K shrd, 69664K buff, 50760K cached
+CPU:  0.0% usr  0.0% sys  0.0% nic  100% idle  0.0% io  0.0% irq  0.0% sirq
+Load average: 0.87 0.35 0.12 7/145 858
+  PID  PPID USER     STAT   VSZ %MEM CPU %CPU COMMAND
+  571     1 root     S     176m 35.5   0  0.0 /usr/bin/smg/mgapp
+  545     1 root     S    65108 12.8   0  0.0 -clish
+  576     1 root     S    52644 10.3   0  0.0 /usr/bin/smg/mod_conf --daemon
+  617   546 root     S    48352  9.5   0  0.0 /usr/bin/smg/snmpd -f -c /etc/conf
+  601   564 root     S    36520  7.1   0  0.0 /usr/bin/smg/cfgmngr
+  569     1 root     S    34196  6.7   0  0.0 /usr/bin/smg/webspp
+  566   565 root     S    33816  6.6   0  0.0 /usr/bin/smg/swctrl
+  551   549 root     S    31472  6.1   0  0.0 /usr/lib/erlang/erts-5.9.2/bin/bea
+  573     1 root     S    30748  6.0   0  0.0 /usr/bin/smg/sysmon
+  558     1 root     S    28808  5.6   0  0.0 /usr/bin/smg/networkd
+  562     1 root     S    22336  4.4   0  0.0 /usr/bin/smg/msgcore
+  746   572 root     S    19760  3.8   0  0.0 /usr/bin/smg/pa_h323
+  564     1 root     S     7228  1.4   0  0.0 /usr/bin/smg/cfgmngr
+  565     1 root     S     5152  1.0   0  0.0 /usr/bin/smg/swctrl
+  754   744 root     S     4588  0.9   0  0.0 /sbin/sshd -D -f /etc/ssh/sshd_con
+  572     1 root     S     3288  0.6   0  0.0 /usr/bin/smg/pa_h323
+  555     1 root     S N   3128  0.6   0  0.0 /bin/sh /sbin/cdr.sh
+  559     1 root     S     3128  0.6   0  0.0 /bin/sh /sbin/sshguard.sh start
+  546     1 root     S     3128  0.6   0  0.0 /bin/sh /sbin/snmpd.sh start
+  553     1 root     S N   3128  0.6   0  0.0 /bin/sh /sbin/rec.sh
+/home/admin # ifconfig 
+eth0      Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet addr:192.168.18.152  Bcast:192.168.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::aaf9:4bff:fe88:7d0d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:34 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:1660 (1.6 KiB)  TX bytes:0 (0.0 B)
+
+eth0.orig Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet6 addr: fe80::aaf9:4bff:fe88:7d0d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:34 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:6 overruns:0 carrier:0
+          collisions:0 txqueuelen:532 
+          RX bytes:2272 (2.2 KiB)  TX bytes:0 (0.0 B)
+          Interrupt:40 
+
+eth0:1    Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet addr:192.168.0.152  Bcast:192.168.0.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth0:2    Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet addr:192.168.2.152  Bcast:192.168.2.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth1      Link encap:Ethernet  HWaddr 02:00:04:00:00:02  
+          inet addr:1.255.254.250  Bcast:1.255.254.255  Mask:255.255.255.240
+          inet6 addr: fe80::4ff:fe00:2/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:10778 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10787 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:532 
+          RX bytes:647052 (631.8 KiB)  TX bytes:12130938 (11.5 MiB)
+          Interrupt:44 
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:689 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:689 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:48418 (47.2 KiB)  TX bytes:48418 (47.2 KiB)
+
+/home/admin # login[879]: root login on 'pts/0'
+csme: socket receive buffer full(1048576), dropping skb (size 1880). (lost: 1)
+csme: socket receive buffer full(1048576), dropping skb (size 1880). (lost: 18)
+clish invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a0c82580 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a9136000 r8:a0cb68b8 r7:aac07710 r6:00000003 r5:aa2afe40
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000152 r6:414cb490 r5:00115514 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa9137fb0 to 0xa9137ff8)
+7fa0:                                     ffffffff 00000000 0011552c 00000001 
+7fc0: 54de6e57 00115514 414cb490 00000152 40111150 003d0f00 400fa590 414cafec 
+7fe0: 00000001 414cae00 40102038 0000b208 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  52   Cold: hi:   62, btch:  15 usd:  49
+Active:99027 inactive:17776 dirty:0 writeback:0 unstable:0
+ free:4496 slab:3424 mapped:213 pagetables:490 bounce:0
+DMA free:17984kB min:16384kB low:20480kB high:24576kB active:396108kB inactive:71104kB present:516128kB pages_scanned:747805 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 170*4kB 91*8kB 26*16kB 3*32kB 1*64kB 1*128kB 0*256kB 1*512kB 1*1024kB 1*2048kB 3*4096kB = 17984kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5041 free pages
+3233 reserved pages
+3424 slab pages
+1757 pages shared
+0 pages swap cached
+Out of memory: kill process 598 (mgapp-console) score 2810 or a child
+Killed process 598 (mgapp-console)
+mgapp-sipt invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:aa2ac2e0 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a7ede000 r8:a9c1f5a0 r7:af29f498 r6:00000096 r5:90ddeaa0
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000001 r6:0179e35c r5:01490948 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa7edffb0 to 0xa7edfff8)
+ffa0:                                     00000000 00000000 014918dc 00000001 
+ffc0: 00000001 01490948 0179e35c 00000001 40043150 003d0f00 4002c590 42e4cdbc 
+ffe0: 00000001 42e4cda8 4002fa78 0009ee68 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  51   Cold: hi:   62, btch:  15 usd:  41
+Active:99121 inactive:17722 dirty:0 writeback:0 unstable:0
+ free:4496 slab:3425 mapped:221 pagetables:490 bounce:0
+DMA free:17984kB min:16384kB low:20480kB high:24576kB active:396484kB inactive:70888kB present:516128kB pages_scanned:840768 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 170*4kB 91*8kB 26*16kB 3*32kB 1*64kB 1*128kB 0*256kB 1*512kB 1*1024kB 1*2048kB 3*4096kB = 17984kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5032 free pages
+3233 reserved pages
+3425 slab pages
+1735 pages shared
+0 pages swap cached
+inet_gethost invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a41b72e0 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a2b34000 r8:a2957968 r7:9001cc90 r6:000000e0 r5:a4467900
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:0001c1a6 r6:0001c1a0 r5:00000001 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa2b35fb0 to 0xa2b35ff8)
+5fa0:                                     0001c1a6 000000ec 0000000e 00000000 
+5fc0: 00000001 00000001 0001c1a0 0001c1a6 000eec9e 00000015 00000000 00019150 
+5fe0: 000190a0 8e990360 0000a210 401c75d0 80000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  51   Cold: hi:   62, btch:  15 usd:  10
+Active:99372 inactive:17645 dirty:0 writeback:0 unstable:0
+ free:4519 slab:3425 mapped:265 pagetables:490 bounce:0
+DMA free:18076kB min:16384kB low:20480kB high:24576kB active:397488kB inactive:70580kB present:516128kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0
+DMA: 155*4kB 106*8kB 28*16kB 3*32kB 1*64kB 1*128kB 0*256kB 1*512kB 1*1024kB 1*2048kB 3*4096kB = 18076kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5005 free pages
+3233 reserved pages
+3425 slab pages
+1653 pages shared
+0 pages swap cached
+Out of memory: kill process 690 (mgapp-kp-proc) score 2810 or a child
+Killed process 690 (mgapp-kp-proc)
+csme: socket receive buffer full(1048576), dropping skb (size 1880). (lost: 1018)
+  03:36:25.983934  [INFO]  
+
+     <<   MGAPP   >>
+  03:36:26.024097  [INFO]  # Software Version: V.3.2.1.1246. M/PBX/SORM/H323/RCM/VAS/REC/IVR Build: Feb 13 2015 17:51:07
+  03:36:26.024379  [INFO]  App: start init. pid 11737
+  03:36:26.025089  [INFO]  app init: start init. dbg [0x0]
+  03:36:26.026160  [INFO]  hw: devices opened
+  03:36:26.026366  [INFO]  consol task: start. pid 11738
+  03:36:26.034383  [INFO]  consol task_wr: start. pid 11739
+  03:36:26.523926  [INFO]  net: init: if name: eth0. idx 0
+  03:36:26.524224  [INFO]  net: init: local IP: 192.168.18.152
+  03:36:26.524283  [INFO]  net: init: local MAC: a8:f9:4b:88:7d:0d
+  03:36:26.524559  [INFO]  net: init: if name: eth1. idx 1
+  03:36:26.524615  [INFO]  net: init: local IP: 1.255.254.250
+  03:36:26.524663  [INFO]  net: init: local MAC: 02:00:04:00:00:02
+  03:36:26.524760  [INFO]  msp: init. dbg [0x0]
+  03:36:26.537632  [INFO]  mspc: init
+  03:36:26.553245  [INFO]  hw task: start. pid 11753
+  03:36:26.553481  [INFO]  net task: start. pid 11754
+  03:36:26.553610  [INFO]  rec task: start. pid 11755
+2015-02-14 03:36:27.243      src/app.c  conf: MGAPP DEAD
+  03:36:27.244017  [INFO] pa-h323.   H323. Core-connection 'lost'
+  03:36:28.175195  [INFO]  msp: Firmware file '/usr/bin/smg/EltexPBX_C300_M823.axf' size [1990879]
+NET: Unregistered protocol family 27
+NET: Registered protocol family 27
+  03:36:28.484209  [INFO]  vapi: Version <VAPI Library Release 2.18.3-, API Version 8.0>
+  03:36:28.484392  [INFO]  msp: vapi-init res (0)
+  03:36:28.484569  [INFO]  cfg: init
+  03:36:28.502782  [INFO]  msp task: start. pid 11763
+  03:36:28.702336  [INFO]  sipt task: start. pid 11764
+  03:36:28.773914  [INFO]  pbxipc_task: pbxipc_3 started. pid: 11765
+  03:36:28.866142  [INFO]  config task: start. pid 11766
+  03:36:28.866433  [INFO]  cdr task: start. pid 11767
+  03:36:28.884608  [INFO]  erl task: start. pid 11770. node [c3]
+  03:36:28.986639  [INFO]  ivr: init.
+  03:36:29.002208  [INFO]  pbxipc_task: pbxipc_1 started. pid: 11771
+  03:36:29.002435  [INFO]  alarm task: start. pid 11772
+  03:36:29.027277  [INFO]  zmq server: start. pid 11773
+  03:36:29.077095  [INFO]  CONF. Adapter-connection 'established'
+2015-02-14 03:36:29.077      src/app.c  conf: MGAPP ALIVE
+  03:36:29.083526  [INFO]  Erlang node[c3]: Accepted: fd [30]
+  03:36:29.084477  [INFO]  H323. Adapter-connection 'established'
+  03:36:29.084676  [INFO] pa-h323.   H323. Core-connection 'established'
+  03:36:30.042359  [INFO]  App: main task. pid: 11737
+  03:36:30.049548  [INFO]  timer task: start. pid 11776
+  03:36:33.249807  [INFO]  cfg: try load
+  03:36:33.778957  [INFO]  cfg: inited
+  03:36:35.071160  [INFO]  H323. Send total-config. Intrf count: 0
+  03:36:35.071550  [INFO]  H323. Config sent
+  03:36:35.139978  [INFO]  mspc: re-init
+  03:36:35.140165  [INFO]  mspc: init
+  03:36:35.578386  [INFO]  RADIUS: start task. pid 11777.
+  03:36:35.656054  [INFO] pa-h323.   H323. config init start
+  03:36:35.657293  [INFO] pa-h323.   H323. config init end
+beam invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:9bcf42e0 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:aa744000 r8:a42b2d88 r7:aa26e730 r6:000000ae r5:af3f9c20
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:4169e000 r6:4169ad4c r5:00000000 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xaa745fb0 to 0xaa745ff8)
+5fa0:                                     416a44b0 00000040 00000000 4169e000 
+5fc0: 8eb10538 00000000 4169ad4c 4169e000 000003ff 416a44d8 41b327a8 8eb10538 
+5fe0: 00000000 8eb104e0 415f2cb4 415de698 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  16   Cold: hi:   62, btch:  15 usd:  14
+Active:112019 inactive:5470 dirty:5 writeback:0 unstable:0
+ free:4096 slab:3365 mapped:721 pagetables:494 bounce:0
+DMA free:16384kB min:16384kB low:20480kB high:24576kB active:448076kB inactive:21880kB present:516128kB pages_scanned:719923 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 16384kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4570 free pages
+3233 reserved pages
+3365 slab pages
+2396 pages shared
+0 pages swap cached
+Out of memory: kill process 11738 (mgapp-console) score 2726 or a child
+Killed process 11738 (mgapp-console)
+beam invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:9bcf42e0 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:aa744000 r8:a42b2d88 r7:aa26e730 r6:000000ae r5:af3f9c20
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:4169e000 r6:4169ad4c r5:00000000 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xaa745fb0 to 0xaa745ff8)
+5fa0:                                     416a44b0 00000040 00000000 4169e000 
+5fc0: 8eb10538 00000000 4169ad4c 4169e000 000003ff 416a44d8 41b327a8 8eb10538 
+5fe0: 00000000 8eb104e0 415f2cb4 415de698 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  15   Cold: hi:   62, btch:  15 usd:  14
+Active:112019 inactive:5470 dirty:5 writeback:0 unstable:0
+ free:4096 slab:3366 mapped:721 pagetables:494 bounce:0
+DMA free:16384kB min:16384kB low:20480kB high:24576kB active:448076kB inactive:21880kB present:516128kB pages_scanned:720035 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 16384kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4569 free pages
+3233 reserved pages
+3366 slab pages
+2396 pages shared
+0 pages swap cached
+Out of memory: kill process 11740 (mgapp-time-que) score 2726 or a child
+Killed process 11740 (mgapp-time-que)
+  12:02:38.839879  [INFO]  
+
+     <<   MGAPP   >>
+  12:02:38.874107  [INFO]  # Software Version: V.3.2.1.1246. M/PBX/SORM/H323/RCM/VAS/REC/IVR Build: Feb 13 2015 17:51:07
+  12:02:38.874316  [INFO]  App: start init. pid 22384
+  12:02:38.874856  [INFO]  app init: start init. dbg [0x0]
+  12:02:38.875857  [INFO]  hw: devices opened
+  12:02:38.876053  [INFO]  consol task: start. pid 22385
+  12:02:38.899262  [INFO]  consol task_wr: start. pid 22386
+  12:02:39.368899  [INFO]  net: init: if name: eth0. idx 0
+  12:02:39.369060  [INFO]  net: init: local IP: 192.168.18.152
+  12:02:39.369122  [INFO]  net: init: local MAC: a8:f9:4b:88:7d:0d
+  12:02:39.369392  [INFO]  net: init: if name: eth1. idx 1
+  12:02:39.369449  [INFO]  net: init: local IP: 1.255.254.250
+  12:02:39.369497  [INFO]  net: init: local MAC: 02:00:04:00:00:02
+  12:02:39.369557  [INFO]  msp: init. dbg [0x0]
+  12:02:39.383519  [INFO]  mspc: init
+  12:02:39.397705  [INFO]  hw task: start. pid 22388
+  12:02:39.397847  [INFO]  net task: start. pid 22389
+  12:02:39.397933  [INFO]  rec task: start. pid 22390
+  12:02:40.945922  [INFO]  msp: Firmware file '/usr/bin/smg/EltexPBX_C300_M823.axf' size [1990879]
+NET: Unregistered protocol family 27
+NET: Registered protocol family 27
+  12:02:41.248562  [INFO]  vapi: Version <VAPI Library Release 2.18.3-, API Version 8.0>
+  12:02:41.248740  [INFO]  msp: vapi-init res (0)
+  12:02:41.249014  [INFO]  msp task: start. pid 22398
+  12:02:41.249111  [INFO]  cfg: init
+  12:02:41.397328  [INFO]  sipt task: start. pid 22399
+  12:02:41.568108  [INFO]  pbxipc_task: pbxipc_3 started. pid: 22400
+  12:02:41.627303  [INFO]  config task: start. pid 22401
+  12:02:41.627558  [INFO]  cdr task: start. pid 22402
+  12:02:41.637515  [INFO]  erl task: start. pid 22405. node [c3]
+2015-02-14 12:02:41.677      src/app.c  conf: MGAPP DEAD
+  12:02:41.678059  [INFO] pa-h323.   H323. Core-connection 'lost'
+  12:02:41.691548  [INFO]  CONF. Adapter-connection 'established'
+2015-02-14 12:02:41.691      src/app.c  conf: MGAPP ALIVE
+  12:02:41.749949  [INFO]  Erlang node[c3]: Accepted: fd [28]
+  12:02:41.760050  [INFO]  ivr: init.
+  12:02:41.778537  [INFO]  pbxipc_task: pbxipc_1 started. pid: 22406
+  12:02:41.778759  [INFO]  alarm task: start. pid 22407
+  12:02:41.802784  [INFO]  zmq server: start. pid 22408
+  12:02:41.988703  [INFO]  H323. Adapter-connection 'established'
+  12:02:41.988972  [INFO] pa-h323.   H323. Core-connection 'established'
+  12:02:42.807554  [INFO]  App: main task. pid: 22384
+  12:02:42.814017  [INFO]  timer task: start. pid 22411
+  12:02:46.032129  [INFO]  cfg: try load
+  12:02:46.553764  [INFO]  cfg: inited
+  12:02:47.714696  [INFO]  H323. Send total-config. Intrf count: 0
+  12:02:47.714888  [INFO]  H323. Config sent
+  12:02:47.762996  [INFO]  mspc: re-init
+  12:02:47.763141  [INFO]  mspc: init
+  12:02:47.989050  [INFO]  RADIUS: start task. pid 22412.
+  12:02:48.016672  [INFO] pa-h323.   H323. config init start
+  12:02:48.017654  [INFO] pa-h323.   H323. config init end
+  12:46:03.777378  [ERR ]  Conn[5036]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  12:50:53.096199  [ERR ]  Conn[5079]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  13:07:31.720198  [ERR ]  Conn[401c]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  13:53:56.415550  [ERR ]  Conn[202a]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  19:12:49.684837  [ERR ]  Conn[2069]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  19:28:58.347390  [ERR ]  Conn[5038]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  19:30:02.349352  [ERR ]  Conn[2046]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  19:30:34.348993  [ERR ]  Conn[2078]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  21:06:59.358110  [ERR ]  Conn[2075]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  22:29:44.120069  [ERR ]  Conn[5061]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  23:31:41.327015  [ERR ]  Conn[501b]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  23:46:37.573461  [ERR ]  Conn[301f]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  00:03:09.799046  [ERR ]  Conn[505d]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  00:22:58.990358  [ERR ]  Conn[0029]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  00:24:02.987831  [ERR ]  Conn[4059]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  00:33:58.102675  [ERR ]  Conn[4043]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  00:48:34.545744  [ERR ]  Conn[2013]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  01:18:54.758516  [ERR ]  Conn[5011]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  02:25:48.980618  [ERR ]  Conn[3020]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  03:06:08.451661  [ERR ]  Conn[2064]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:24:00.183068  [ERR ]  Conn[206c]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:28:37.874928  [ERR ]  Conn[5072]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:41:26.067115  [ERR ]  Conn[2070]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:16:13.954596  [ERR ]  Conn[5041]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:16:46.619721  [ERR ]  Conn[2067]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:22:38.724690  [ERR ]  Conn[2045]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:24:46.737110  [ERR ]  Conn[304c]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:52:31.166390  [ERR ]  Conn[4019]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:04:46.659594  [ERR ]  Conn[4006]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:07:29.276126  [ERR ]  Conn[2045]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:09:05.305571  [ERR ]  Conn[2043]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:12:23.056823  [ERR ]  Conn[205a]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:24:18.390377  [ERR ]  Conn[400e]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  09:00:08.872638  [ERR ]  Conn[5016]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  09:16:01.542808  [ERR ]  Conn[2061]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+beam invoked oom-killer: gfp_mask=0x200d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:9bcf42e0 r7:00000042 r6:000200d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<9018086c>] (__handle_mm_fault+0x428/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<9002b234>] (do_DataAbort+0x38/0x98)
+[<9002b1fc>] (do_DataAbort+0x0/0x98) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xaa745fb0 to 0xaa745ff8)
+5fa0:                                     4427afec 43e17a40 0000e82c 41ef67bc 
+5fc0: 41ef67bc 41ef67bc 41ef67bc 41ef67bc 41ef67bc 43f5d03c 41d2fa2c 42175d98 
+5fe0: 41ef67bc 8eb1028c 41ef67bc 4018cf90 20000010 ffffffff                   
+ r8:41ef67bc r7:41ef67bc r6:41ef67bc r5:41ef67bc r4:ffffffff
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  30   Cold: hi:   62, btch:  15 usd:   8
+Active:108849 inactive:8774 dirty:1 writeback:0 unstable:0
+ free:4093 slab:3227 mapped:735 pagetables:493 bounce:0
+DMA free:16372kB min:16384kB low:20480kB high:24576kB active:435396kB inactive:35096kB present:516128kB pages_scanned:743896 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 1*4kB 0*8kB 5*16kB 1*32kB 0*64kB 1*128kB 1*256kB 1*512kB 1*1024kB 1*2048kB 3*4096kB = 16372kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4575 free pages
+3233 reserved pages
+3227 slab pages
+2334 pages shared
+0 pages swap cached
+Out of memory: kill process 22385 (mgapp-console) score 2678 or a child
+Killed process 22385 (mgapp-console)
+  09:24:29.752952  [INFO]  
+
+     <<   MGAPP   >>
+  09:24:29.798803  [INFO]  # Software Version: V.3.2.1.1246. M/PBX/SORM/H323/RCM/VAS/REC/IVR Build: Feb 13 2015 17:51:07
+  09:24:29.799025  [INFO]  App: start init. pid 16947
+  09:24:29.799604  [INFO]  app init: start init. dbg [0x0]
+  09:24:29.800520  [INFO]  hw: devices opened
+  09:24:29.800716  [INFO]  consol task: start. pid 16948
+  09:24:29.809133  [INFO]  consol task_wr: start. pid 16949
+  09:24:30.297970  [INFO]  net: init: if name: eth0. idx 0
+  09:24:30.298085  [INFO]  net: init: local IP: 192.168.18.152
+  09:24:30.298138  [INFO]  net: init: local MAC: a8:f9:4b:88:7d:0d
+  09:24:30.298461  [INFO]  net: init: if name: eth1. idx 1
+  09:24:30.298520  [INFO]  net: init: local IP: 1.255.254.250
+  09:24:30.298569  [INFO]  net: init: local MAC: 02:00:04:00:00:02
+  09:24:30.298629  [INFO]  msp: init. dbg [0x0]
+  09:24:30.311594  [INFO]  mspc: init
+  09:24:30.327552  [INFO]  hw task: start. pid 16951
+  09:24:30.327705  [INFO]  net task: start. pid 16952
+  09:24:30.330249  [INFO]  rec task: start. pid 16953
+  09:24:31.978403  [INFO]  msp: Firmware file '/usr/bin/smg/EltexPBX_C300_M823.axf' size [1990879]
+NET: Unregistered protocol family 27
+NET: Registered protocol family 27
+  09:24:32.296505  [INFO]  vapi: Version <VAPI Library Release 2.18.3-, API Version 8.0>
+  09:24:32.296685  [INFO]  msp: vapi-init res (0)
+  09:24:32.296817  [INFO]  cfg: init
+  09:24:32.406478  [INFO]  msp task: start. pid 16961
+  09:24:32.475253  [INFO]  sipt task: start. pid 16962
+  09:24:32.653429  [INFO]  pbxipc_task: pbxipc_3 started. pid: 16963
+  09:24:32.739535  [INFO]  config task: start. pid 16964
+  09:24:32.739759  [INFO]  cdr task: start. pid 16965
+  09:24:32.755935  [INFO]  CONF. Adapter-connection 'established'
+  09:24:32.756434  [INFO]  erl task: start. pid 16968. node [c3]
+  09:24:32.868428  [INFO]  ivr: init.
+  09:24:32.897089  [INFO]  Erlang node[c3]: Accepted: fd [28]
+  09:24:32.906168  [INFO]  pbxipc_task: pbxipc_1 started. pid: 16969
+  09:24:32.906386  [INFO]  alarm task: start. pid 16970
+  09:24:32.930221  [INFO]  zmq server: start. pid 16971
+  09:24:33.056011  [INFO] pa-h323.   H323. Core-connection 'lost'
+  09:24:33.058748  [INFO]  H323. Adapter-connection 'established'
+  09:24:33.058938  [INFO] pa-h323.   H323. Core-connection 'established'
+  09:24:33.946045  [INFO]  App: main task. pid: 16947
+  09:24:33.952401  [INFO]  timer task: start. pid 16974
+  09:24:37.150257  [INFO]  cfg: try load
+  09:24:37.684070  [INFO]  cfg: inited
+  09:24:38.932603  [INFO]  H323. Send total-config. Intrf count: 0
+  09:24:38.932813  [INFO]  H323. Config sent
+  09:24:38.986184  [INFO]  mspc: re-init
+  09:24:38.986325  [INFO]  mspc: init
+  09:24:39.431042  [INFO]  RADIUS: start task. pid 16975.
+  09:24:39.447333  [INFO] pa-h323.   H323. config init start
+  09:24:39.448152  [INFO] pa-h323.   H323. config init end
+  09:25:18.204676  [ERR ]  Conn[301f]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  09:26:21.734713  [ERR ]  Conn[307b]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  11:21:16.585151  [ERR ]  Conn[2003]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  12:45:20.578293  [ERR ]  Conn[3045]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  13:06:09.919911  [ERR ]  Conn[400c]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  15:41:19.997185  [ERR ]  Conn[3069]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  16:39:31.732103  [ERR ]  Conn[2056]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  16:40:32.888526  [ERR ]  Conn[403a]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  16:50:41.064456  [ERR ]  Conn[3067]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  16:55:29.136440  [ERR ]  Conn[5017]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  17:20:33.551652  [ERR ]  Conn[3021]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  17:36:56.777708  [ERR ]  Conn[504e]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  17:43:32.666263  [ERR ]  Conn[5053]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  19:47:01.015063  [ERR ]  Conn[503e]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  20:32:36.147914  [ERR ]  Conn[4011]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  20:33:43.911817  [ERR ]  Conn[2038]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  20:36:23.953014  [ERR ]  Conn[3010]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  20:45:24.373862  [ERR ]  Conn[303d]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  20:53:41.913345  [ERR ]  Conn[2007]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  21:08:38.148879  [ERR ]  Conn[204f]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  21:40:06.629043  [ERR ]  Conn[201d]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  22:06:21.020459  [ERR ]  Conn[2011]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  01:50:05.659277  [ERR ]  Conn[2024]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  01:50:37.664779  [ERR ]  Conn[4076]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  02:43:35.822192  [ERR ]  Conn[3069]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  03:43:55.939510  [ERR ]  Conn[207d]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  04:16:47.917569  [ERR ]  Conn[202b]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  04:17:19.924012  [ERR ]  Conn[205e]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  04:45:04.357548  [ERR ]  Conn[2044]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:29:53.057427  [ERR ]  Conn[507f]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:33:49.805991  [ERR ]  Conn[404a]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:35:44.025935  [ERR ]  Conn[3068]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:36:16.028344  [ERR ]  Conn[5008]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  05:51:45.365681  [ERR ]  Conn[5033]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:05:18.250440  [ERR ]  Conn[4000]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:16:49.698756  [ERR ]  Conn[5043]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:24:17.812373  [ERR ]  Conn[2009]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:31:13.898104  [ERR ]  Conn[5044]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:34:42.806743  [ERR ]  Conn[306b]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:40:55.216413  [ERR ]  Conn[2068]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:42:41.841438  [ERR ]  Conn[402a]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:45:11.249445  [ERR ]  Conn[2061]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:46:26.979314  [ERR ]  Conn[3066]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:54:58.011992  [ERR ]  Conn[2036]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  07:55:35.600933  [ERR ]  Conn[206d]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:02:59.200806  [ERR ]  Conn[3023]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:04:03.216932  [ERR ]  Conn[203b]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:10:47.660573  [ERR ]  Conn[501a]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:32:19.650692  [ERR ]  Conn[2062]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:37:06.750823  [ERR ]  Conn[2078]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:54:42.973893  [ERR ]  Conn[4034]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  08:57:12.404133  [ERR ]  Conn[201c]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0

@@ -1,0 +1,497 @@
+SMG1016M> sh
+/home/admin # top
+
+Mem: 311632K used, 195676K free, 0K shrd, 69692K buff, 55808K cached
+CPU: 75.0% usr  0.0% sys  0.0% nic  8.3% idle  0.0% io  0.0% irq 16.6% sirq
+Load average: 4.21 2.34 2.14 6/145 4479
+  PID  PPID USER     STAT   VSZ %MEM CPU %CPU COMMAND
+  606   553 root     R    66404 13.0   0 66.6 /usr/lib/erlang/erts-5.9.2/bin/bea
+  571     1 root     S     177m 35.8   0 24.9 /usr/bin/smg/mgapp
+  546     1 root     S    65196 12.8   0  0.0 -clish
+  576     1 root     S    52644 10.3   0  0.0 /usr/bin/smg/mod_conf --daemon
+  605   547 root     S    49372  9.7   0  0.0 /usr/bin/smg/snmpd -f -c /etc/conf
+  579   566 root     S    36520  7.1   0  0.0 /usr/bin/smg/cfgmngr
+  570     1 root     S    34196  6.7   0  0.0 /usr/bin/smg/webspp
+  568   567 root     S    33816  6.6   0  0.0 /usr/bin/smg/swctrl
+  573     1 root     S    30748  6.0   0  0.0 /usr/bin/smg/sysmon
+  562     1 root     S    28808  5.6   0  0.0 /usr/bin/smg/networkd
+  564     1 root     S    22336  4.4   0  0.0 /usr/bin/smg/msgcore
+  731   572 root     S    19760  3.8   0  0.0 /usr/bin/smg/pa_h323
+  566     1 root     S     7228  1.4   0  0.0 /usr/bin/smg/cfgmngr
+  567     1 root     S     5152  1.0   0  0.0 /usr/bin/smg/swctrl
+  755   753 root     S     4588  0.9   0  0.0 /sbin/sshd -D -f /etc/ssh/sshd_con
+  572     1 root     S     3288  0.6   0  0.0 /usr/bin/smg/pa_h323
+  563     1 root     S     3128  0.6   0  0.0 /bin/sh /sbin/sshguard.sh start
+  555     1 root     S N   3128  0.6   0  0.0 /bin/sh /sbin/rec.sh
+  557     1 root     S N   3128  0.6   0  0.0 /bin/sh /sbin/cdr.sh
+  547     1 root     S     3128  0.6   0  0.0 /bin/sh /sbin/snmpd.sh start
+/home/admin # csme: socket receive buffer full(1048576), dropping skb (size 1880). (lost: 1)
+beam invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a9c3fd60 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a9a18000 r8:a9c8fa70 r7:9001cc90 r6:00000085 r5:a99c9460
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:8eb05588 r6:8eb0558c r5:8eb05590 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa9a19fb0 to 0xa9a19ff8)
+9fa0:                                     8eb0555c 8eb05530 8eb0558c 8eb0555c 
+9fc0: 8eb05580 8eb05590 8eb0558c 8eb05588 8eb05594 4048a040 40575ff0 423b3a94 
+9fe0: 0017e254 8eb05530 00089144 4019bb98 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  16   Cold: hi:   62, btch:  15 usd:  42
+Active:114811 inactive:1985 dirty:0 writeback:0 unstable:0
+ free:4729 slab:3384 mapped:79 pagetables:426 bounce:0
+DMA free:18916kB min:16384kB low:20480kB high:24576kB active:459244kB inactive:7940kB present:516128kB pages_scanned:728926 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 223*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18916kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5169 free pages
+3233 reserved pages
+3384 slab pages
+1392 pages shared
+0 pages swap cached
+Out of memory: kill process 595 (mgapp-console) score 3246 or a child
+Killed process 595 (mgapp-console)
+webspp invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a98b4820 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a9940000 r8:a9ebf910 r7:ab054bf8 r6:000000f9 r5:add67540
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000152 r6:415a3490 r5:00000002 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa9941fb0 to 0xa9941ff8)
+1fa0:                                     00000000 00000000 00276f70 00000001 
+1fc0: 00000000 00000002 415a3490 00000152 40222150 003d0f00 4020b590 415a2fec 
+1fe0: 00000001 415a2e20 4020ea78 001011ac 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  15   Cold: hi:   62, btch:  15 usd:  42
+Active:110959 inactive:5869 dirty:0 writeback:0 unstable:0
+ free:4729 slab:3385 mapped:79 pagetables:426 bounce:0
+DMA free:18916kB min:16384kB low:20480kB high:24576kB active:443836kB inactive:23476kB present:516128kB pages_scanned:759929 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 223*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18916kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5168 free pages
+3233 reserved pages
+3385 slab pages
+1360 pages shared
+0 pages swap cached
+pbxipc_3 invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a8d8fd60 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a8896000 r8:a9f8ab78 r7:aad44710 r6:0000007e r5:90d78ac0
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000152 r6:4324d490 r5:00000006 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa8897fb0 to 0xa8897ff8)
+7fa0:                                     00000003 4324cd34 00000001 00000000 
+7fc0: 0000cbcc 00000006 4324d490 00000152 4011a150 003d0f00 40103590 4324cd1c 
+7fe0: 00000002 4324cce0 0008731c 00086e60 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  15   Cold: hi:   62, btch:  15 usd:  42
+Active:111854 inactive:5038 dirty:0 writeback:0 unstable:0
+ free:4729 slab:3385 mapped:79 pagetables:426 bounce:0
+DMA free:18916kB min:16384kB low:20480kB high:24576kB active:447416kB inactive:20152kB present:516128kB pages_scanned:813812 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 223*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18916kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5168 free pages
+3233 reserved pages
+3385 slab pages
+1296 pages shared
+0 pages swap cached
+kernel_req_proc invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a8d8f820 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a8f18000 r8:a9f8a2e0 r7:af501630 r6:00000029 r5:9bd69280
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000152 r6:41515490 r5:001f7754 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa8f19fb0 to 0xa8f19ff8)
+9fa0:                                     ffffffff 00000000 001f7774 00000001 
+9fc0: 54dce647 001f7754 41515490 00000152 40043150 003d0f00 4002c590 41514fec 
+9fe0: 00000001 41514df8 40034038 00031c0c 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  15   Cold: hi:   62, btch:  15 usd:  41
+Active:111854 inactive:5038 dirty:0 writeback:0 unstable:0
+ free:4729 slab:3385 mapped:80 pagetables:426 bounce:0
+DMA free:18916kB min:16384kB low:20480kB high:24576kB active:447416kB inactive:20152kB present:516128kB pages_scanned:813812 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 223*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18916kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5167 free pages
+3233 reserved pages
+3385 slab pages
+1298 pages shared
+0 pages swap cached
+clish invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a0b17d60 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a044e000 r8:90027f98 r7:aad44a40 r6:00000003 r5:aeea8cc0
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000152 r6:414cb490 r5:00115514 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa044ffb0 to 0xa044fff8)
+ffa0:                                     ffffffff 00000000 0011552c 00000001 
+ffc0: 54dce647 00115514 414cb490 00000152 40111150 003d0f00 400fa590 414cafec 
+ffe0: 00000001 414cae00 40102038 0000b1e8 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:  13   Cold: hi:   62, btch:  15 usd:  10
+Active:111950 inactive:4988 dirty:0 writeback:0 unstable:0
+ free:4714 slab:3388 mapped:126 pagetables:426 bounce:0
+DMA free:18856kB min:16384kB low:20480kB high:24576kB active:447800kB inactive:19952kB present:516128kB pages_scanned:815252 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 208*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18856kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+5116 free pages
+3233 reserved pages
+3390 slab pages
+1345 pages shared
+0 pages swap cached
+mgapp-consolex invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a9990820 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a99aa000 r8:a9ebf0d0 r7:af5017c8 r6:0000000f r5:aa264940
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:001c5f50 r6:4049bdc0 r5:0023a3c4 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa99abfb0 to 0xa99abff8)
+bfa0:                                     00000000 00000000 01870578 00000001 
+bfc0: 00000001 0023a3c4 4049bdc0 001c5f50 0023a3c4 003d0f00 00000000 4049bdbc 
+bfe0: 00000001 4049bda8 4002fa78 000177f4 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:   9   Cold: hi:   62, btch:  15 usd:   7
+Active:105537 inactive:11525 dirty:0 writeback:0 unstable:0
+ free:4594 slab:3391 mapped:249 pagetables:426 bounce:0
+DMA free:18376kB min:16384kB low:20480kB high:24576kB active:422148kB inactive:46100kB present:516128kB pages_scanned:845580 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 88*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18376kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4992 free pages
+3233 reserved pages
+3391 slab pages
+1472 pages shared
+0 pages swap cached
+mgapp-sipt invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a98642e0 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a7952000 r8:a9ebf0d0 r7:af5017c8 r6:00000096 r5:aa264940
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000001 r6:0179e35c r5:01490948 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa7953fb0 to 0xa7953ff8)
+3fa0:                                     00000000 00000000 014918dc 00000001 
+3fc0: 00000001 01490948 0179e35c 00000001 40043150 003d0f00 4002c590 42e4cdbc 
+3fe0: 00000001 42e4cda8 4002fa78 0009ee68 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:   9   Cold: hi:   62, btch:  15 usd:  14
+Active:102682 inactive:14388 dirty:0 writeback:0 unstable:0
+ free:4579 slab:3391 mapped:257 pagetables:426 bounce:0
+DMA free:18316kB min:16384kB low:20480kB high:24576kB active:410728kB inactive:57552kB present:516128kB pages_scanned:872540 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 73*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18316kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4983 free pages
+3233 reserved pages
+3392 slab pages
+1482 pages shared
+0 pages swap cached
+mgapp-config invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:a9c3f820 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a5dfa000 r8:a9ebf0d0 r7:af5017c8 r6:00000024 r5:aa264940
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:0134e969 r6:013c2924 r5:00000001 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa5dfbfb0 to 0xa5dfbff8)
+bfa0:                                     00000000 00000000 013c373c 00000001 
+bfc0: 00000001 00000001 013c2924 0134e969 0134eaf4 0023a194 00000000 452f1d94 
+bfe0: 00000001 452f1d80 4002fa78 0002c89c 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:   8   Cold: hi:   62, btch:  15 usd:  14
+Active:102682 inactive:14388 dirty:0 writeback:0 unstable:0
+ free:4579 slab:3392 mapped:257 pagetables:426 bounce:0
+DMA free:18316kB min:16384kB low:20480kB high:24576kB active:410728kB inactive:57552kB present:516128kB pages_scanned:872540 all_unreclaimable? yes
+lowmem_reserve[]: 0 0
+DMA: 73*4kB 109*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18316kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4983 free pages
+3233 reserved pages
+3392 slab pages
+1482 pages shared
+0 pages swap cached
+csme: socket receive buffer full(1048576), dropping skb (size 1880). (lost: 1001)
+snmpd invoked oom-killer: gfp_mask=0x201d2, order=0, oomkilladj=0
+[<90124518>] (dump_stack+0x0/0x14) from [<901779a8>] (out_of_memory+0x7c/0x25c)
+[<9017792c>] (out_of_memory+0x0/0x25c) from [<9017944c>] (__alloc_pages+0x228/0x2a8)
+ r8:9bcf82e0 r7:00000042 r6:000201d2 r5:00000000 r4:00000000
+[<90179224>] (__alloc_pages+0x0/0x2a8) from [<90174d1c>] (page_cache_read+0x40/0xac)
+[<90174cdc>] (page_cache_read+0x0/0xac) from [<90175268>] (filemap_nopage+0x1c8/0x310)
+ r9:a96b2000 r8:aa14a910 r7:aad443e0 r6:000000ed r5:9bd69320
+r4:00000000
+[<901750a0>] (filemap_nopage+0x0/0x310) from [<90180590>] (__handle_mm_fault+0x14c/0x960)
+[<90180444>] (__handle_mm_fault+0x0/0x960) from [<90126930>] (do_page_fault+0xe4/0x214)
+[<9012684c>] (do_page_fault+0x0/0x214) from [<90126af4>] (do_translation_fault+0x18/0x88)
+[<90126adc>] (do_translation_fault+0x0/0x88) from [<9002b1f8>] (do_PrefetchAbort+0x18/0x1c)
+ r7:00000152 r6:42cff490 r5:00000005 r4:ffffffff
+[<9002b1e0>] (do_PrefetchAbort+0x0/0x1c) from [<90031608>] (ret_from_exception+0x0/0x10)
+Exception stack(0xa96b3fb0 to 0xa96b3ff8)
+3fa0:                                     ffffffff 00000000 002907e0 00000001 
+3fc0: 42cff4d8 00000005 42cff490 00000152 4005d150 003d0f00 40046590 42cfedfc 
+3fe0: 00000001 42cfedd0 4004e038 000f59b0 60000010 ffffffff                   
+Mem-info:
+DMA per-cpu:
+CPU    0: Hot: hi:  186, btch:  31 usd:   2   Cold: hi:   62, btch:  15 usd:   0
+Active:99596 inactive:17650 dirty:0 writeback:0 unstable:0
+ free:4555 slab:3392 mapped:331 pagetables:426 bounce:0
+DMA free:18220kB min:16384kB low:20480kB high:24576kB active:398384kB inactive:70600kB present:516128kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0
+DMA: 13*4kB 127*8kB 30*16kB 7*32kB 1*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 4*4096kB = 18220kB
+Swap cache: add 0, delete 0, find 0/0, race 0+0
+Free swap  = 0kB
+Total swap = 0kB
+Free swap:            0kB
+130048 pages of RAM
+4921 free pages
+3233 reserved pages
+3392 slab pages
+1461 pages shared
+0 pages swap cached
+Out of memory: kill process 597 (mgapp-time-que) score 3246 or a child
+Killed process 597 (mgapp-time-que)
+  23:43:38.648128  [INFO]  
+
+     <<   MGAPP   >>
+  23:43:38.684267  [INFO]  # Software Version: V.3.2.1.1245. M/PBX/SORM/H323/RCM/VAS/REC/IVR Build: Feb 11 2015 09:12:29
+  23:43:38.684488  [INFO]  App: start init. pid 25172
+  23:43:38.685166  [INFO]  app init: start init. dbg [0x0]
+  23:43:38.686316  [INFO]  hw: devices opened
+  23:43:38.686566  [INFO]  consol task: start. pid 25173
+  23:43:38.690094  [INFO]  consol task_wr: start. pid 25174
+  23:43:39.170121  [INFO] pa-h323.   H323. Core-connection 'lost'
+  23:43:39.181147  [INFO]  net: init: if name: eth0. idx 0
+  23:43:39.181386  [INFO]  net: init: local IP: 192.168.18.152
+  23:43:39.181441  [INFO]  net: init: local MAC: a8:f9:4b:88:7d:0d
+  23:43:39.182791  [INFO]  net: init: if name: eth1. idx 1
+  23:43:39.182862  [INFO]  net: init: local IP: 1.255.254.250
+  23:43:39.182911  [INFO]  net: init: local MAC: 02:00:04:00:00:02
+  23:43:39.183018  [INFO]  msp: init. dbg [0x0]
+  23:43:39.195923  [INFO]  mspc: init
+  23:43:39.243019  [INFO]  hw task: start. pid 25189
+  23:43:39.243286  [INFO]  net task: start. pid 25190
+  23:43:39.244016  [INFO]  rec task: start. pid 25191
+ 23:43:40.171  webs[ERR ]  ERROR: Failed to get alarm-list.
+  23:43:40.715064  [INFO]  msp: Firmware file '/usr/bin/smg/EltexPBX_C300_M823.axf' size [1990879]
+NET: Unregistered protocol family 27
+NET: Registered protocol family 27
+  23:43:40.991332  [INFO]  vapi: Version <VAPI Library Release 2.18.3-, API Version 8.0>
+  23:43:40.991509  [INFO]  msp: vapi-init res (0)
+  23:43:40.991677  [INFO]  cfg: init
+2015-02-12 23:43:41.000      src/app.c  conf: MGAPP DEAD
+  23:43:41.100785  [INFO]  msp task: start. pid 25204
+  23:43:41.151599  [INFO]  sipt task: start. pid 25205
+  23:43:41.320816  [INFO]  pbxipc_task: pbxipc_3 started. pid: 25206
+  23:43:41.380181  [INFO]  config task: start. pid 25207
+  23:43:41.380535  [INFO]  cdr task: start. pid 25208
+  23:43:41.391397  [INFO]  erl task: start. pid 25211. node [c3]
+  23:43:41.503302  [INFO]  Erlang node[c3]: Accepted: fd [28]
+  23:43:41.507339  [INFO]  ivr: init.
+  23:43:41.520210  [INFO]  pbxipc_task: pbxipc_1 started. pid: 25212
+  23:43:41.520422  [INFO]  alarm task: start. pid 25213
+  23:43:41.548835  [INFO]  zmq server: start. pid 25214
+  23:43:41.601371  [INFO]  CONF. Adapter-connection 'established'
+2015-02-12 23:43:41.601      src/app.c  conf: MGAPP ALIVE
+  23:43:41.601772  [INFO]  H323. Adapter-connection 'established'
+  23:43:41.601931  [INFO] pa-h323.   H323. Core-connection 'established'
+  23:43:42.560306  [INFO]  App: main task. pid: 25172
+  23:43:42.589520  [INFO]  timer task: start. pid 25217
+  23:43:45.804985  [INFO]  cfg: try load
+  23:43:46.333648  [INFO]  cfg: inited
+  23:43:47.387092  [INFO]  H323. Send total-config. Intrf count: 0
+  23:43:47.387278  [INFO]  H323. Config sent
+  23:43:47.442963  [INFO]  mspc: re-init
+  23:43:47.443100  [INFO]  mspc: init
+  23:43:47.714051  [INFO]  RADIUS: start task. pid 25223.
+  23:43:47.755879  [INFO] pa-h323.   H323. config init start
+  23:43:47.756723  [INFO] pa-h323.   H323. config init end
+  01:48:06.090232  [ERR ]  Conn[207f]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  02:30:10.844398  [ERR ]  Conn[5048]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  02:45:39.554302  [ERR ]  Conn[502e]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  03:06:16.834443  [ERR ]  Conn[3057]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  03:13:55.962615  [ERR ]  Conn[4049]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  03:54:32.828708  [ERR ]  Conn[204d]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  03:56:04.388573  [ERR ]  Conn[500f]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  04:35:01.500589  [ERR ]  Conn[5076]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+  06:19:14.273468  [ERR ]  Conn[0060]: VAPI CB Req. Level 0. RequestId 042c. Result -68033. Response len 0
+
+/home/admin # ifconfig 
+eth0      Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet addr:192.168.18.152  Bcast:192.168.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::aaf9:4bff:fe88:7d0d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:39884244 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:684498236 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:3948049287 (3.6 GiB)  TX bytes:1474799942 (1.3 GiB)
+
+eth0.orig Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet6 addr: fe80::aaf9:4bff:fe88:7d0d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:39884244 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:684498217 errors:0 dropped:6 overruns:0 carrier:0
+          collisions:0 txqueuelen:532 
+          RX bytes:370998383 (353.8 MiB)  TX bytes:4212788762 (3.9 GiB)
+          Interrupt:40 
+
+eth0:1    Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet addr:192.168.0.152  Bcast:192.168.0.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth0:2    Link encap:Ethernet  HWaddr A8:F9:4B:88:7D:0D  
+          inet addr:192.168.2.152  Bcast:192.168.2.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+eth1      Link encap:Ethernet  HWaddr 02:00:04:00:00:02  
+          inet addr:1.255.254.250  Bcast:1.255.254.255  Mask:255.255.255.240
+          inet6 addr: fe80::4ff:fe00:2/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:734337970 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:90240711 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:532 
+          RX bytes:3033405312 (2.8 GiB)  TX bytes:1229216459 (1.1 GiB)
+          Interrupt:44 
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:8497353 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8497353 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:1793509176 (1.6 GiB)  TX bytes:1793509176 (1.6 GiB)
+
+/home/admin # 
+/home/admin # top
+
+Mem: 383920K used, 123388K free, 0K shrd, 69668K buff, 12312K cached
+CPU:  0.0% usr  9.0% sys  0.0% nic 90.9% idle  0.0% io  0.0% irq  0.0% sirq
+Load average: 0.54 1.62 2.34 1/146 5298
+  PID  PPID USER     STAT   VSZ %MEM CPU %CPU COMMAND
+25172     1 root     S     222m 44.9   0  9.0 /usr/bin/smg/mgapp
+  606   553 root     S     129m 26.1   0  0.0 /usr/lib/erlang/erts-5.9.2/bin/bea
+  546     1 root     S    65196 12.8   0  0.0 -clish
+  576     1 root     S    52644 10.3   0  0.0 /usr/bin/smg/mod_conf --daemon
+  605   547 root     S    49372  9.7   0  0.0 /usr/bin/smg/snmpd -f -c /etc/conf
+  579   566 root     S    36520  7.1   0  0.0 /usr/bin/smg/cfgmngr
+  570     1 root     S    34196  6.7   0  0.0 /usr/bin/smg/webspp
+  568   567 root     S    33816  6.6   0  0.0 /usr/bin/smg/swctrl
+  573     1 root     S    30748  6.0   0  0.0 /usr/bin/smg/sysmon
+  562     1 root     S    28808  5.6   0  0.0 /usr/bin/smg/networkd
+  564     1 root     S    22336  4.4   0  0.0 /usr/bin/smg/msgcore
+  731   572 root     S    19760  3.8   0  0.0 /usr/bin/smg/pa_h323
+  566     1 root     S     7228  1.4   0  0.0 /usr/bin/smg/cfgmngr
+  567     1 root     S     5152  1.0   0  0.0 /usr/bin/smg/swctrl
+  755   753 root     S     4588  0.9   0  0.0 /sbin/sshd -D -f /etc/ssh/sshd_con
+  572     1 root     S     3288  0.6   0  0.0 /usr/bin/smg/pa_h323
+  563     1 root     S     3128  0.6   0  0.0 /bin/sh /sbin/sshguard.sh start
+  557     1 root     S N   3128  0.6   0  0.0 /bin/sh /sbin/cdr.sh
+  555     1 root     S N   3128  0.6   0  0.0 /bin/sh /sbin/rec.sh
+  831   606 root     S     3128  0.6   0  0.0 sh -s disksup
+/home/admin # login[6013]: root login on 'pts/0'
+root@jonnik:/home/jonnik/123# 

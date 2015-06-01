@@ -1,0 +1,1354 @@
+SMG-1016M. SN: VI1F000130 Software Version: V.3.3.0.1389 M/PBX/SORM/H323/RCM/VAS/REC/IVR/40VNI Build: Apr 10 2015 18:29:46
+Log started at: 15:46:44.146581 13/04/15
+Trace levels:
+         alarm  - 01
+         calls  - 01
+         isup   - 01
+         q931   - 01
+         sipt   - 01
+         rtp    - 01
+         msp    - 01
+         radius - 01
+         h323   - 01
+         ivr    - 99
+  15:46:46.358575  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:46.358679  [INFO]  ASN. Try decode message
+  15:46:46.358818  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:46:46.358893  [INFO]  ASN. Decode success
+  15:46:46.358951  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:46:46.359022  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:46:46.359086  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:46:46.359253  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:46:46.359311  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:46:51.370124  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:51.370230  [INFO]  ASN. Try decode message
+  15:46:51.370369  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:46:51.370442  [INFO]  ASN. Decode success
+  15:46:51.370499  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:46:51.370571  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:46:51.370634  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:46:51.370801  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:46:51.370859  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:46:52.179771  [INFO]  SS7/MTP3. Line '00/08'. Data Rx. SNI=0xC5 (SI=5, NI=3) [DPC=1, OPC=2, SLS=9]. [SLC=0]
+21.C5.01.80.00.90.29.00.01.00.20.00.E3.02.02.07.05.81.10.43.43.0F.0A.06.03.13.83.13.32.54.3D.01.07.00.
+  15:46:52.179888  [INFO]  SS7/MTP3. Line '00/08'. Data Rx. 'ISUP' (28). 
+  15:46:52.180062  [INFO]  SS7/ISUP. RX. ISUP-profile 01. Link '00/08', CIC=041. IAM- Initial Address Message
+			## Nature of connection: 00
+			# 	Satellite: no
+			# 	Continuity Check: not required
+			# 	Echo control: not included
+			## Forward Call Indicators: 20 00 
+			# 	Call to be treated as national call
+			# 	EndToEnd method: no end-to-end(only link-by-link)
+			# 	Interworking: no encountered
+			# 	EndToEnd info: not available
+			# 	ISUP: used all the way
+			# 	ISUP indicator: preferred all way
+			# 	Originating access: non-ISDN
+			# Calling party category:  0xe3 (227)
+			# Transmission medium req: 0x02 - unrestricted 64 kbps
+			## Called party number: 81 10 43 43 0F 
+			# 	Nature of address: 0x81 - subscriber
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Number:            3434 <ST>
+			[Optional params]
+			## Calling party number: 03 13 83 13 32 54 
+			# 	Nature of address: 0x03 - national
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Screening:         0x03 - network prov
+			# 	Presentation:      0x00 - presentation allowed
+			# 	Number:            38312345
+			# Hop counter: 07.
+			[end of optional params]
+  15:46:52.180178  [INFO]  SS7/ISUP. ISUP-profile 01. Link '00/08', CIC=041: state 'NULL'. Check state for IAM
+  15:46:52.180305  [INFO]  SS7/ISUP. Chan '00/08':02. New state IN_PROCEEDING
+  15:46:52.180399  [INFO]  SS7/ISUP. Line '00/08'. Chan 02. Incoming seize: 
+			# Port SS7:08:02. CCR(none). category e3 (227). 
+			# Calling <38312345> Called <3434> 
+			# Orig called <none> Redirecting <none>. Redirecting count 0
+			# cplt=y; pres=allow; nature=not subscriber
+			# SS7 all way: y, ISUP all way: y, ISDN orig: n, ISDN pref: 0
+			chan [2] trunk [255]. linkset [1] trunk [13]
+  15:46:52.180489  [INFO]  Port SS7:08:02. VChan set (chan 2) - 'line 2, chan 8'
+  15:46:52.180567  [INFO]  Port SS7:08:02. Seize (v-chan:02, TG:13). Cld:'<none>'(0). (Trunk) . Clg-len: 8. clg-set: y. COS: -1. RADIUS=-1
+  15:46:52.180664  [INFO]  Port SS7:08:02. ModTable in [-1:-1], out [-1:-1], out redir:orig [-1:-1]
+  15:46:52.180733  [INFO]  Port SS7:08:02. CgPN: <38312345>(8) <set> <national> <isdn/telephony> <allowed> <net.provided>. cat [9].
+  15:46:52.180805  [INFO]  Port SS7:08:02. Calling Info (pres allowed): <38312345>. <Category=9>
+  15:46:52.180864  [INFO]  Port SS7:08:02. CgPN: <38312345>(8) <set> <national> <isdn/telephony> <allowed> <net.provided>. cat [9].
+  15:46:52.180983  [INFO]  Port SS7:08:02. Set state 'In-Dial'
+  15:46:52.181044  [INFO]  SS7/ISUP. Chan '00/08':02. Incoming seize - PLAN 0. COS 0. T9 120.
+  15:46:52.181121  [INFO]  Port SS7:08:02. Dial In (in=05, need rm=0): <3><4><3><4>[.]
+  15:46:52.181182  [INFO]  Port SS7:08:02. In Digit 5 sym: called buf <3434.>
+  15:46:52.181236  [INFO]  Port SS7:08:02. Dial buf <3434>(4)
+  15:46:52.181297  [INFO]  Port SS7:08:02. Dial Proc (state In-Dial, called len 05): <3434.> Compl.
+  15:46:52.181359  [INFO]  Port SS7:08:02. Search route. Mode: 'calling'. Num: <38312345>(8).# Complete
+  15:46:52.181434  [INFO]  Port SS7:08:02. Search route. Result: route not found. res (-1)
+  15:46:52.181574  [INFO]  Port SS7:08:02. Search route. Mode: 'called'. Num: <3434.>(5).# Complete
+  15:46:52.181690  [INFO]  Port SS7:08:02. Search route. User-service data search
+  15:46:52.181751  [INFO]  Port SS7:08:02. Search route. User-service data not found
+  15:46:52.181809  [INFO]  Port SS7:08:02. Search route. Result: found route: prefix[30]. res (4)
+  15:46:52.181870  [INFO]  Port SS7:08:02. Process route to prefix [30].
+  15:46:52.181930  [INFO]  Port SS7:08:02. Prefix 30: type 'IVR.SCENARIO', idx=0
+  15:46:52.182002  [INFO]  IVR. Callref 0021. State changed: 'null_state' -> 'allocated'
+  15:46:52.182074  [INFO]  SRV. Callref 0021. out-Seize from port SS7:08:02.
+  15:46:52.182161  [INFO]  Port SRVC:0021. Set parent SS7:08:02
+  15:46:52.182224  [INFO]  Port SRVC:0021. loc 1, trunk-loc 0. peer-loc 0, peer-tunk-loc: 0
+  15:46:52.182281  [INFO]  Port SS7:08:02. loc 0, trunk-loc 0. peer-loc 1, peer-tunk-loc: 0
+  15:46:52.182334  [INFO]  SRV. Callref 0021.  CgPN: <38312345>(8) <set> <national> <isdn/telephony> <allowed> <net.provided>. cat [9]
+  15:46:52.182396  [INFO]  Port SRVC:0021. Set state 'Service-Dial'
+  15:46:52.182454  [INFO]  SRV. Callref 0021. New state 'SRV_PRESENTED'
+  15:46:52.182509  [INFO]  SRV. Callref 0021. Set IVR ref [0021]
+  15:46:52.182566  [INFO]  Port SRVC:0021. Set state 'Wait-Num'
+  15:46:52.182632  [INFO]  Port SRVC:0021. Query Next Digit - peer SS7:08:02 (next.digit=n). Called len 05, proceed 00
+  15:46:52.182688  [INFO]  Port SRVC:0021. Dial Out=3 (loc)
+  15:46:52.182747  [INFO]  Port SRVC:0021. Check out-called-modify: '3'(1). ModTable[-1], CldMod[-1]
+  15:46:52.182807  [INFO]  SRV. Callref 0021. Dial 3
+  15:46:52.182861  [INFO]  Port SRVC:0021. Dial Out: called len 00, append 01 (max digit 30)
+  15:46:52.182929  [INFO]  Port SRVC:0021. Query Next Digit - peer SS7:08:02 (next.digit=n). Called len 05, proceed 01
+  15:46:52.182983  [INFO]  Port SRVC:0021. Dial Out=4 (loc)
+  15:46:52.183041  [INFO]  SRV. Callref 0021. Dial 4
+  15:46:52.183096  [INFO]  Port SRVC:0021. Dial Out: called len 01, append 01 (max digit 30)
+  15:46:52.183163  [INFO]  Port SRVC:0021. Query Next Digit - peer SS7:08:02 (next.digit=n). Called len 05, proceed 02
+  15:46:52.183218  [INFO]  Port SRVC:0021. Dial Out=3 (loc)
+  15:46:52.183298  [INFO]  SRV. Callref 0021. Dial 3
+  15:46:52.183359  [INFO]  Port SRVC:0021. Dial Out: called len 02, append 01 (max digit 30)
+  15:46:52.183428  [INFO]  Port SRVC:0021. Query Next Digit - peer SS7:08:02 (next.digit=n). Called len 05, proceed 03
+  15:46:52.183485  [INFO]  Port SRVC:0021. Dial Out=4. (loc)
+  15:46:52.183544  [INFO]  SRV. Callref 0021. Dial 4.
+  15:46:52.183600  [INFO]  Port SRVC:0021. Dial Out: called len 03, append 02 (max digit 30)
+  15:46:52.183655  [INFO]  Port SRVC:0021. Dial Out: 'End_of_Dial' digit/stop dial
+  15:46:52.183718  [INFO]  IVR. Try find IVRScenario in /mnt/sda/ivr_scenario
+  15:46:52.183821  [INFO]  IVR. Script found. Full path: /mnt/sda/ivr_scenario/IVRScenario
+  15:46:52.183892  [INFO]  IVR. Callref 0021. Mapped on SRVC:0021 (Peer SS7:08:02)
+  15:46:52.183953  [INFO]  ZMQ. TX Callref 0021. Try send 'Seize'
+  15:46:52.184040  [INFO]  ASN. Added 'Seize' to message body
+  15:46:52.184123  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Seize
+				 BASIC params:
+				 applicationCfg: . . . . /mnt/sda/ivr_scenario/IVRScenario
+				 vatsId: . . . . . . . . no_vats
+				 applicationId:  . . . . 0
+				 timestamp:  . . . . . . 1428.918412.0
+				 cdpn: . . . . . . . . . 
+				    nai: . . . . . . . . 2
+				    npi: . . . . . . . . 1
+				    inn: . . . . . . . . 0
+				    address: . . . . . . 3434
+				 OPTIONAL params:
+				 cgpn: . . . . . . . . . 
+				    nai: . . . . . . . . 2
+				    screening: . . . . . 3
+				    apri:  . . . . . . . 0
+				    npi: . . . . . . . . 2
+				    ni:  . . . . . . . . 0
+				    address: . . . . . . 38312345
+				    displayName: . . . . no
+				 callRef:  . . . . . . . no
+				 category: . . . . . . . 227
+				 tgId: . . . . . . . . . no
+				 originalCDPN: . . . . . no
+				 genericNumber:  . . . . no
+				 redirectingNumber:  . . no
+				 redirectionInformation: no
+				 callingAccess:  . . . . 255
+				 fci . . . . . . . . . . no
+				 usi . . . . . . . . . . no
+				 uti . . . . . . . . . . no
+				 tmr . . . . . . . . . . 0
+				 noCDR . . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+  15:46:52.184569  [INFO]  ASN. Message 'Seize'. Encode success
+  15:46:52.184647  [INFO]  ZMQ. Callref 0021. State changed: 'disconnected' -> 'wait connection'
+  15:46:52.184704  [INFO]  ZMQ. Callref 0021. New session added
+  15:46:52.184757  [INFO]  ZMQ. TX. Message 'Seize' was sent
+  15:46:52.185027  [INFO]  IVR. Callref 0021. State changed: 'allocated' -> 'new'
+  15:46:52.185115  [INFO]  Port SS7:08:02. Prefix linked: called len 05, proceed 05. (IVR-call)
+  15:46:52.220244  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:52.220356  [INFO]  ASN. Try decode message
+  15:46:52.220517  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1428.918412.201300
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:52.220621  [INFO]  ASN. Decode success
+  15:46:52.220682  [INFO]  ZMQ. RX Callref 0021. Message 'Progress'
+  15:46:52.220748  [INFO]  ZMQ. Callref 0021. Mapped to '6b051397fe5f1be3'
+  15:46:52.220803  [INFO]  ZMQ. Callref 0021. State changed: 'wait connection' -> 'connected'
+  15:46:52.287648  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:52.287782  [INFO]  ASN. Try decode message
+  15:46:52.288000  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 1
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1428.918412.268988
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . 1
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    tone:  . . . . . . . 18
+				        duration:  . . . 3000
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:52.288137  [INFO]  ASN. Decode success
+  15:46:52.288198  [INFO]  ZMQ. RX Callref 0021. Message 'Progress'
+  15:46:52.288270  [INFO]  Port SRVC:0021. Set in-band indication flag
+  15:46:52.288327  [INFO]  Port SRVC:0021. Stop Dial, reason 'complete'
+  15:46:52.288392  [INFO]  Port SS7:08:02. Send 'End of Dial' to incoming call
+  15:46:52.288452  [INFO]  SS7/ISUP. Chan SS7:08:02. End Dial
+  15:46:52.288510  [INFO]  Port SRVC:0021. get ISDN: BCI=0xD2: 'ISDN All Way' 'SS7 All Way' 'Change' 'In-band'
+  15:46:52.288620  [INFO]  SS7/ISUP. TX. ISUP-profile 01. Link '00/08', CIC=041. ACM-Address Complete
+			## Backward call Indicators: 12 04 
+			# 	Called party's status indicator: No indication
+			# 	Interworking: no encountered
+			# 	ISUP: used all the way
+			# 	Terminating access: non-ISDN
+			[Optional params]
+			## Optional backward call indicators: 01 
+			# 	In-band info:      in-band information or an appropriate pattern is now available
+			# 	Call diversion:    no indication
+			# 	Simple segment-n:  no additional information will be sent
+			# 	MLPP user:         no indication
+			[end of optional params]
+  15:46:52.288686  [INFO]  SS7/MTP3. Line '00/08'. ISUP-profile 01. Data Tx. SI=0xC5 [DPC=2, OPC=1, SLS=9] 
+  15:46:52.288774  [INFO]  SS7/MTP3. Line '00/08'. Data Tx. 'ISUP': C5.02.40.00.90.29.00.06.12.04.01.29.01.01.00.
+  15:46:52.288915  [INFO]  Port SS7:08:02. LinkUp to SRVC:0021
+  15:46:52.288991  [INFO]  IVR. Callref 0021. Port SS7:08:02. MSP connection not exist. Try create
+  15:46:52.289081  [INFO]  Port SS7:08:02. Create msp-conn Conn[2013].
+  15:46:52.289137  [INFO]  Conn[2013]: Set state 'Idle'->'AllocReq'
+  15:46:52.289270  [INFO]  Port SS7:08:02. Set new IP-conn [2013]
+  15:46:52.289347  [INFO]  IVR. Callref 0021. Port SS7:08:02. MSP connection created [2013]
+  15:46:52.289424  [INFO]  IVR. Callref 0021. Play status: Play '18'. Repeat 1 of 1. Play position 1 of 1
+  15:46:52.289495  [INFO]  Port SS7:08:02. Set signal: 'RING_BACK'
+  15:46:52.289559  [INFO]  Conn[0000]: Switch tone '21' for port SS7:08:02: 04:00 -> 02:08
+  15:46:52.291928  [INFO]  Conn[2013]: Set state 'AllocReq'->'Allocated'
+  15:46:52.292019  [INFO]  Conn[2013]: Set state 'Allocated'->'DisableReq'
+  15:46:52.293041  [INFO]  Conn[2013]: Created (disabled). State 'DisableReq'
+  15:46:52.293115  [INFO]  Conn[2013]: Set state 'DisableReq'->'Disabled'
+  15:46:52.293184  [INFO]  Port SS7:08:02. Created IP-conn [2013]. no cot-test
+  15:46:52.711820  [INFO]  Port SS7:08:02. Signal RING_BACK active
+  15:46:52.711929  [INFO]  Conn[0002]: Switch tone '23' for port SS7:08:02: 04:02 -> 02:08
+  15:46:55.300352  [INFO]  IVR. Callref 0021. Playlist: All files in playlist already played. err_buff: 'none'
+  15:46:55.300469  [INFO]  IVR. Callref 0021. Playlist: send playlist notify
+  15:46:55.300530  [INFO]  IVR. Callref 0021. Normal mode. Play status: Stopped
+  15:46:55.300612  [INFO]  ZMQ. TX Callref 0021. Try send 'Progress'
+  15:46:55.300695  [INFO]  ASN. Added 'Progress' to message body
+  15:46:55.300831  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1428.918415.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . 
+				    0:  . . . . . . . . 250
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    tone:  . . . . . . . 18
+				        duration:  . . . 0
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:55.301188  [INFO]  ASN. Message 'Progress'. Encode success
+  15:46:55.301258  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:46:55.379377  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:55.379483  [INFO]  ASN. Try decode message
+  15:46:55.379668  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Answer
+				 BASIC params:
+				 timestamp . . . . . . . 1428.918415.363061
+				 OPTIONAL params:
+				 bci . . . . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 connectedNumber . . . . no
+				 genericNumber . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 play  . . . . . . . . . 
+				    file:  . . . . . . . 1_1.wav
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 record  . . . . . . . . no
+				 detect  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:55.379792  [INFO]  ASN. Decode success
+  15:46:55.379854  [INFO]  ZMQ. RX Callref 0021. Message 'Answer'
+  15:46:55.379926  [INFO]  Port SRVC:0021. Answer
+  15:46:55.379995  [INFO]  Port SRVC:0021. Set state 'Talk'
+  15:46:55.380062  [INFO]  Port SS7:08:02. Answer from peer (SRVC:0021)
+  15:46:55.380147  [INFO]  Port SS7:08:02. Self: ext, Peer: loc.
+  15:46:55.380207  [INFO]  Port SRVC:0021. Self: loc, Peer: ext.
+  15:46:55.380272  [INFO]  Port SS7:08:02. Set RADIUS-talk flag
+  15:46:55.380331  [INFO]  Port SS7:08:02. Set state 'Talk'
+  15:46:55.380391  [INFO]  SS7/ISUP. Chan SS7:08:02. Connect
+  15:46:55.380448  [INFO]  Port SRVC:0021. get ISDN: BCI=0x50: 'ISDN All Way' 'SS7 All Way'
+  15:46:55.380510  [INFO]  SS7/ISUP. Chan '00/08':02. New state ACTIVE
+  15:46:55.380585  [INFO]  SS7/ISUP. TX. ISUP-profile 01. Link '00/08', CIC=041. ANM-Answer
+			[No optional params]
+  15:46:55.380645  [INFO]  SS7/MTP3. Line '00/08'. ISUP-profile 01. Data Tx. SI=0xC5 [DPC=2, OPC=1, SLS=9] 
+  15:46:55.380726  [INFO]  SS7/MTP3. Line '00/08'. Data Tx. 'ISUP': C5.02.40.00.90.29.00.09.00.
+  15:46:55.380852  [INFO]  IVR. Callref 0021. SS7:08:02: Check recording: Disable
+  15:46:55.380923  [INFO]  Port SS7:08:02. Set signal: 'NULL'
+  15:46:55.380998  [INFO]  Port SS7:08:02. LinkUp to SRVC:0021
+  15:46:55.381063  [INFO]  Port SS7:08:02. Activate IP-conn [2013]
+  15:46:55.381118  [INFO]  Conn[2013]: try activate. state 'Disabled'. (no media)
+  15:46:55.381176  [INFO]  IVR. Callref 0021. State changed: 'new' -> 'processed'
+  15:46:55.381239  [INFO]  IVR. Callref 0021. Port SS7:08:02. MSP connection already exist [2013]
+  15:46:55.381313  [INFO]  IVR. Callref 0021. Play status: Play '1_1.wav'. Repeat 1 of 1. Play position 1 of 1
+  15:46:55.381372  [INFO]  IVR. Callref 0021. Try find file '1_1.wav' in '/mnt/sda/ivr_sound'
+  15:46:55.381568  [INFO]  IVR. Callref 0021. File found. Full path '/mnt/sda/ivr_sound/1_1.wav'
+  15:46:55.381676  [INFO]  Port SRVC:0021. Play file start. <local> <out>. (ext). Peer SS7:08:02
+  15:46:55.381745  [INFO]  Port SS7:08:02. Start play file to <TDM> (ext)
+  15:46:55.381816  [INFO]  Port SS7:08:02. Start play file: /mnt/sda/ivr_sound/1_1.wav
+  15:46:55.381883  [INFO]  Conn[2013]: Play file. Play from file
+  15:46:55.381940  [INFO]  Conn[2013]: Play file. term is TDM(0) G711A(1) (0)
+  15:46:55.382063  [INFO]  Conn[2013]: Play file: /mnt/sda/ivr_sound/1_1.wav to TDM
+  15:46:56.379407  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:56.379506  [INFO]  ASN. Try decode message
+  15:46:56.379644  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:46:56.379742  [INFO]  ASN. Decode success
+  15:46:56.379806  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:46:56.379880  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:46:56.379943  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:46:56.380147  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:46:56.380211  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:46:57.153022  [INFO]  Port SS7:08:02. File played
+  15:46:57.153134  [INFO]  IVR. Callref 0021. Playlist: All files in playlist already played. err_buff: 'none'
+  15:46:57.153195  [INFO]  IVR. Callref 0021. Playlist: send playlist notify
+  15:46:57.153253  [INFO]  IVR. Callref 0021. Normal mode. Play status: Stopped
+  15:46:57.153334  [INFO]  ZMQ. TX Callref 0021. Try send 'Progress'
+  15:46:57.153419  [INFO]  ASN. Added 'Progress' to message body
+  15:46:57.153512  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1428.918417.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . 
+				    0:  . . . . . . . . 250
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    file:  . . . . . . . 1_1.wav
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:57.153848  [INFO]  ASN. Message 'Progress'. Encode success
+  15:46:57.153917  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:46:57.254421  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:57.254527  [INFO]  ASN. Try decode message
+  15:46:57.254714  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1428.918417.228657
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 record  . . . . . . . . 
+				    present: . . . . . . record
+				    name:  . . . . . . . 2015-4-13_15-46-57_38312345_3434.wav
+				    relativePath:  . . . /38312345/
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:57.254865  [INFO]  ASN. Decode success
+  15:46:57.254931  [INFO]  ZMQ. RX Callref 0021. Message 'Progress'
+  15:46:57.255008  [INFO]  IVR. Callref 0021. Port SS7:08:02. MSP connection already exist [2013]
+  15:46:57.255064  [INFO]  IVR. Callref 0021. Start call recording.
+  15:46:57.255127  [INFO]  IVR. Callref 0021. SRVC:0021: Check recording: Enable
+  15:46:57.255188  [INFO]  Port SRVC:0021. Start call recording. Peer SS7:08:02.
+  15:46:57.255250  [INFO]  IVR. Callref 0021. SRVC:0021: Try get filename for call recording
+  15:46:57.255308  [INFO]  IVR. Callref 0021. Try create: /mnt/sda/ivr_records/38312345/
+  15:46:57.255464  [INFO]  IVR. Callref 0021. Total recording filename: /mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav
+  15:46:57.255536  [INFO]  Conf[3011]: Set state 'confIdle'->'confAllocReq'
+  15:46:57.255593  [INFO]  Conf[3011]: create. payload-coeff 370
+  15:46:57.255643  [INFO]  Conf[3011]: MSP [3] - next conf-idx [18]
+  15:46:57.255775  [INFO]  Port SRVC:0021. Conf[3011] - recording conference
+  15:46:57.255838  [INFO]  Conf[3011]: add participant
+  15:46:57.255894  [INFO]  Conn[3033]: Set state 'Idle'->'ConfReq'
+  15:46:57.255949  [INFO]  Conf[3011]: Requested participant Conn[3033]. Wait for conf activation.
+  15:46:57.256001  [INFO]  Conn[3033]: Set partState 'partIdle'->'partAwaitConf'. Conf[3011]
+  15:46:57.256054  [INFO]  Conf[3011]: add participant
+  15:46:57.256105  [INFO]  Conn[3034]: Set state 'Idle'->'ConfReq'
+  15:46:57.256185  [INFO]  Conf[3011]: Requested participant Conn[3034]. Wait for conf activation.
+  15:46:57.256239  [INFO]  Conn[3034]: Set partState 'partIdle'->'partAwaitConf'. Conf[3011]
+  15:46:57.256302  [INFO]  Port SRVC:0021. Update Recording v-chan [-1:-1]. mode [3]. Conf [3011], part 0: [07:51]
+  15:46:57.256384  [INFO]  Port SS7:08:02. Update Recording v-chan [02:08]. mode [3]. Conf [3011], part 1: [07:52]
+  15:46:57.256455  [INFO]  Conf[3011]: Creating recording participant
+  15:46:57.256508  [INFO]  Conf[3011]: add participant
+  15:46:57.256561  [INFO]  Conn[3035]: Set state 'Idle'->'ConfReq'
+  15:46:57.256614  [INFO]  Conf[3011]: Requested participant Conn[3035]. Wait for conf activation.
+  15:46:57.256666  [INFO]  Conn[3035]: Set partState 'partIdle'->'partAwaitConf'. Conf[3011]
+  15:46:57.256719  [INFO]  Conn[3035]: Recording participant of Conf[3011]
+  15:46:57.256772  [INFO]  Conn[3035]: Record file. dest '/mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav' conn state 'ConfReq'
+  15:46:57.256829  [INFO]  Conn[3035]: Record file pended, source <RTP + TDM> dest '/mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav' conn state 'ConfReq'
+  15:46:57.257013  [INFO]  Conf[3011]: Callback. Mode 0x9 ('CONF_MODE_CREATE'). Command 0x2f ('CONF_CREATE'). Result 0
+  15:46:57.257080  [INFO]  Conf[3011]: Set state 'confAllocReq'->'confActive'
+  15:46:57.257137  [INFO]  Conf[3011]: Created
+  15:46:57.257244  [INFO]  Conf[3011]: Requested creation for participant Conn[3033] as local.
+  15:46:57.257306  [INFO]  Conn[3033]: Set partState 'partAwaitConf'->'partAllocReq'. Conf[3011]
+  15:46:57.257380  [INFO]  Conf[3011]: Requested creation for participant Conn[3034] as local.
+  15:46:57.257435  [INFO]  Conn[3034]: Set partState 'partAwaitConf'->'partAllocReq'. Conf[3011]
+  15:46:57.257507  [INFO]  Conf[3011]: Requested creation for participant Conn[3035] as remote.
+  15:46:57.257562  [INFO]  Conn[3035]: Set partState 'partAwaitConf'->'partAllocReq'. Conf[3011]
+  15:46:57.262502  [INFO]  Conf[3011]: Participant has been created Conn[3033] num [0]
+  15:46:57.262606  [INFO]  Conn[3033]: Set partState 'partAllocReq'->'partAllocated'. Conf[3011]
+  15:46:57.262669  [INFO]  Conn[3033]: Set state 'ConfReq'->'ConfActive'
+  15:46:57.262731  [INFO]  Port SRVC:0021. Created Participant
+  15:46:57.264197  [INFO]  Conf[3011]: Participant has been created Conn[3034] num [1]
+  15:46:57.264277  [INFO]  Conn[3034]: Set partState 'partAllocReq'->'partAllocated'. Conf[3011]
+  15:46:57.264358  [INFO]  Conn[3034]: Set state 'ConfReq'->'ConfActive'
+  15:46:57.264422  [INFO]  Port SS7:08:02. Created Participant
+  15:46:57.264542  [INFO]  Conf[3011]: Participant has been created Conn[3035] num [2]
+  15:46:57.264606  [INFO]  Conn[3035]: Set partState 'partAllocReq'->'partAllocated'. Conf[3011]
+  15:46:57.264663  [INFO]  Conn[3035]: Set state 'ConfReq'->'ConfActive'
+  15:46:57.264720  [INFO]  Conn[3035]: Record file. dest '/mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav' conn state 'ConfActive' (need rec)
+  15:46:57.264779  [INFO]  Conf[3011]: Change rec status to 'active'
+  15:46:57.264882  [INFO]  Conn[3035]: Record file: <RTP + TDM> to /mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav
+  15:46:57.264946  [INFO]  Conn[3035]: Record file for port SRVC:0021 and Conf[3011]
+  15:46:57.265006  [INFO]  Port SRVC:0021. File is recording: /mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav
+  15:46:57.275786  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:57.275883  [INFO]  ASN. Try decode message
+  15:46:57.276082  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1428.918417.241669
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    file:  . . . . . . . 1_10.wav
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:57.276209  [INFO]  ASN. Decode success
+  15:46:57.276270  [INFO]  ZMQ. RX Callref 0021. Message 'Progress'
+  15:46:57.276344  [INFO]  IVR. Callref 0021. Port SS7:08:02. MSP connection already exist [2013]
+  15:46:57.276419  [INFO]  IVR. Callref 0021. Play status: Play '1_10.wav'. Repeat 1 of 1. Play position 1 of 1
+  15:46:57.276480  [INFO]  IVR. Callref 0021. Try find file '1_10.wav' in '/mnt/sda/ivr_sound'
+  15:46:57.276675  [INFO]  IVR. Callref 0021. File found. Full path '/mnt/sda/ivr_sound/1_10.wav'
+  15:46:57.276747  [INFO]  Port SRVC:0021. Play file start. <local> <out>. (ext). Peer SS7:08:02
+  15:46:57.276812  [INFO]  Port SS7:08:02. Start play file to <TDM> (ext)
+  15:46:57.276885  [INFO]  Port SS7:08:02. Start play file: /mnt/sda/ivr_sound/1_10.wav
+  15:46:57.276952  [INFO]  Conn[2013]: Play file. Play from file
+  15:46:57.277009  [INFO]  Conn[2013]: Play file. term is TDM(0) G711A(1) reconfig(1)
+  15:46:57.277127  [INFO]  Conn[2013]: Play file: /mnt/sda/ivr_sound/1_10.wav to TDM
+  15:46:59.093002  [INFO]  Port SS7:08:02. File played
+  15:46:59.093110  [INFO]  IVR. Callref 0021. Playlist: All files in playlist already played. err_buff: 'none'
+  15:46:59.093173  [INFO]  IVR. Callref 0021. Playlist: send playlist notify
+  15:46:59.093230  [INFO]  IVR. Callref 0021. Normal mode. Play status: Stopped
+  15:46:59.093311  [INFO]  ZMQ. TX Callref 0021. Try send 'Progress'
+  15:46:59.093395  [INFO]  ASN. Added 'Progress' to message body
+  15:46:59.093488  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1428.918419.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . 
+				    0:  . . . . . . . . 250
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    file:  . . . . . . . 1_10.wav
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 1
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:59.093862  [INFO]  ASN. Message 'Progress'. Encode success
+  15:46:59.093935  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:46:59.306823  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:59.306928  [INFO]  ASN. Try decode message
+  15:46:59.307174  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_6b051397fe5f1be3_with_sid_1
+				 swSessionID:  . . . . . 
+				 body: . . . . . . . . . Seize
+				 BASIC params:
+				 applicationCfg: . . . . dialer from ivr
+				 vatsId: . . . . . . . . vatsId for virtual ATS
+				 applicationId:  . . . . 0
+				 timestamp:  . . . . . . 1428.918419.277272
+				 cdpn: . . . . . . . . . 
+				    nai: . . . . . . . . 0
+				    npi: . . . . . . . . 0
+				    inn: . . . . . . . . 0
+				    address: . . . . . . 100
+				 OPTIONAL params:
+				 cgpn: . . . . . . . . . 
+				    nai: . . . . . . . . 2
+				    screening: . . . . . 3
+				    apri:  . . . . . . . 0
+				    npi: . . . . . . . . 2
+				    ni:  . . . . . . . . 0
+				    address: . . . . . . 38312345
+				    displayName: . . . . no
+				 callRef:  . . . . . . . no
+				 category: . . . . . . . 227
+				 tgId: . . . . . . . . . no
+				 originalCDPN: . . . . . no
+				 genericNumber:  . . . . no
+				 redirectingNumber:  . . no
+				 redirectionInformation: no
+				 callingAccess:  . . . . no
+				 fci . . . . . . . . . . no
+				 usi . . . . . . . . . . no
+				 uti . . . . . . . . . . no
+				 tmr . . . . . . . . . . 0
+				 noCDR . . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+  15:46:59.307305  [INFO]  ASN. Decode success
+  15:46:59.307364  [INFO]  ZMQ. RX Callref 0000 (empty). Message 'Seize'
+  15:46:59.307439  [INFO]  IVR. Callref 0022. State changed: 'null_state' -> 'allocated'
+  15:46:59.307492  [INFO]  IVR. Callref 0022. State changed: 'allocated' -> 'new'
+  15:46:59.307545  [INFO]  ZMQ. Callref 0022. State changed: 'disconnected' -> 'wait connection'
+  15:46:59.307600  [INFO]  ZMQ. Callref 0022. Mapped to 'in_6b051397fe5f1be3_with_sid_1'
+  15:46:59.307650  [INFO]  ZMQ. Callref 0022. State changed: 'wait connection' -> 'connected'
+  15:46:59.307708  [INFO]  IVR. Callref 0022. Progress without early media
+  15:46:59.307763  [INFO]  ZMQ. TX Callref 0022. Try send 'Progress'
+  15:46:59.307824  [INFO]  ASN. Added 'Progress' to message body
+  15:46:59.307894  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_6b051397fe5f1be3_with_sid_1
+				 swSessionID:  . . . . . 34
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1428.918419.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:59.308114  [INFO]  ASN. Message 'Progress'. Encode success
+  15:46:59.308173  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:46:59.308423  [INFO]  SRV. Callref 0022. New state 'SRV_PRESENTED'
+  15:46:59.308500  [INFO]  SRV. Callref 0022. Set IVR ref [0022]
+  15:46:59.308562  [INFO]  IVR. Callref 0022. Incoming seize
+			# Category 9 (57). COS 0.
+			# Calling <38312345> Called <100> Generic <none> GenericNotify 0x0
+			# Orig called <none> Redirecting <none> Reason 0x00 Info 0x00 Count 0
+			# cplt=n; pres=allow; nature=not subscriber
+			# Transmission medium req 0x00
+			# Display name: 100
+  15:46:59.308634  [INFO]  SRV. Callref 0022. Invoke second-seize
+  15:46:59.308689  [INFO]  SRV. Callref 0022. Incoming seize
+			# Category 9 (57).
+			# Calling <38312345> Called <none> Generic <none> GenericNotify 0x0
+			# Orig called <none> Redirecting <none>. Redirecting count 0
+			# cplt=n; pres=allow; nature=not subscriber
+  15:46:59.308794  [INFO]  Port SRVC:0022. Seize (v-chan:-1, TG:-1). Cld:'<none>'(0). (Subscr) . Clg-len: 8. clg-set: y. COS: -1. RADIUS=-1
+  15:46:59.308857  [INFO]  Port SRVC:0022. ModTable in [-1:-1], out [-1:-1], out redir:orig [-1:-1]
+  15:46:59.308921  [INFO]  Port SRVC:0022. CgPN: <38312345>(8) <set> <national> <isdn/telephony> <allowed> <net.provided>. cat [9].
+  15:46:59.308991  [INFO]  Port SRVC:0022. Calling Info (pres allowed): <38312345>. <Category=9>
+  15:46:59.309048  [INFO]  Port SRVC:0022. CgPN: <38312345>(8) <set> <national> <isdn/telephony> <allowed> <net.provided>. cat [9].
+  15:46:59.309167  [INFO]  Port SRVC:0022. Set state 'In-Dial'
+  15:46:59.309221  [INFO]  SRV. Callref 0022. Incoming seize - access code [0x0], mask [0x90]
+  15:46:59.309271  [INFO]  SRV. Callref 0022. Incoming seize - PLAN 0. COS 0
+  15:46:59.309347  [INFO]  Port SRVC:0022. Dial In (in=04, need rm=0): <1><0><0>[.]
+  15:46:59.309407  [INFO]  Port SRVC:0022. In Digit 4 sym: called buf <100.>
+  15:46:59.309462  [INFO]  Port SRVC:0022. Dial buf <100>(3)
+  15:46:59.309521  [INFO]  Port SRVC:0022. Dial Proc (state In-Dial, called len 04): <100.> Compl.
+  15:46:59.309582  [INFO]  Port SRVC:0022. Search route. Mode: 'calling'. Num: <38312345>(8).# Complete
+  15:46:59.309655  [INFO]  Port SRVC:0022. Search route. Result: route not found. res (-1)
+  15:46:59.309723  [INFO]  Port SRVC:0022. Search route. Mode: 'called'. Num: <100.>(4).# Complete
+  15:46:59.309786  [INFO]  Port SRVC:0022. Search route. User-service data search
+  15:46:59.309844  [INFO]  Port SRVC:0022. Search route. User-service data not found
+  15:46:59.309899  [INFO]  Port SRVC:0022. Search route. Result: found route: user[3]. res (3)
+  15:46:59.309959  [INFO]  Port SRVC:0022. Process route to sip-user-ID [03].
+  15:46:59.310024  [INFO]  Port SRVC:0022. Dial In (in=01, need rm=0): [.]
+  15:46:59.310078  [INFO]  Port SRVC:0022. In Digit 1 sym: called buf <100..>
+  15:46:59.311410  [INFO]  Port SRVC:0022. Dial buf <100>(3)
+  15:46:59.311477  [INFO]  Port SRVC:0022. Link to SIPuser ID[3]. Index [0].
+  15:46:59.311538  [INFO]  Port SRVC:0022. Check Access. 0 => 0. Y. (0x00.0x00.0x00.0x00.0x00.0x00.0xFF.0xFF)
+  15:46:59.311602  [INFO]  Port SRVC:0022. Accs on
+  15:46:59.311663  [INFO]  Port SRVC:0022. Outgoing setup to SIPu:0000 [0003].
+  15:46:59.311728  [INFO]  Port SIPu:0000 [0003]. Seize from SRVC:0022. Port access mode: <on>
+  15:46:59.311793  [INFO]  SIPT[03]. Seize from port SRVC:0022.
+  15:46:59.311894  [INFO]  Port SIPT:0410. Set CallerId: 'Subscriber#002' (14).
+  15:46:59.311960  [INFO]  Port SIPT:0410. Check out-calling-modify: '38312345'(8). ModTable[-1], ClgMod[-1]
+  15:46:59.312021  [INFO]  Port SIPT:0410. Check out-calling-from-RADIUS-modify: '38312345'(8). ClgMod[-1]
+  15:46:59.312100  [INFO]  Port SIPT:0410. Set parent SRVC:0022
+  15:46:59.312161  [INFO]  Port SIPT:0410. loc 1, trunk-loc 0. peer-loc 1, peer-tunk-loc: 0
+  15:46:59.312215  [INFO]  Port SRVC:0022. loc 1, trunk-loc 0. peer-loc 1, peer-tunk-loc: 0
+  15:46:59.312297  [INFO]  Port SIPT:0410. Create msp-conn Conn[4010].
+  15:46:59.312348  [INFO]  Conn[4010]: Set state 'Idle'->'AllocReq'
+  15:46:59.312471  [INFO]  Port SIPT:0410. Set new IP-conn [4010]
+  15:46:59.312566  [INFO]  Conn[4010]: set network interface in state 'AllocReq'. IP <192.168.0.20>. net-dev [2]
+  15:46:59.312625  [INFO]  SIPT[03]. Seize  - dst '192.168.0.24:5060' src-port 0
+  15:46:59.312681  [INFO]  SIPT[03]. Seize  CgPN: <38312345>(8) <set> <national> <isdn/telephony> <allowed> <net.provided>. cat [9](0x39)
+  15:46:59.312740  [INFO]  SIPT[03]. Seize  - calling category: '9' convert to ISUP category 227
+  15:46:59.312794  [INFO]  SIPT[03]. Seize  - enblock mode
+  15:46:59.312852  [INFO]  Port SIPT:0410. Set state 'Wait-Num'
+  15:46:59.312917  [INFO]  Port SIPT:0410. Query Next Digit - peer SRVC:0022 (next.digit=n). Called len 05, proceed 00
+  15:46:59.312975  [INFO]  Port SIPT:0410. Dial Out=1 (loc)
+  15:46:59.313035  [INFO]  Port SIPT:0410. Check out-called-modify: '1'(1). ModTable[-1], CldMod[-1]
+  15:46:59.313094  [INFO]  SIP. Callref 0410. Dial 1
+  15:46:59.313149  [INFO]  Port SIPT:0410. Dial Out: called len 00, append 01 (max digit 30)
+  15:46:59.313217  [INFO]  Port SIPT:0410. Query Next Digit - peer SRVC:0022 (next.digit=n). Called len 05, proceed 01
+  15:46:59.313273  [INFO]  Port SIPT:0410. Dial Out=0 (loc)
+  15:46:59.313352  [INFO]  SIP. Callref 0410. Dial 0
+  15:46:59.313410  [INFO]  Port SIPT:0410. Dial Out: called len 01, append 01 (max digit 30)
+  15:46:59.313478  [INFO]  Port SIPT:0410. Query Next Digit - peer SRVC:0022 (next.digit=n). Called len 05, proceed 02
+  15:46:59.313536  [INFO]  Port SIPT:0410. Dial Out=0. (loc)
+  15:46:59.313593  [INFO]  SIP. Callref 0410. Dial 0.
+  15:46:59.313648  [INFO]  Port SIPT:0410. Dial Out: called len 02, append 02 (max digit 30)
+  15:46:59.313704  [INFO]  Port SIPT:0410. Dial Out: 'End_of_Dial' digit/stop dial
+  15:46:59.313759  [INFO]  SIP. Callref 0410. New state 'SIPT_OVL_SENDING'
+  15:46:59.313841  [INFO]  Port SIPT:0410. Setup Ack (peer=SRVC:0022)
+  15:46:59.313901  [INFO]  Port SIPT:0410. Set state 'Out-Dial'
+  15:46:59.313960  [INFO]  Port SRVC:0022. Setup Acked in state In-Dial. (peer=SIPT:0410)
+  15:46:59.314019  [INFO]  Port SRVC:0022. LinkUp to SIPT:0410
+  15:46:59.314078  [INFO]  Port SIPT:0410. Activate IP-conn [4010]
+  15:46:59.314129  [INFO]  Conn[4010]: try activate. state 'AllocReq'. (no media)
+  15:46:59.314186  [INFO]  SIP. Callref 0410. Prepare media requested
+  15:46:59.314251  [INFO]  SIP. Callref 0410. Update Media-Info. [core/sipt_proc.c:1829]
+  15:46:59.314309  [INFO]  SIP. Callref 0410. Media-Info (offer): [192.168.0.20]
+  15:46:59.314387  [INFO]  Valid
+			 m[0]: audio 30072 RTP/AVP 8 0 18 101
+			 a[0]:8 G711.A [set]
+			 a[1]:0 G711.U [set]
+			 a[2]:18 G729.B [set]
+			 a[3]:101 NTE [set]
+			 a[4]:ptime:30
+			 a[5]:sendrecv
+  15:46:59.314440  [INFO]  SIP. Callref 0410. Prepare media finished (should send)
+  15:46:59.314500  [INFO]  SIP. TX. Callref 0410. Mode: 'SIPu[0][3]' Destination: [192.168.0.24:5060] localport [0] (with media)
+  15:46:59.314790  [INFO]  Port SRVC:0022. Get CallerId: '-none-' (0) no set-flg
+  15:46:59.314843  [INFO]  SIP. Callref 0410. Get display name: <>(0)
+  15:46:59.315198  [INFO]  SIP. Callref 0410. Media-Info prepare
+  15:46:59.315262  [INFO]  SIP. Callref 0410. Media-Info encode. Media-list size: 1 
+  15:46:59.315446  [INFO]  SIP. TX. Callref 0410. Mode [8003:0]. [192.168.0.24:5060]
+  15:46:59.315635  [INFO]  SIP. TX. Callref 0410.   IAM- Initial Address Message
+			## Nature of connection: 10
+			# 	Satellite: no
+			# 	Continuity Check: not required
+			# 	Echo control: included
+			## Forward Call Indicators: 08 00 
+			# 	Call to be treated as national call
+			# 	EndToEnd method: no end-to-end(only link-by-link)
+			# 	Interworking: encountered
+			# 	EndToEnd info: not available
+			# 	ISUP: not used all the way
+			# 	ISUP indicator: preferred all way
+			# 	Originating access: non-ISDN
+			# Calling party category:  0xe3
+			# Transmission medium req: 0x00 - speech
+			## Called party number: 82 90 01 00 
+			# 	Nature of address: 0x82 - unknown
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Number:            100
+			[Optional params]
+			## Calling party number: 03 13 83 13 32 54 
+			# 	Nature of address: 0x03 - national
+			# 	Numbering plan:    0x01 - ISDN/telephony
+			# 	Screening:         0x03 - network prov
+			# 	Presentation:      0x00 - presentation allowed
+			# 	Number:            38312345
+			[end of optional params]
+  15:46:59.315782  [INFO]  SIP. TX. Callref 0410.   MediaInfo
+			## IP: <192.168.0.20> 
+			## Offer: <1> 
+			## m=audio 30072 RTP/AVP 8 0 18 101 
+			## a=rtpmap:8 PCMA/8000 
+			## a=rtpmap:0 PCMU/8000 
+			## a=rtpmap:18 G729/8000 
+			## a=rtpmap:101 telephone-event/8000 
+			## a=fmtp:101 0-15 
+			## a=ptime:30 
+			## a=sendrecv 
+  15:46:59.316095  [INFO]  Port SRVC:0022. SIP-user linked: called len 05, proceed 04
+  15:46:59.316164  [INFO]  IVR. Callref 0022. State changed: 'new' -> 'alerting'
+  15:46:59.320248  [INFO]  Conn[4010]: Set state 'AllocReq'->'Allocated'
+  15:46:59.320347  [INFO]  Conn[4010]: Set state 'Allocated'->'DisableReq'
+  15:46:59.321630  [INFO]  Conn[4010]: Created (disabled). State 'DisableReq'
+  15:46:59.321731  [INFO]  Conn[4010]: Set state 'DisableReq'->'Disabled'
+  15:46:59.321802  [INFO]  Port SIPT:0410. Created IP-conn [4010]. 
+  15:46:59.321861  [INFO]  Conn[4010]: try activate. state 'Disabled'. (no media)
+  15:46:59.519994  [INFO]  SIP. RX. Callref 0410. Call-ID: 1428-918419-353802
+  15:46:59.520162  [INFO]  SIP. RX. Callref 0410.   ACM-Address Complete
+			## Backward call Indicators: 16 01 
+			# 	Called party's status indicator: Subscriber free
+			# 	Interworking: encountered
+			# 	ISUP: not used all the way
+			# 	Terminating access: non-ISDN
+			[No optional params]
+  15:46:59.520243  [INFO]  Port SIPT:0410. set ISDN: BCI=0x80: 'Send'
+  15:46:59.520306  [INFO]  SIP. Callref 0410. New state 'SIPT_DELIVERED'
+  15:46:59.520369  [INFO]  Port SIPT:0410. set ISDN: BCI=0x80: 'Send'
+  15:46:59.520432  [INFO]  Port SIPT:0410. Alert (peer=SRVC:0022)
+  15:46:59.520486  [INFO]  Port SIPT:0410. Substate [0]
+  15:46:59.520542  [INFO]  Port SIPT:0410. Stop Dial, reason 'alert'
+  15:46:59.520611  [INFO]  Port SIPT:0410. Set state 'Out-Call'
+  15:46:59.520670  [INFO]  Port SRVC:0022. Alerting from peer SIPT:0410
+  15:46:59.520726  [INFO]  Port SRVC:0022. Set state 'In-Call'
+  15:46:59.520780  [INFO]  SRV. Callref 0022. Alerting in state 'SRV_PRESENTED'
+  15:46:59.520840  [INFO]  Port SIPT:0410. get ISDN: BCI=0x00: 'Send'
+  15:46:59.520900  [INFO]  IVR. Callref 0022. Alerting without early media
+  15:46:59.520959  [INFO]  ZMQ. TX Callref 0022. Try send 'Progress'
+  15:46:59.521021  [INFO]  ASN. Added 'Progress' to message body
+  15:46:59.521096  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_6b051397fe5f1be3_with_sid_1
+				 swSessionID:  . . . . . 34
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 1
+				 presentation  . . . . . 1
+				 timestamp . . . . . . . 1428.918419.0
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:59.521319  [INFO]  ASN. Message 'Progress'. Encode success
+  15:46:59.521380  [INFO]  ZMQ. TX. Message 'Progress' was sent
+  15:46:59.521593  [INFO]  Port SIPT:0410. TDM-RingBack for IP-conn [4010]
+  15:46:59.521694  [INFO]  Conn[4010]: RingBack. State 'Disabled', ip <not set>, flag <0>
+  15:46:59.535271  [INFO]  Conn[4010]: Start tone 'RINGBACKTONE'(23), direction 'TDM' in state 'Disabled'
+  15:46:59.537850  [INFO]  Conn[4010]: Tone started
+  15:46:59.661041  [INFO]  ZMQ. RX. Incomming message detected.
+  15:46:59.661146  [INFO]  ASN. Try decode message
+  15:46:59.661357  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1428.918419.643804
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . 1
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . 
+				    tone:  . . . . . . . 18
+				        duration:  . . . 0
+				    bargein: . . . . . . 0
+				    repeatCount: . . . . 0
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:46:59.661531  [INFO]  ASN. Decode success
+  15:46:59.661596  [INFO]  ZMQ. RX Callref 0021. Message 'Progress'
+  15:46:59.661705  [INFO]  IVR. Callref 0021. Port SS7:08:02. MSP connection already exist [2013]
+  15:46:59.661784  [INFO]  IVR. Callref 0021. Play status: Play '18'. Repeat 1 of 0 (forever). Play position 1 of 1
+  15:46:59.661855  [INFO]  Port SS7:08:02. Set signal: 'RING_BACK'
+  15:46:59.661919  [INFO]  Conn[0000]: Switch tone '21' for port SS7:08:02: 04:00 -> 02:08
+  15:47:00.030709  [INFO]  Port SS7:08:02. Signal RING_BACK active
+  15:47:00.030821  [INFO]  Conn[0002]: Switch tone '23' for port SS7:08:02: 04:02 -> 02:08
+  15:47:00.808634  [INFO]  SIP. RX. Callref 0410.   MediaConnected
+  15:47:00.808733  [INFO]  SIP. Callref 0410. Media connected. Mode: 'inactive'
+  15:47:00.808797  [INFO]  Port SIPT:0410. Media-connected for IP-conn [4010]
+  15:47:00.808853  [INFO]  Conn[4010]: Media connected indication
+  15:47:00.808909  [INFO]  Conn[4010]: try activate. state 'Disabled'. (no media)
+  15:47:00.808972  [INFO]  Port SIPT:0410. Set IP-conn [4010] inactive
+  15:47:00.809028  [INFO]  Conn[4010]: SendRecv set 'inactive' in state 'Disabled'
+  15:47:00.812418  [INFO]  SIP. RX. Callref 0410. Call-ID: 1428-918419-353802
+  15:47:00.812522  [INFO]  SIP. RX. Callref 0410.   ANM-Answer
+			[No optional params]
+  15:47:00.812585  [INFO]  SIP. Callref 0410. New state 'SIPT_ACTIVE'
+  15:47:00.812653  [INFO]  Port SIPT:0410. Answer
+  15:47:00.812730  [INFO]  Port SIPT:0410. Set state 'Talk'
+  15:47:00.812796  [INFO]  Port SRVC:0022. Answer from peer (SIPT:0410)
+  15:47:00.812851  [INFO]  Port SRVC:0022. Self: loc, Peer: loc.
+  15:47:00.812906  [INFO]  Port SIPT:0410. Self: loc, Peer: loc.
+  15:47:00.812967  [INFO]  Port SRVC:0022. Set RADIUS-talk flag
+  15:47:00.813024  [INFO]  Port SRVC:0022. Set state 'Talk'
+  15:47:00.813078  [INFO]  SRV. Callref 0022. Connect in state 'SRV_PRESENTED'
+  15:47:00.813139  [INFO]  Port SIPT:0410. get ISDN: BCI=0x00: 'Send'
+  15:47:00.813212  [INFO]  ZMQ. TX Callref 0022. Try send 'Answer'
+  15:47:00.813284  [INFO]  ASN. Added 'Answer' to message body
+  15:47:00.813366  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_6b051397fe5f1be3_with_sid_1
+				 swSessionID:  . . . . . 34
+				 body: . . . . . . . . . Answer
+				 BASIC params:
+				 timestamp . . . . . . . 1428.918420.0
+				 OPTIONAL params:
+				 bci . . . . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 connectedNumber . . . . 
+				    nai: . . . . . . . . 0
+				    screening: . . . . . 0
+				    apri:  . . . . . . . 0
+				    npi: . . . . . . . . 0
+				    address: . . . . . . 
+				 genericNumber . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 play  . . . . . . . . . no
+				 record  . . . . . . . . no
+				 detect  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:47:00.813625  [INFO]  ASN. Message 'Answer'. Encode success
+  15:47:00.813726  [INFO]  ZMQ. TX. Message 'Answer' was sent
+  15:47:00.813916  [INFO]  IVR. Callref 0022. State changed: 'alerting' -> 'talking'
+  15:47:00.813994  [INFO]  IVR. Callref 0022. SRVC:0022: Check recording: Disable
+  15:47:00.814104  [INFO]  SIP. RX. Callref 0410.   MediaInfo
+			## IP: <192.168.0.24> 
+			## Offer: <0> 
+			## m=audio 35002 RTP/AVP 0 
+			## a=rtpmap:0 PCMU/8000 
+			## a=ptime:30 
+  15:47:00.814230  [INFO]  SIP. Callref 0410. Set Media-Info. Count[1]
+  15:47:00.814298  [INFO]  SIP. Callref 0410. Media-Info (answer): [192.168.0.24]
+  15:47:00.814369  [INFO]  Valid
+			 m[0]: audio 35002 RTP/AVP 0
+			 a[0]:0 G711.U [set]
+			 a[1]:ptime:30
+			 a[2]:sendrecv
+  15:47:00.814427  [INFO]  SIP. Callref 0410. Media negotiate. Interface: 3
+  15:47:00.814488  [INFO]  SIP. Callref 0410. Media negotiate <answer>. [192.168.0.24]. List-count: 1
+  15:47:00.814544  [INFO]  SIP. Callref 0410. Media negotiate. Codec found: G711.U. PT 0. m[1], a[0]. sendrecv
+  15:47:00.814606  [INFO]  Port SIPT:0410. Set IP-conn [4010] sendrecv
+  15:47:00.814660  [INFO]  Conn[4010]: SendRecv set 'sendrecv' in state 'Disabled'
+  15:47:00.814728  [INFO]  Port SIPT:0410. IP-conn [4010]. Set Tune
+  15:47:00.814782  [INFO]  Conn[4010]: Set tune: vad 'on', cng 'on', ecan 'on'
+			 pte [30], rtcp_period [0], rtcp_ctrl [0], dscp [2]
+			 dtmf_mode 'inband' dtmf_pt rx [101] dtmf_pt tx [101] fax_mode [1]
+			 use_vbd 'off' vbd_codec [2] vbd_pt [255]
+			 NAT: N, t38transit: 0
+  15:47:00.814850  [INFO]  SIP. Callref 0410. Use codec: G711.U sendrecv. PT 0.
+  15:47:00.814916  [INFO]  Port SIPT:0410. IP-conn [4010]. Set Media-Info: [192.168.0.24:35002]
+  15:47:00.814977  [INFO]  Conn[4010]: Set media-info in state 'Disabled'. [192.168.0.24:35002]
+  15:47:00.815040  [INFO]  Conn[4010]: [192.168.0.20:30072] <-> [192.168.0.24:35002]
+  15:47:00.815095  [INFO]  Conn[4010]: Codec: G.711U , payload [0], DTMF-PT: 101
+  15:47:00.815155  [INFO]  Conn[4010]: try get remote MAC for <192.168.0.24>
+  15:47:00.815324  [INFO]  Conn[4010]: found   remote MAC for <192.168.0.24> - [a8:f9:4b:09:a6:fc]. net-dev [2]
+  15:47:00.815390  [INFO]  Conn[4010]: Deactivate in state 'Disabled'
+  15:47:00.815448  [INFO]  Conn[4010]: try activate. state 'Disabled'.
+  15:47:00.815515  [INFO]  Conn[4010]: Activate [192.168.0.20:30072] <-> [192.168.0.24:35002]
+			 MAC_loc.src [02:31:52:63:74:84], MAC_loc.dst [02:00:04:00:00:02]
+			 MAC_ext.src [a8:f9:4b:81:78:f0], MAC_ext.dst [a8:f9:4b:09:a6:fc]
+  15:47:00.815589  [INFO]  Conn[4010]: Start voice. Codec G711U, vad=on, cng=on. Ptime=30 ms. PT [0] SSRC=4009e5b2
+  15:47:00.815689  [INFO]  Conn[4010]: Stop tone (last one 'RINGBACKTONE'(23), direction 'TDM')
+  15:47:00.815820  [INFO]  Conn[4010]: Set state 'Disabled'->'ActivateReq'
+  15:47:00.815886  [INFO]  Conn[4010]: Set codecs-info in state 'ActivateReq'. Count: 1
+  15:47:00.815947  [INFO]  Conn[4010]: G711.U PT [0]
+  15:47:00.816672  [INFO]  Conn[4010]: Tone stopped
+  15:47:00.817679  [INFO]  Conn[4010]: Tone stopped
+  15:47:00.818998  [INFO]  Conn[4010]: Params set. State 'ActivateReq'
+  15:47:00.819078  [INFO]  Conn[4010]: Enable connection
+  15:47:00.821649  [INFO]  Conn[4010]: Activated
+  15:47:00.821755  [INFO]  Conn[4010]: Set state 'ActivateReq'->'Active'
+  15:47:00.821841  [INFO]  Conn[4010]: set rtp-cfg.  <192.168.0.20:30072>:[02.31.52.63.74.84] <-> <192.168.0.24:35002>:[A8.F9.4B.09.A6.FC]. flg[1]
+  15:47:00.821914  [INFO]  Port SIPT:0410. Changed IP-conn [4010]
+  15:47:00.828494  [INFO]  Conn[4010]: Event 'SSRC Change': new [0x6C149D44], prev [0x00000000]
+  15:47:00.954880  [INFO]  ZMQ. RX. Incomming message detected.
+  15:47:00.954981  [INFO]  ASN. Try decode message
+  15:47:00.955183  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Progress
+				 BASIC params:
+				 event . . . . . . . . . 2
+				 presentation  . . . . . 0
+				 timestamp . . . . . . . 1428.918420.929496
+				 OPTIONAL params:
+				 cause . . . . . . . . . no
+				 descript  . . . . . . . no
+				 obci  . . . . . . . . . no
+				 gnotification . . . . . no
+				 redirectionNumber . . . no
+				 redirectionRestInd  . . no
+				 callDiversion . . . . . no
+				 callTransferNumber  . . no
+				 detect  . . . . . . . . no
+				 collectedInfo . . . . . no
+				 play  . . . . . . . . . no
+				 record  . . . . . . . . no
+				 noCDR . . . . . . . . . no
+				 bridge  . . . . . . . . 
+				    swSID: . . . . . . . 33
+				    appSID:  . . . . . . 6b051397fe5f1be3
+				    swSID: . . . . . . . 34
+				    appSID:  . . . . . . in_6b051397fe5f1be3_with_sid_1
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+				 other . . . . . . . . . no
+  15:47:00.955333  [INFO]  ASN. Decode success
+  15:47:00.955397  [INFO]  ZMQ. RX Callref 0021. Message 'Progress'
+  15:47:00.955468  [INFO]  IVR. Make bridge '0153' <-> '015d'.
+  15:47:00.955534  [INFO]  IVR. Callref 0000. State changed: 'null_state' -> 'talking'
+  15:47:00.955589  [INFO]  IVR. Callref 0000. State changed: 'null_state' -> 'talking'
+  15:47:01.389153  [INFO]  ZMQ. RX. Incomming message detected.
+  15:47:01.389257  [INFO]  ASN. Try decode message
+  15:47:01.389434  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:47:01.389531  [INFO]  ASN. Decode success
+  15:47:01.389594  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:47:01.389668  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:47:01.389732  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:47:01.389899  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:47:01.389958  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:47:06.399679  [INFO]  ZMQ. RX. Incomming message detected.
+  15:47:06.399784  [INFO]  ASN. Try decode message
+  15:47:06.399919  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Request
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:47:06.399991  [INFO]  ASN. Decode success
+  15:47:06.400049  [INFO]  ZMQ. RX Callref ffffffff. Message 'Connection Update Request'
+  15:47:06.400141  [INFO]  ASN. Added 'Connection Update Response' to message body
+  15:47:06.400207  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . -1
+				 swSessionID:  . . . . . -1
+				 body: . . . . . . . . . Connection Update Response
+				 OPTIONAL params:
+				 requestId . . . . . . . 0
+				 other . . . . . . . . . no
+  15:47:06.400374  [INFO]  ASN. Message 'Connection Update Response'. Encode success
+  15:47:06.400433  [INFO]  ZMQ. TX. Message 'Connection Update Response' was sent
+  15:47:09.056884  [INFO]  SIP. RX. Callref 0410. Rel-cause code: '200'.
+  15:47:09.057021  [INFO]  SIP. RX. Callref 0410.   REL-Release
+			# Cause indicators: [user] [cause=Normal call clearing] 
+			[No optional params]
+  15:47:09.057094  [INFO]  SIP. Callref 0410. 'REL-Release' with cause <Normal call clearing>(16) in state <SIPT_ACTIVE>
+  15:47:09.057163  [INFO]  Port SIPT:0410. Deactivate IP-conn [4010]
+  15:47:09.057219  [INFO]  Conn[4010]: Deactivate in state 'Active'
+  15:47:09.057341  [INFO]  Conn[4010]: Set state 'Active'->'DisableReq'
+  15:47:09.057418  [INFO]  Port SIPT:0410. Release Complete, cause 'Normal call clearing', dcl '0', loc '0'
+  15:47:09.057495  [INFO]  Port SIPT:0410. Save CDR. enabled. [0x7]
+  15:47:09.057562  [INFO]  Port SIPT:0410. Release peer 'SRVC:0022', cause 'Normal call clearing', dcl '1', loc '0'
+  15:47:09.057628  [INFO]  Port SRVC:0022. Disconnect from SIPT:0410, cause 'Normal call clearing', dcl '1', loc '0'
+  15:47:09.057727  [INFO]  Port SRVC:0022. Disconnect, cause 'Normal call clearing', dcl '1', loc '0'
+  15:47:09.057801  [INFO]  Port SRVC:0022. Save CDR. enabled. [0x7]
+  15:47:09.057889  [INFO]  Port SRVC:0022. Set signal: 'BUSY'
+  15:47:09.057960  [INFO]  SRV. Callref 0022. Release, cause 'Normal call clearing', loc '0', ivrCR 0022
+  15:47:09.058019  [INFO]  Port SRVC:0022. Release Complete, cause 'Normal call clearing', dcl '0', loc '0'
+  15:47:09.058084  [INFO]  Port SRVC:0022. Save CDR. enabled. [0x7]
+  15:47:09.058168  [INFO]  Port SRVC:0022. Set state 'Ready'
+  15:47:09.058222  [INFO]  SRV. Callref 0022. New state 'SRV_IDLE'
+  15:47:09.058277  [INFO]  IVR. Callref 0022. Release catched
+  15:47:09.058328  [INFO]  IVR. Callref 0022. Will be disconnected. Cause: 16 (Normal call clearing)
+  15:47:09.058382  [INFO]  SRV. Callref 0022. Set IVR ref [ffffffff]
+  15:47:09.058477  [INFO]  SRV. Callref 0022. Release, cause 'Normal call clearing', loc '0'
+  15:47:09.058537  [INFO]  Port SRVC:0022. Release Complete, cause 'Normal call clearing', dcl '0', loc '0'
+  15:47:09.058624  [INFO]  Port SRVC:0022. Save CDR. enabled. [0x7]
+  15:47:09.058718  [INFO]  ZMQ. Callref 0022. Normal release detected
+  15:47:09.058777  [INFO]  ZMQ. TX Callref 0022. Try send 'Release'
+  15:47:09.058837  [INFO]  ZMQ. TX Callref 0022. Released in state 'connected'
+  15:47:09.058906  [INFO]  ASN. Added 'Release' to message body
+  15:47:09.058964  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . in_6b051397fe5f1be3_with_sid_1
+				 swSessionID:  . . . . . 34
+				 body: . . . . . . . . . Release
+				 BASIC params:
+				 cause . . . . . . . . . 16
+				 timestamp . . . . . . . 1428.918429.0
+				 OPTIONAL params:
+				 descript  . . . . . . . Normal call clearing
+				 noCDR . . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+  15:47:09.059150  [INFO]  ASN. Message 'Release'. Encode success
+  15:47:09.059210  [INFO]  ZMQ. TX. Message 'Release' was sent
+  15:47:09.059484  [INFO]  ZMQ. Callref 0022. State changed: 'connected' -> 'disconnected'
+  15:47:09.059561  [INFO]  ZMQ. Callref 0022. Release notify. Parker only notify
+  15:47:09.059618  [INFO]  IVR. Callref 0022. State changed: 'talking' -> 'null_state'
+  15:47:09.059698  [INFO]  Port SIPT:0410. Free IP-conn [4010]
+  15:47:09.059759  [INFO]  Conn[4010]: Destroy in state 'DisableReq'. [check] - set destroy-flg
+  15:47:09.059848  [INFO]  Port SIPT:0410. Set state 'Ready'
+  15:47:09.059903  [INFO]  SIP. Callref 0410. New state 'SIPT_IDLE'
+  15:47:09.060570  [INFO]  Port SRVC:0022. CDR: process modifiers. ModTable: in [255:255], out [255:255]
+  15:47:09.060641  [INFO]  Port SRVC:0022. Search Modifier at 'incoming CDR' for 'calling'. ModTable[255].
+  15:47:09.060708  [INFO]  Port SRVC:0022. Search Modifier for num <38312345>(8) <national> <isdn/telephony> <allowed> <net.provided>. cat '9'
+  15:47:09.061154  [INFO]  Port SRVC:0022. Search Modifier at 'incoming CDR' for 'calling'. Result: modifier [-5]
+  15:47:09.061215  [INFO]  Port SRVC:0022. Search Modifier at 'incoming CDR' for 'called'. ModTable[255].
+  15:47:09.061276  [INFO]  Port SRVC:0022. Search Modifier for num <100.>(4) <unknown> <no-change>
+  15:47:09.061718  [INFO]  Port SRVC:0022. Search Modifier at 'incoming CDR' for 'called'. Result: modifier [-5]
+  15:47:09.061778  [INFO]  Port SRVC:0022. Search Modifier at 'outgoing CDR' for 'calling'. ModTable[255].
+  15:47:09.061838  [INFO]  Port SRVC:0022. Search Modifier for num <38312345>(8) <national> <isdn/telephony> <allowed> <net.provided>. cat '9'
+  15:47:09.062280  [INFO]  Port SRVC:0022. Search Modifier at 'outgoing CDR' for 'calling'. Result: modifier [-5]
+  15:47:09.062339  [INFO]  Port SRVC:0022. Search Modifier at 'outgoing CDR' for 'called'. ModTable[255].
+  15:47:09.062398  [INFO]  Port SRVC:0022. Search Modifier for num <100>(3) <unknown> <no-change>
+  15:47:09.062840  [INFO]  Port SRVC:0022. Search Modifier at 'outgoing CDR' for 'called'. Result: modifier [-5]
+  15:47:09.062948  [INFO]  Port SRVC:0022. CDR:
+ 		 sign:         1016;
+		 connect:      2015-04-13 15:47:01;
+		 duration:     9;
+		 disccode:     16;
+		 discinfo:     user answer;
+		 incoming:     0.0.0.0;user-service;IVR;
+		 calling:      38312345;38312345;
+		 category:     9;9;
+		 redirect:     none;none;
+		 outgoing:     192.168.0.24;sip-user;Subscriber#002;
+		 called:       100;100;
+		 setup:        2015-04-13 15:46:59;
+		 disconn:      2015-04-13 15:47:10;
+		 redir-mark:   normal;
+		 pickup-mark:  normal;
+  15:47:09.070256  [INFO]  SIP. TX. Callref 0410.   RLC-Release_Complete
+			[No optional params]
+  15:47:09.070576  [INFO]  Conn[4010]: Close flag set - destroy chan.
+  15:47:09.070659  [INFO]  Conn[4010]: Destroy in state 'DisableReq'.
+  15:47:09.070722  [INFO]  Port SIPT:0410. Destroy Conn[4010].
+  15:47:09.070779  [INFO]  Conn[4010]: Set state 'DisableReq'->'DeallocReq'
+  15:47:09.100355  [INFO]  Conn[4010]: Destroyed
+  15:47:09.100486  [INFO]  Conn[4010]: clr rtp-cfg.  <192.168.0.20:30072>:[02.31.52.63.74.84] <-> <192.168.0.24:35002>:[A8.F9.4B.09.A6.FC]. flg[1]
+  15:47:09.100559  [INFO]  Conn[4010]: Set state 'DeallocReq'->'Idle'
+  15:47:09.181557  [INFO]  ZMQ. RX. Incomming message detected.
+  15:47:09.181661  [INFO]  ASN. Try decode message
+  15:47:09.181804  [INFO]  Basic message params:
+				 version:  . . . . . . . 1
+				 appSessionID  . . . . . 6b051397fe5f1be3
+				 swSessionID:  . . . . . 33
+				 body: . . . . . . . . . Release
+				 BASIC params:
+				 cause . . . . . . . . . 16
+				 timestamp . . . . . . . 1428.918429.165580
+				 OPTIONAL params:
+				 descript  . . . . . . . Normal call clearing
+				 noCDR . . . . . . . . . no
+				 detached  . . . . . . . no
+				 toLog . . . . . . . . . no
+  15:47:09.181889  [INFO]  ASN. Decode success
+  15:47:09.181947  [INFO]  ZMQ. RX Callref 0021. Message 'Release'
+  15:47:09.182007  [INFO]  ZMQ. Callref 0021. State changed: 'connected' -> 'disconnected'
+  15:47:09.182065  [INFO]  IVR. Callref 0021. Will be disconnected. Cause: 16 (Normal call clearing)
+  15:47:09.182133  [INFO]  Port SRVC:0021. Stop call recording at stage 5. Peer port: SS7:08:02
+  15:47:09.182191  [INFO]  Port SRVC:0021. Disconnecting standalone conference Conf[3011]
+  15:47:09.182258  [INFO]  Conf[3011]: Change rec status to 'idle'
+  15:47:09.182321  [INFO]  Conf[3011]: destroy in state confActive. Participants: 3
+  15:47:09.182376  [INFO]  Conf[3011]: del participant Conn[3033] num [0] in state 'partAllocated'
+  15:47:09.182495  [INFO]  Conn[3033]: Set partState 'partAllocated'->'partDeallocReq'. Conf[3011]
+  15:47:09.182558  [INFO]  Conf[3011]: del participant Conn[3034] num [1] in state 'partAllocated'
+  15:47:09.182651  [INFO]  Conn[3034]: Set partState 'partAllocated'->'partDeallocReq'. Conf[3011]
+  15:47:09.182711  [INFO]  Conf[3011]: del participant Conn[3035] num [2] in state 'partAllocated' (recording)
+  15:47:09.182777  [INFO]  Conn[3035]: Set partState 'partAllocated'->'partDeallocReq'. Conf[3011]
+  15:47:09.182831  [INFO]  Conf[3011]: Set state 'confActive'->'confDestroyPending'
+  15:47:09.182884  [INFO]  Conf[3011]: destroy pending. Wait for participants to be destroyed
+  15:47:09.182937  [INFO]  SRV. Callref 0021. Set IVR ref [ffffffff]
+  15:47:09.183000  [INFO]  SRV. Callref 0021. Release, cause 'Normal call clearing', loc '0'
+  15:47:09.183092  [INFO]  Port SRVC:0021. Release Complete, cause 'Normal call clearing', dcl '0', loc '0'
+  15:47:09.183168  [INFO]  Port SRVC:0021. Save CDR. enabled. [0x7]
+  15:47:09.183236  [INFO]  Port SRVC:0021. Release peer 'SS7:08:02', cause 'Normal call clearing', dcl '1', loc '0'
+  15:47:09.183302  [INFO]  Port SS7:08:02. Disconnect from SRVC:0021, cause 'Normal call clearing', dcl '1', loc '0'
+  15:47:09.183362  [INFO]  Port SS7:08:02. Disconnect, cause 'Normal call clearing', dcl '1', loc '0'
+  15:47:09.183429  [INFO]  Port SS7:08:02. Save CDR. enabled. [0x7]
+  15:47:09.183514  [INFO]  Port SS7:08:02. Set signal: 'BUSY'
+  15:47:09.183631  [INFO]  SS7/ISUP. Chan SS7:08:02. Release, cause 'Normal call clearing', cause_loc '0'
+  15:47:09.183750  [INFO]  SS7/ISUP. TX. ISUP-profile 01. Link '00/08', CIC=041. REL-Release
+			# Cause indicators: [80].[90].
+			# 	Location [00] - user
+			# 	Cause [90] - Normal call clearing
+			[No optional params]
+  15:47:09.183816  [INFO]  SS7/MTP3. Line '00/08'. ISUP-profile 01. Data Tx. SI=0xC5 [DPC=2, OPC=1, SLS=9] 
+  15:47:09.183904  [INFO]  SS7/MTP3. Line '00/08'. Data Tx. 'ISUP': C5.02.40.00.90.29.00.0C.02.00.02.80.90.
+  15:47:09.184025  [INFO]  SS7/ISUP. Chan '00/08':02. New state RELEASE_REQUEST
+  15:47:09.184098  [INFO]  Port SS7:08:02. Set state 'Release'
+  15:47:09.184184  [INFO]  Port SRVC:0021. Set state 'Ready'
+  15:47:09.184240  [INFO]  SRV. Callref 0021. New state 'SRV_IDLE'
+  15:47:09.184301  [INFO]  IVR. Callref 0021. State changed: 'processed' -> 'null_state'
+  15:47:09.184673  [INFO]  Port SS7:08:02. CDR: process modifiers. ModTable: in [255:255], out [255:255]
+  15:47:09.184746  [INFO]  Port SS7:08:02. Search Modifier at 'incoming CDR' for 'calling'. ModTable[255].
+  15:47:09.184814  [INFO]  Port SS7:08:02. Search Modifier for num <38312345>(8) <national> <isdn/telephony> <allowed> <net.provided>. cat '9'
+  15:47:09.185291  [INFO]  Port SS7:08:02. Search Modifier at 'incoming CDR' for 'calling'. Result: modifier [-5]
+  15:47:09.185358  [INFO]  Port SS7:08:02. Search Modifier at 'incoming CDR' for 'called'. ModTable[255].
+  15:47:09.185422  [INFO]  Port SS7:08:02. Search Modifier for num <3434>(4) <subscriber> <no-change>
+  15:47:09.185867  [INFO]  Port SS7:08:02. Search Modifier at 'incoming CDR' for 'called'. Result: modifier [-5]
+  15:47:09.185928  [INFO]  Port SS7:08:02. Search Modifier at 'outgoing CDR' for 'calling'. ModTable[255].
+  15:47:09.185989  [INFO]  Port SS7:08:02. Search Modifier for num <38312345>(8) <national> <isdn/telephony> <allowed> <net.provided>. cat '9'
+  15:47:09.186433  [INFO]  Port SS7:08:02. Search Modifier at 'outgoing CDR' for 'calling'. Result: modifier [-5]
+  15:47:09.186493  [INFO]  Port SS7:08:02. Search Modifier at 'outgoing CDR' for 'called'. ModTable[255].
+  15:47:09.186555  [INFO]  Port SS7:08:02. Search Modifier for num <3434>(4) _undef_0xff <no-change>
+  15:47:09.186997  [INFO]  Port SS7:08:02. Search Modifier at 'outgoing CDR' for 'called'. Result: modifier [-5]
+  15:47:09.187081  [INFO]  Port SS7:08:02. CDR:
+ 		 sign:         1016;
+		 connect:      2015-04-13 15:46:56;
+		 duration:     14;
+		 disccode:     16;
+		 discinfo:     user answer;
+		 incoming:     0.0.0.0;trunk-SS7;MC-SS;
+		 calling:      38312345;38312345;
+		 category:     9;9;
+		 redirect:     none;none;
+		 outgoing:     0.0.0.0;user-service;IVR;
+		 called:       3434;3434;
+		 setup:        2015-04-13 15:46:52;
+		 disconn:      2015-04-13 15:47:10;
+		 redir-mark:   normal;
+		 pickup-mark:  normal;
+  15:47:09.187302  [INFO]  Conf[3011]: Participant has been destroyed Conn[3033] num [0]
+  15:47:09.187372  [INFO]  Conf[3011]: destroyed participant Conn[3033] num [0]
+  15:47:09.187439  [INFO]  Conf[3011]: State 'confDestroyPending' [    0]. Participants: 2. BusyMask: [0006]   [3033][3034]
+  15:47:09.187494  [INFO]  Conn[3033]: Set state 'ConfActive'->'Idle'
+  15:47:09.187548  [INFO]  Conn[3033]: Set partState 'partDeallocReq'->'partIdle'. Conf[3011]
+  15:47:09.188387  [INFO]  Conf[3011]: Participant has been destroyed Conn[3034] num [1]
+  15:47:09.188468  [INFO]  Conf[3011]: destroyed participant Conn[3034] num [1]
+  15:47:09.188534  [INFO]  Conf[3011]: State 'confDestroyPending' [    0]. Participants: 1. BusyMask: [0004]   [3033]
+  15:47:09.188588  [INFO]  Conf[3011]: destroy in state confDestroyPending. Participants: 1
+  15:47:09.188645  [INFO]  Conf[3011]: del participant Conn[3035] num [2] in state 'partDeallocReq' (recording)
+  15:47:09.188701  [INFO]  Conf[3011]: destroy pending. Wait for participants to be destroyed
+  15:47:09.188755  [INFO]  Conn[3034]: Set state 'ConfActive'->'Idle'
+  15:47:09.188810  [INFO]  Conn[3034]: Set partState 'partDeallocReq'->'partIdle'. Conf[3011]
+  15:47:09.195502  [INFO]  SS7/MTP3. Line '00/08'. Data Rx. SNI=0xC5 (SI=5, NI=3) [DPC=1, OPC=2, SLS=9]. [SLC=0]
+09.C5.01.80.00.90.29.00.10.00.
+  15:47:09.195604  [INFO]  SS7/MTP3. Line '00/08'. Data Rx. 'ISUP' (4). 
+  15:47:09.195679  [INFO]  SS7/ISUP. RX. ISUP-profile 01. Link '00/08', CIC=041. RLC-Release_Complete
+			[No optional params]
+  15:47:09.195759  [INFO]  SS7/ISUP. Chan '00/08':02. Clear v-chan 02:08
+  15:47:09.195826  [INFO]  Port SS7:08:02. Release Complete, cause 'Normal, unspecified', dcl '0', loc '0'
+  15:47:09.195898  [INFO]  Port SS7:08:02. Save CDR. enabled. [0x7]
+  15:47:09.195962  [INFO]  Port SS7:08:02. Free IP-conn [2013]
+  15:47:09.196023  [INFO]  Conn[2013]: Destroy in state 'Disabled'. [check]
+  15:47:09.196080  [INFO]  Port SS7:08:02. Destroy Conn[2013].
+  15:47:09.196132  [INFO]  Conn[2013]: Set state 'Disabled'->'DeallocReq'
+  15:47:09.196310  [INFO]  Port SS7:08:02. Set state 'Ready'
+  15:47:09.196379  [INFO]  SS7/ISUP. Chan '00/08':02. New state NULL
+  15:47:09.197992  [INFO]  Conn[2013]: Destroyed
+  15:47:09.198090  [INFO]  Conn[2013]: clr rtp-cfg.  <0.0.0.0:30070>:[02.31.52.63.74.82] <-> <0.0.0.0:0>:[00.00.00.00.00.00]. flg[1]
+  15:47:09.198161  [INFO]  Conn[2013]: Set state 'DeallocReq'->'Idle'
+  15:47:09.611603  [INFO]  Conn[3035]: Recording stopped. File: /mnt/sda/ivr_records/38312345/2015-4-13_15-46-57_38312345_3434.wav
+  15:47:09.613438  [INFO]  Conf[3011]: Participant has been destroyed Conn[3035] num [2]
+  15:47:09.613507  [INFO]  Conf[3011]: destroyed participant Conn[3035] num [2]
+  15:47:09.613574  [INFO]  Conf[3011]: State 'confDestroyPending' [    1]. Participants: 0. BusyMask: [0000]   
+  15:47:09.613628  [INFO]  Conf[3011]: destroy in state confDestroyPending. Participants: 0
+  15:47:09.613745  [INFO]  Conn[3035]: Set state 'ConfActive'->'Idle'
+  15:47:09.613806  [INFO]  Conn[3035]: Set partState 'partDeallocReq'->'partIdle'. Conf[3011]
+  15:47:09.614332  [INFO]  Conf[3011]: Callback. Mode 0xa ('CONF_MODE_DESTROY'). Command 0x30 ('CONF_DESTROY'). Result 0
+  15:47:09.614401  [INFO]  Conf[3011]: Destroyed
+  15:47:09.614458  [INFO]  Conf[3011]: Set state 'confDestroyPending'->'confIdle'
+SMG-1016M. SN: VI1F000130 Software Version: V.3.3.0.1389 M/PBX/SORM/H323/RCM/VAS/REC/IVR/40VNI Build: Apr 10 2015 18:29:46
+Log stopped at: 15:47:10.431156 13/04/15
