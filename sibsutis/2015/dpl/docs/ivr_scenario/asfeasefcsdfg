@@ -1,0 +1,103 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+			},
+			"pos":	{
+				"x":	1,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1018"
+			}
+		},
+		"SvgjsG1018":	{
+			"name":	"info",
+			"params":	{
+				"info":	[{
+						"name":	"access_temp.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	1
+			},
+			"cases":	{
+				"next":	"SvgjsG1025"
+			}
+		},
+		"SvgjsG1025":	{
+			"name":	"play",
+			"params":	{
+				"play":	[{
+						"name":	"trunk_busy.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	2
+			},
+			"cases":	{
+				"next":	"SvgjsG1032"
+			}
+		},
+		"SvgjsG1032":	{
+			"name":	"ivr",
+			"params":	{
+				"description":	"",
+				"play":	[],
+				"ivr":	[{
+						"command":	"1",
+						"description":	""
+					}],
+				"wait_time":	5,
+				"extension_dialing":	false,
+				"max_digits":	3,
+				"interdigit_timeout":	2
+			},
+			"pos":	{
+				"x":	1,
+				"y":	3
+			},
+			"cases":	{
+				"1":	"SvgjsG1046",
+				"Empty":	"SvgjsG1039"
+			}
+		},
+		"SvgjsG1039":	{
+			"name":	"play",
+			"params":	{
+				"play":	[{
+						"name":	"trunk_error.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"undefined"
+			}
+		},
+		"SvgjsG1046":	{
+			"name":	"dial",
+			"params":	{
+				"numbers":	[{
+						"number":	"41015"
+					}]
+			},
+			"pos":	{
+				"x":	0,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"undefined"
+			}
+		}
+	},
+	"description":	""
+}

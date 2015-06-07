@@ -1,0 +1,99 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+			},
+			"pos":	{
+				"x":	1,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1018"
+			}
+		},
+		"SvgjsG1018":	{
+			"name":	"ivr",
+			"params":	{
+				"description":	"",
+				"play":	[{
+						"name":	"conference_greeting01.wav",
+						"type":	"file"
+					}, {
+						"name":	"conference_greeting02.wav",
+						"type":	"file"
+					}],
+				"ivr":	[{
+						"command":	"1",
+						"description":	""
+					}, {
+						"command":	"2",
+						"description":	""
+					}],
+				"wait_time":	5,
+				"extension_dialing":	false,
+				"max_digits":	1,
+				"interdigit_timeout":	2
+			},
+			"pos":	{
+				"x":	1,
+				"y":	1
+			},
+			"cases":	{
+				"1":	"SvgjsG1025",
+				"2":	"SvgjsG1032",
+				"No Match":	"SvgjsG1039"
+			}
+		},
+		"SvgjsG1025":	{
+			"name":	"play",
+			"params":	{
+				"description":	"",
+				"play":	[{
+						"name":	"access_unpaid.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	0,
+				"y":	2
+			},
+			"cases":	{
+				"next":	"undefined"
+			}
+		},
+		"SvgjsG1032":	{
+			"name":	"play",
+			"params":	{
+				"description":	"",
+				"play":	[{
+						"name":	"conference_greeting01.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	2,
+				"y":	2
+			},
+			"cases":	{
+				"next":	"undefined"
+			}
+		},
+		"SvgjsG1039":	{
+			"name":	"goto",
+			"params":	{
+				"description":	"",
+				"goto":	"SvgjsG1018",
+				"max_hops":	3
+			},
+			"pos":	{
+				"x":	1,
+				"y":	2
+			},
+			"cases":	{
+				"next":	"SvgjsG1018"
+			}
+		}
+	},
+	"description":	""
+}

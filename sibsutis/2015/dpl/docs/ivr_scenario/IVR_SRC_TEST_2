@@ -1,0 +1,32 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+			},
+			"pos":	{
+				"x":	1,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1033"
+			}
+		},
+		"SvgjsG1033":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"",
+				"numbers":	[{
+						"number":	"99999"
+					}]
+			},
+			"pos":	{
+				"x":	1,
+				"y":	1
+			},
+			"cases":	{
+			}
+		}
+	},
+	"description":	""
+}

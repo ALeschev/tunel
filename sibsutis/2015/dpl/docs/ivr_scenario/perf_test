@@ -1,0 +1,64 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+			},
+			"pos":	{
+				"x":	1,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1168"
+			}
+		},
+		"SvgjsG1168":	{
+			"name":	"time",
+			"params":	{
+				"description":	"",
+				"time_ranges":	[{
+						"time":	"11:11-12:12,3,4"
+					}]
+			},
+			"pos":	{
+				"x":	1,
+				"y":	1
+			},
+			"cases":	{
+				"Yes":	"SvgjsG1258",
+				"No":	"SvgjsG1273"
+			}
+		},
+		"SvgjsG1258":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"",
+				"numbers":	[{
+						"number":	"41010"
+					}]
+			},
+			"pos":	{
+				"x":	0,
+				"y":	2
+			},
+			"cases":	{
+			}
+		},
+		"SvgjsG1273":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"",
+				"numbers":	[{
+						"number":	"111"
+					}]
+			},
+			"pos":	{
+				"x":	1,
+				"y":	2
+			},
+			"cases":	{
+			}
+		}
+	},
+	"description":	""
+}

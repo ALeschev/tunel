@@ -1,0 +1,49 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+			},
+			"pos":	{
+				"x":	1,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1033"
+			}
+		},
+		"SvgjsG1033":	{
+			"name":	"info",
+			"params":	{
+				"description":	"",
+				"info":	[{
+						"name":	"access_temp.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	1
+			},
+			"cases":	{
+				"next":	"SvgjsG1063"
+			}
+		},
+		"SvgjsG1063":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"",
+				"numbers":	[{
+						"number":	"123"
+					}]
+			},
+			"pos":	{
+				"x":	1,
+				"y":	2
+			},
+			"cases":	{
+			}
+		}
+	},
+	"description":	""
+}

@@ -1,0 +1,34 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+			},
+			"pos":	{
+				"x":	1,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1018"
+			}
+		},
+		"SvgjsG1018":	{
+			"name":	"play",
+			"params":	{
+				"description":	"",
+				"play":	[{
+						"name":	"access_restrict.wav"
+					}],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	1
+			},
+			"cases":	{
+				"next":	"undefined"
+			}
+		}
+	},
+	"description":	""
+}

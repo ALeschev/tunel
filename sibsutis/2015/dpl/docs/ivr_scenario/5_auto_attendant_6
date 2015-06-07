@@ -1,0 +1,351 @@
+{
+	"actions":	{
+		"SvgjsG1011":	{
+			"name":	"ring",
+			"params":	{
+				"description":	"Поступил новый входящий вызов.",
+				"ringback_duration":	0
+			},
+			"pos":	{
+				"x":	2,
+				"y":	0
+			},
+			"cases":	{
+				"next":	"SvgjsG1018"
+			}
+		},
+		"SvgjsG1018":	{
+			"name":	"info",
+			"params":	{
+				"description":	"Проигрываем абоненту приветствие с информацией о компании в предответном состоянии. Те кто ошибся номером отобьются на этом этапе.",
+				"info":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	2,
+				"y":	1
+			},
+			"cases":	{
+				"next":	"SvgjsG1025"
+			}
+		},
+		"SvgjsG1025":	{
+			"name":	"ivr",
+			"params":	{
+				"description":	"Проигрываем варианты выбора подключения к отделу технической поддержки, сервис центру, комерческому отделу, донабора внутреннего номера.",
+				"play":	[],
+				"ivr":	[{
+						"command":	"1",
+						"description":	"Отдел техничесокй поддержки."
+					}, {
+						"command":	"2",
+						"description":	"Сервис центр"
+					}, {
+						"command":	"3",
+						"description":	"Комерческий отдел"
+					}, {
+						"command":	"4",
+						"description":	"Информация об услугах"
+					}],
+				"wait_time":	5,
+				"extension_dialing":	true,
+				"max_digits":	5,
+				"interdigit_timeout":	2
+			},
+			"pos":	{
+				"x":	2,
+				"y":	2
+			},
+			"cases":	{
+				"1":	"SvgjsG1074",
+				"2":	"SvgjsG1088",
+				"3":	"SvgjsG1046",
+				"4":	"SvgjsG1342",
+				"No Match":	"SvgjsG1032"
+			}
+		},
+		"SvgjsG1032":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о некорректном выборе пункта меню.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	5,
+				"y":	3
+			},
+			"cases":	{
+				"next":	"SvgjsG1039"
+			}
+		},
+		"SvgjsG1039":	{
+			"name":	"goto",
+			"params":	{
+				"description":	"Переход в основное меню.",
+				"goto":	"SvgjsG1025",
+				"max_hops":	2
+			},
+			"pos":	{
+				"x":	5,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"SvgjsG1025"
+			}
+		},
+		"SvgjsG1046":	{
+			"name":	"time",
+			"params":	{
+				"description":	"Сравнение текущего времени вызова с графиком работы сервис центра.",
+				"time_ranges":	[{
+						"time":	""
+					}]
+			},
+			"pos":	{
+				"x":	1,
+				"y":	3
+			},
+			"cases":	{
+				"Yes":	"SvgjsG1053",
+				"No":	"SvgjsG1067"
+			}
+		},
+		"SvgjsG1053":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о перенаправлении вызова в сервис центр.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	0,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"SvgjsG1060"
+			}
+		},
+		"SvgjsG1060":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"Вызов в сервис центр.",
+				"numbers":	[{
+						"number":	"777"
+					}]
+			},
+			"pos":	{
+				"x":	0,
+				"y":	5
+			},
+			"cases":	{
+			}
+		},
+		"SvgjsG1067":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о том, что в текущее время сервис центр не работает. Проигрываем информацию о графике работы сервис центра.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"SvgjsG1116"
+			}
+		},
+		"SvgjsG1074":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о перенаправлении вызова в отдел технической поддержки.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	2,
+				"y":	6
+			},
+			"cases":	{
+				"next":	"SvgjsG1081"
+			}
+		},
+		"SvgjsG1081":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"Вызов в отдел технической поддержки.",
+				"numbers":	[{
+						"number":	"123"
+					}]
+			},
+			"pos":	{
+				"x":	2,
+				"y":	7
+			},
+			"cases":	{
+			}
+		},
+		"SvgjsG1088":	{
+			"name":	"time",
+			"params":	{
+				"description":	"Сравнение текущего времени вызова с графиком работы комерческого отдела.",
+				"time_ranges":	[{
+						"time":	""
+					}]
+			},
+			"pos":	{
+				"x":	3,
+				"y":	3
+			},
+			"cases":	{
+				"Yes":	"SvgjsG1095",
+				"No":	"SvgjsG1109"
+			}
+		},
+		"SvgjsG1095":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о перенаправлении вызова в комерческий отдел.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	4,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"SvgjsG1102"
+			}
+		},
+		"SvgjsG1102":	{
+			"name":	"dial",
+			"params":	{
+				"description":	"Вызов в комерческий отдел.",
+				"numbers":	[{
+						"number":	"888"
+					}]
+			},
+			"pos":	{
+				"x":	4,
+				"y":	5
+			},
+			"cases":	{
+			}
+		},
+		"SvgjsG1109":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о том, что в текущее время комерческий отдел не работает. Проигрываем информацию о графике работы комерческого отдела.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	3,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"SvgjsG1130"
+			}
+		},
+		"SvgjsG1116":	{
+			"name":	"ivr",
+			"params":	{
+				"description":	"Проигрываем вариант соединения с отделом технической поддержки.",
+				"play":	[],
+				"ivr":	[{
+						"command":	"1",
+						"description":	"Отдел технической поддержки"
+					}],
+				"wait_time":	5,
+				"extension_dialing":	false,
+				"max_digits":	1,
+				"interdigit_timeout":	2
+			},
+			"pos":	{
+				"x":	1,
+				"y":	5
+			},
+			"cases":	{
+				"1":	"SvgjsG1123",
+				"No Match":	"SvgjsG1137"
+			}
+		},
+		"SvgjsG1123":	{
+			"name":	"goto",
+			"params":	{
+				"description":	"Перенаправление вызова в отдел технической поддержки.",
+				"goto":	"SvgjsG1074",
+				"max_hops":	1
+			},
+			"pos":	{
+				"x":	1,
+				"y":	6
+			},
+			"cases":	{
+				"next":	"SvgjsG1074"
+			}
+		},
+		"SvgjsG1130":	{
+			"name":	"goto",
+			"params":	{
+				"description":	"Переход на проигрывание варианта соединения с отделом технической поддержки.",
+				"goto":	"SvgjsG1116",
+				"max_hops":	1
+			},
+			"pos":	{
+				"x":	3,
+				"y":	5
+			},
+			"cases":	{
+				"next":	"SvgjsG1116"
+			}
+		},
+		"SvgjsG1137":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о некорректном выборе пункта меню.",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	0,
+				"y":	6
+			},
+			"cases":	{
+				"next":	"undefined"
+			}
+		},
+		"SvgjsG1342":	{
+			"name":	"play",
+			"params":	{
+				"description":	"Проигрываем информацию о разного видах услугах",
+				"play":	[],
+				"replay":	1
+			},
+			"pos":	{
+				"x":	6,
+				"y":	3
+			},
+			"cases":	{
+				"next":	"SvgjsG1372"
+			}
+		},
+		"SvgjsG1372":	{
+			"name":	"goto",
+			"params":	{
+				"description":	"Переход в основное меню.",
+				"goto":	"SvgjsG1025",
+				"max_hops":	1
+			},
+			"pos":	{
+				"x":	6,
+				"y":	4
+			},
+			"cases":	{
+				"next":	"SvgjsG1025"
+			}
+		}
+	},
+	"description":	"Принимаем вызов, проигрываем приветствие.\nПроигрываем варианты выбора подключения к отделу технической поддержки, сервис центру, комерческому отделу, донабора внутреннего номера, информации о разного видах услугах, после чего осуществляется соединение согласно выбору абонента.\n\n"
+}
