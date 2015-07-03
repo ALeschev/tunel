@@ -3,8 +3,12 @@ STRIP = $(CROSS_COMPILER)strip
 OBJ_DIR = build/$(ARCH)/obj
 BIN_DIR = build/$(ARCH)/bin
 
-SRC_DIR = .
-HDR_DIR = .
+SRC_DIR = ./
+HDR_DIR = ./
+
+INC = -I $(HDR_DIR)
+CFLAGS = -g
+LIBS = -lpthread
 
 NETSCANER_TARGET = $(BIN_DIR)/netscaner
 
@@ -21,14 +25,6 @@ ICMP_CORE_DEPS = $(SRC_DIR)/icmp_core.c \
 NETSCANER_DEPS = $(SRC_DIR)/netscaner.c \
                  # $(HDR_DIR)/netscaner.h \
                  $(ICMP_CORE_DEPS)
-
-
-
-CFLAGS = -g
-
-LIBS = -lpthread
-
-INC = -I ./
 
 all: check_dir $(NETSCANER_TARGET)
 
