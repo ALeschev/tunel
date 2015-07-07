@@ -1,3 +1,11 @@
+/*
+ * LAV by fun
+ */
+
+#ifndef __MESSAGE_H__
+#define __MESSAGE_H__
+
+#include <stdint.h>
 
 enum e_command
 {
@@ -31,3 +39,5 @@ typedef struct
 
 m_message_t *m_message_init(m_header_t *header, uint8_t *data, size_t len);
 int m_message_close(m_message_t *message);
+
+#endif /* __MESSAGE_H__ */

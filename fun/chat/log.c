@@ -1,3 +1,7 @@
+/*
+ * LAV by fun
+ */
+
 #include <stdio.h>
 #include <time.h>
 #include <sys/syscall.h>
