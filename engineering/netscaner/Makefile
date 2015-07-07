@@ -8,7 +8,7 @@ HDR_DIR = ./
 
 INC = -I $(HDR_DIR)
 CFLAGS = -g
-LIBS = -lpthread
+LIBS = -lpthread -lrt
 
 NETSCANER_TARGET = $(BIN_DIR)/netscaner
 
@@ -20,6 +20,7 @@ NETSCANER_OBJ += $(OBJ_DIR)/netscaner.o \
 #
 
 ICMP_CORE_DEPS = $(SRC_DIR)/icmp_core.c \
+                 $(SRC_DIR)/ique.c
                  # $(HDR_DIR)/icmp_core.h \
 
 NETSCANER_DEPS = $(SRC_DIR)/netscaner.c \

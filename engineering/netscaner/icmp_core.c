@@ -17,12 +17,16 @@
 #include <pthread.h>
 #include <errno.h>
 
+#include <time.h>
+
+#include "ique.h"
 #include "icmp_core.h"
 
 // #define LOGING_DEBUG
 // #define INIT_SYNCH_DEBUG
 
 typedef struct {
+    uint8_t th_num;
     icmp_addr_in_t addr_in;
     int send_period_ms;
     int send_count;
@@ -33,6 +37,7 @@ typedef struct {
 } icmp_settings_t;
 
 typedef struct {
+    uint8_t pull_num;
     icmp_addr_t *source;
     icmp_addr_t *dest;
     int dest_count;
@@ -56,8 +61,8 @@ pthread_mutex_t thread_init_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int  icmp_sock_init (int *sockfd);
 static int  icmp_sock_deinit (int *sockfd);
 
-static int  icmp_packet_init (uint8_t **icmp_packet, int *packet_size,
-                              icmp_result_t *icmp_result);
+static int  icmp_packet_init (uint8_t **icmp_packet, uint8_t puul_num,
+                              int *packet_size, icmp_result_t *icmp_result);
 static void icmp_packet_deinit (uint8_t *icmp_packet);
 
 static int  icmp_send_packet (uint8_t *icmp_packet, int packet_size,
@@ -315,6 +320,7 @@ static void icmp_start_sending (icmp_settings_t *icmp_settings)
 
         icmp_pull.dest = &addr_in->dest[i];
         icmp_pull.dest_count = ADDR_BY_PULL;
+        icmp_pull.pull_num = /*cur_pull*/ 123;
 
         icmp_proc_pull (&icmp_pull, &icmp_send_threads[cur_pull]);
 
@@ -326,6 +332,7 @@ static void icmp_start_sending (icmp_settings_t *icmp_settings)
 
     icmp_pull.dest = &addr_in->dest[i];
     icmp_pull.dest_count = addr_in->dest_count - i;
+    icmp_pull.pull_num = cur_pull;
 
     /* processing residue */
     icmp_proc_pull (&icmp_pull, &icmp_send_threads[cur_pull]);
@@ -478,16 +485,18 @@ void *icmp_send_packet_thread (void *arg)
     icmp_result_cb_t request_result = icmp_pull->request_result;
     int dest_count = icmp_pull->dest_count;
     icmp_result_t icmp_result = {0};
+    uint8_t pull_num = icmp_pull->pull_num;
 
     icmp_pull->pid = syscall(SYS_gettid);
 
-    icmp_log ("%s inited", __func__);
+    icmp_log ("%s inited: pull num: %d", __func__, pull_num);
 
     pthread_mutex_unlock(&thread_init_mutex);
 
     uint8_t *icmp_packet;
 
-    rc = icmp_packet_init (&icmp_packet, &packet_size, &icmp_result);
+    rc = icmp_packet_init (&icmp_packet, 123,
+                           &packet_size, &icmp_result);
     if (rc != 0)
     {
         return NULL;
@@ -584,8 +593,8 @@ static unsigned short in_cksum(unsigned short *ptr, int nbytes)
     return (answer);
 }
 
-static int icmp_packet_init (uint8_t **icmp_packet, int *packet_size,
-                             icmp_result_t *icmp_result)
+static int icmp_packet_init (uint8_t **icmp_packet, uint8_t pull_num,
+                             int *packet_size, icmp_result_t *icmp_result)
 {
     struct iphdr *ip_hdr;
     struct icmphdr *icmp_hdr;
@@ -627,7 +636,7 @@ static int icmp_packet_init (uint8_t **icmp_packet, int *packet_size,
     icmp_hdr->un.echo.id = rand();
 
     memset((*icmp_packet) + sizeof(struct iphdr) + sizeof(struct icmphdr),
-            rand() % 255,
+            pull_num,
             payload_size);
 
     icmp_hdr->checksum = 0;
