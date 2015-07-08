@@ -4,7 +4,6 @@ MODE=$1
 
 FLAGS=
 CLEAN=
-TRANSPORT=
 
 COLOR_WARN="\\033[0;33m"
 COLOR_SUCCESS="\\033[1;32m"
@@ -31,10 +30,10 @@ print_info()
 build_status_check()
 {
     if [ $? -ne 0 ]; then
-    print_error "$1 for '$ARCH_LOC' build failed"
+    print_error "transport for '$ARCH_LOC' build failed"
         exit 1;
     else
-    print_info "$1 for '$ARCH_LOC' build OK"
+    print_info "transport for '$ARCH_LOC' build OK"
     fi;
 }
 
@@ -45,17 +44,6 @@ case "$MODE" in
         CC_LOC="CROSS_COMPILE=x86_64-linux-gnu-"
         ARCH_LOC="x86_64"
         LDFLAGS_LOC=""
-        ;;
-    "mv" | "smg1016m" | "smgm" | "1016m")
-        CC_LOC="CROSS_COMPILE=arm-mv5sft-linux-gnueabi-"
-        ARCH_LOC="mv"
-        LDFLAGS_LOC="LDFLAGS=-DBOARD_SMG1016M"
-        ;;
-    "2016" | "smg2016" )
-        CC_LOC="CROSS_COMPILE=arm-marvell-linux-gnueabi-"
-        ARCH_LOC="2016"
-        LDFLAGS_LOC="LDFLAGS=-DBOARD_2016"
-        ;;
 esac
 }
 
@@ -63,38 +51,11 @@ check_clean_mode()
 {
 case "$PARAM" in
     "cleanall" )
-        case "$TRANSPORT" in
-            "pbyte" )
-                CLEAN="clean_zmq distclean_pbyte"
-                ;;
-            "trike" )
-                CLEAN="clean_deps distclean_trike"
-                ;;
-        esac
+        CLEAN="clean_zmq distclean_pbyte"
     ;;
     "clean" )
-        case "$TRANSPORT" in
-            "pbyte" )
-                CLEAN="clean_pbyte"
-                ;;
-            "trike" )
-                CLEAN="clean_trike"
-                ;;
-        esac
+        CLEAN="clean_pbyte"
     ;;
-esac
-}
-
-check_transport_mode()
-{
-case "$PARAM" in
-    "pbyte" )
-        TRANSPORT="pbyte"
-        ;;
-    "trike" )
-        TRANSPORT="trike"
-        ;;
-    * )
 esac
 }
 
@@ -126,16 +87,6 @@ print_info "Mode: '$MODE'"
 check_mode
 
 for PARAM in $*; do
-    check_transport_mode
-done
-
-if [ ! -n "$TRANSPORT" ]; then
-    print_error "Transport not set!"
-    echo "Usage: ./$0 <transport> <clean/cleanall>"
-    exit 0
-fi;
-
-for PARAM in $*; do
     check_clean_mode
 done
 
@@ -144,19 +95,9 @@ if [ -n "$CLEAN" ]; then
     make $CLEAN $CC_LOC ARCH=$ARCH_LOC
 fi;
 
-case "$TRANSPORT" in
-    "pbyte" )
-        check_lib libzmq.a ZMQ-lib build_zmq
-        make $LDFLAGS_LOC $CC_LOC ARCH=$ARCH_LOC build_pbyte
-        ;;
-    "trike" )
-        check_lib libzmq.a ZMQ-lib build_zmq
-        check_lib libprotobuf.a protobuf-lib build_protobuf
-        check_lib libprotobuf-c.a protobuf_c-lib build_protobuf_c
-        make $LDFLAGS_LOC $CC_LOC ARCH=$ARCH_LOC build_trike
-        ;;
-esac
+check_lib libzmq.a ZMQ-lib build_zmq
+make $LDFLAGS_LOC $CC_LOC ARCH=$ARCH_LOC build_pbyte
 
-build_status_check "$TRANSPORT"
+build_status_check
 
 exit 0;
