@@ -18,8 +18,6 @@ c_client_t *c_client_get_by_nick(char *nickname, size_t len);
 c_client_t *c_client_get_by_ip(s_addr_t *ip_addr);
 */
 
-
-
 int main(void)
 {
 	int res;
