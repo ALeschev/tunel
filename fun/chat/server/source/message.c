@@ -2,6 +2,11 @@
  * LAV by fun
  */
 
+#include <string.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <errno.h>
+
 #include "log.h"
 #include "message.h"
 
