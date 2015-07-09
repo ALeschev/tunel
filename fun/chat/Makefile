@@ -3,20 +3,27 @@ STRIP = $(CROSS_COMPILER)strip
 OBJ_DIR = build/$(ARCH)/obj
 BIN_DIR = build/$(ARCH)/bin
 
+HOST = x86_64
+
+# ifeq ($(CROSS_COMPILE),x86_64-linux-gnu-)
+# HOST=x86_64-linux-gnu
+# endif
+
 SERVER_SRC_DIR = ./server
 SERVER_HDR_DIR = ./server
 
 TRANSPORT_SRC_DIR = ./transport/include
 TRANSPORT_HDR_DIR = ./transport/src
-TRANSPORT_LIB_DIR = ./transport/lib
+TRANSPORT_LIB_DIR = ./transport/.build/$(HOST)/.pbyte
+TRANSPORT_ZMQ_LIB =./transport/.build/$(HOST)/.zmq/usr/local/lib
 
 LOGGER_SRC_DIR = ./logger
 LOGGER_HDR_DIR = ./logger
 
 CFLAGS  = -g
 INC     = -I $(SERVER_HDR_DIR) -I $(TRANSPORT_SRC_DIR) -I $(LOGGER_HDR_DIR)
-LDFLAGS = -L $(TRANSPORT_LIB_DIR)
-LIBS    = -lpthread -lrt -lpbyte
+LDFLAGS = -L $(TRANSPORT_LIB_DIR) -L $(TRANSPORT_ZMQ_LIB)
+LIBS    = -lpthread -lrt -lpbyte -lzmq
 
 SERVER_TARGET = $(BIN_DIR)/chat_server
 
