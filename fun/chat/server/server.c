@@ -19,7 +19,7 @@ void init_thread_test(void)
 
 static int message_handler(int identity_idx, pb_dialog_t *dialog, char *data, int size)
 {
-	log_info("recv new message from %d", identity_idx);
+	log_info("recv new message from %d: '%s'", identity_idx, data? data:"NULL");
 
 	pb_transport_send(&transport, identity_idx, dialog, data, size);
 

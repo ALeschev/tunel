@@ -26,7 +26,7 @@ configure_zmq:
 	                     --disable-shared --without-libsodium
 
 check_zmq:
-	if [ ! -d "$(BUILD_DIR)" ];   \
+	if [ ! -d "$(BUILD_DIR)/usr/local/lib" ];   \
 	then                            \
 	        make platform=$(platform) CROSS_COMPILE=$(CROSS_COMPILE) HOST=$(HOST) build_zmq; \
 	fi

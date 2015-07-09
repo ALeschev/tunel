@@ -12,7 +12,7 @@ void init_thread_test(void)
 
 static int message_handler(pb_dialog_t *dialog, char *data, int size)
 {
-	log_info("recv new message");
+	log_info("recv new message: '%s'", data? data:"NULL");
 
 	return 0;
 }
@@ -50,6 +50,7 @@ int main(void)
 		sleep(1);
 		wait_count--;
 
+		sprintf(asd, "cli test %d", wait_count);
 		pb_transport_send(&pbyte_client, -1, NULL, asd, sizeof (asd));
 	}
 
