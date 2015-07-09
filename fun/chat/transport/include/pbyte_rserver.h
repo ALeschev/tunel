@@ -35,5 +35,6 @@ typedef struct {
 int rserver_start(pb_rserver_t **rserver_ptr, pb_params_t *server_params);
 int rserver_stop(pb_rserver_t *rserver);
 int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog, char *data, int size);
+int rserver_send_broadcast (pb_rserver_t *rserver, pb_dialog_t *dialog, char *data, int size);
 
 #endif

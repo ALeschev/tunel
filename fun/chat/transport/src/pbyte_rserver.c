@@ -1142,3 +1142,32 @@ int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog,
 
 	return 0;
 }
+
+int rserver_send_broadcast (pb_rserver_t *rserver, pb_dialog_t *dialog,
+                            char *data, int size)
+{
+	int i, identity_idx;
+
+	/* emm... and what we can do? */
+	if (!rserver)
+		return -1;
+
+	pb_identity_lock();
+	{
+		for(i = 0; i < IDENTITY_MAX; i++)
+		{
+			if (!rserver->pb_identity_table.identity[i].active)
+				continue;
+
+			identity_idx = rserver->pb_identity_table.identity[i].idx;
+			pb_identity_unlock();
+
+			rserver_send (rserver, identity_idx, dialog, data, size);
+
+			pb_identity_lock();
+		}
+	}
+	pb_identity_unlock();
+
+	return 0;
+}

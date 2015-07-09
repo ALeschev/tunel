@@ -4,7 +4,7 @@
 #define MAX_ALPHANUMS 32
 #define PBYTE_STR_LEN 255
 #define PBYTE_IDENTITY_LEN 32
-#define IDENTITY_MAX 2
+#define IDENTITY_MAX 32
 
 // #define TIME_DEBUG
 // #define QUEUE_DEBUG
@@ -107,6 +107,10 @@ int pb_transport_send (pb_transport_t *transport,
                        int identity_idx,
                        pb_dialog_t *dialog,
                        char *data, int size);
+
+int pb_transport_broadcast (pb_transport_t *transport,
+                            pb_dialog_t *dialog,
+                            char *data, int size);
 
 #if defined (__cplusplus)
 }

@@ -11,8 +11,6 @@
 #include "pbyte_dclient.h"
 #include "pbyte_log.h"
 
-/*----------------------------------------------------------------------------*/
-
 int pb_transport_start(pb_transport_t *transport, pb_params_t *transport_params)
 {
 	int rc = -1;
@@ -36,8 +34,6 @@ int pb_transport_start(pb_transport_t *transport, pb_params_t *transport_params)
 	return rc;
 }
 
-/*----------------------------------------------------------------------------*/
-
 int pb_transport_stop(pb_transport_t *transport)
 {
 	int rc = -1;
@@ -59,14 +55,15 @@ int pb_transport_stop(pb_transport_t *transport)
 	return rc;
 }
 
-/*----------------------------------------------------------------------------*/
-
 int pb_transport_send (pb_transport_t *transport,
                        int identity_idx,
                        pb_dialog_t *dialog,
                        char *data, int size)
 {
 	int rc = -1;
+
+	if (!transport)
+		return -99;
 
 	// if (!transport || !data || (size <= 0))
 	// 	return -99;
@@ -85,4 +82,19 @@ int pb_transport_send (pb_transport_t *transport,
 	return rc;
 }
 
-/*----------------------------------------------------------------------------*/
+int pb_transport_broadcast (pb_transport_t *transport,
+                            pb_dialog_t *dialog,
+                            char *data, int size)
+{
+	int rc = -1;
+
+	if (!transport)
+		return -99;
+
+	if (transport->mode == ePBYTE_SERVER)
+	{
+		rc = rserver_send_broadcast ((pb_rserver_t *)transport->choise.rserver, dialog, data, size);
+	}
+
+	return rc;
+}

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "logger.h"
 #include "pbyte_transport.h"
@@ -20,18 +21,19 @@ static int message_handler(pb_dialog_t *dialog, char *data, int size)
 int main(void)
 {
 	int res = -1, wait_count = 60;
+	int size;
 	pb_transport_t pbyte_client;
 	pb_params_t client_params;
-	char asd[] = "cli test";
+	char buff[1024] = {0};
 
 	memset(&pbyte_client, 0, sizeof (pbyte_client));
 	memset(&client_params, 0, sizeof (client_params));
 
 	client_params.mode = ePBYTE_CLIENT;
 	client_params.io_threads = 1;
-	client_params.addr = "5.128.41.70";
+	client_params.addr = "127.0.0.1";
 	client_params.port = 1230;
-	client_params.logger_prio = 99;
+	client_params.logger_prio = eLOG_ERR;
 
 	client_params.logger = &log_print;
 	client_params.thread_init = &init_thread_test;
@@ -45,13 +47,34 @@ int main(void)
 		return -1;
 	}
 
-	while (wait_count > 0)
+	while(fgets(buff, 1023, stdin)) /* while(1) ? :) */
 	{
-		sleep(1);
-		wait_count--;
+		printf ("> ");
 
-		sprintf(asd, "cli test %d", wait_count);
-		pb_transport_send(&pbyte_client, -1, NULL, asd, sizeof (asd));
+		size = strlen(buff);
+
+		if ((size == 1) && (buff[0] == '\n'))
+		{
+			continue;
+		}
+		// scanf("%1023s", buff);
+		// sleep(1);
+		// wait_count--;
+
+		while(size && (buff[size-1] == '\n'))
+			size--;
+
+		buff[size++] = 0;
+
+		if (!strcmp(buff, "close"))
+		{
+			break;
+		}
+
+		pb_transport_send(&pbyte_client, -1, NULL, buff, strlen (buff));
+
+		memset(buff, 0, sizeof (buff));
+		fflush(stdin);
 	}
 
 	pb_transport_stop(&pbyte_client);

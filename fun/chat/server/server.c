@@ -31,6 +31,8 @@ int main(void)
 	int wait_count = 120;
 	int res;
 	int i;
+	int size;
+	char buff[1024] = {0};
 	char nickname[MAX_STR_LEN] = {0};
 	c_client_t *test_client;
 	c_client_base_t client_base = {NULL, 0};
@@ -46,9 +48,9 @@ int main(void)
 
 	params.mode = ePBYTE_SERVER;
 	params.io_threads = 1;
-	params.addr = "192.168.1.34";
+	params.addr = "127.0.0.1";
 	params.port = 1230;
-	params.logger_prio = 99;
+	params.logger_prio = eLOG_ERR;
 	params.ack_timeout = 1;
 	params.conn_check_timeout = 5;
 	params.worker_count = 1;
@@ -66,31 +68,55 @@ int main(void)
 		return -1;
 	}
 
-	res = c_base_init(&client_base, MAX_CLIENTS);
-	if (res != 0)
-	{
-		log_error("failed to init client base [%d]", res);
-		return -2;
-	}
+	// res = c_base_init(&client_base, MAX_CLIENTS);
+	// if (res != 0)
+	// {
+	// 	log_error("failed to init client base [%d]", res);
+	// 	return -2;
+	// }
 
-	for (i = 0; i < MAX_CLIENTS; i++)
+	// for (i = 0; i < MAX_CLIENTS; i++)
+	// {
+	// 	sprintf (nickname, "test_nick%d", i);
+	// 	test_client = c_client_add(&client_base, i, nickname, strlen(nickname));
+	// 	if (!test_client)
+	// 	{
+	// 		log_error("failed to add client: %d %s", i, nickname);
+	// 		continue;
+	// 	}
+	// }
+
+	while(fgets(buff, 1023, stdin)) /* while(1) ? :) */
 	{
-		sprintf (nickname, "test_nick%d", i);
-		test_client = c_client_add(&client_base, i, nickname, strlen(nickname));
-		if (!test_client)
+		printf ("> ");
+
+		size = strlen(buff);
+
+		if ((size == 1) && (buff[0] == '\n'))
 		{
-			log_error("failed to add client: %d %s", i, nickname);
 			continue;
 		}
+		// scanf("%1023s", buff);
+		// sleep(1);
+		// wait_count--;
+
+		while(size && (buff[size-1] == '\n'))
+			size--;
+
+		buff[size++] = 0;
+
+		if (!strcmp(buff, "close"))
+		{
+			break;
+		}
+
+		pb_transport_broadcast(&transport, NULL, buff, strlen (buff));
+
+		memset(buff, 0, sizeof (buff));
+		fflush(stdin);
 	}
 
-	while (wait_count > 0)
-	{
-		sleep(1);
-		wait_count--;
-	}
-
-	c_base_close(&client_base);
+	// c_base_close(&client_base);
 
 	pb_transport_stop(&transport);
 
