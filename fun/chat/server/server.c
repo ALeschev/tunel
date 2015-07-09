@@ -47,7 +47,7 @@ int main(void)
 	params.mode = ePBYTE_SERVER;
 	params.io_threads = 1;
 	params.addr = "192.168.1.34";
-	params.port = 1234;
+	params.port = 1230;
 	params.logger_prio = 99;
 	params.ack_timeout = 1;
 	params.conn_check_timeout = 5;
