@@ -5,7 +5,7 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
- 
+
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
@@ -36,6 +36,8 @@
 #define KBRWN "\x1B[0;33m"
 #define KLYEL "\x1B[1;33m"
 
+#define KBLINK "\x1B[5m"
+
 void log_print (int level, char *format, ...)
 {
     va_list ap;
@@ -54,8 +56,8 @@ void log_print (int level, char *format, ...)
 
     switch(level)
     {
-        case eLOG_CRIT: p = "[" KLRED "CRIT" KNRM "] "; break;
-        case eLOG_ERR:  p = "[" KRED  "ERR " KNRM "] "; break;
+        case eLOG_CRIT: p = "[" KBLINK KLRED "CRIT" KNRM "] "; break;
+        case eLOG_ERR:  p = "[" KBLINK KLRED "ERR " KNRM "] "; break;
         case eLOG_WARN: p = "[" KLYEL "WARN" KNRM "] "; break;
         case eLOG_INFO: p = "[" KGRN  "INFO" KNRM "] "; break;
         case eLOG_CUT:  p = "[" KLCYN "CUT " KNRM "] "; break;
