@@ -481,15 +481,15 @@ rserver_identity_control_check(pb_rserver_t *rserver, int delta_check)
 				pb_msg_set_identity (pb_msg, p_identity);
 				pb_msg_set_types (pb_msg, CONUPD, 0);
 			}
-			pb_identity_unlock();
-
-			if (rserver_msg_send (rserver, pb_msg) == 0)
-			{
-				p_control->wait_ack = 1;
-			}
-
-			pb_msg = NULL;
 		}
+		pb_identity_unlock();
+
+		if (rserver_msg_send (rserver, pb_msg) == 0)
+		{
+			p_control->wait_ack = 1;
+		}
+
+		pb_msg = NULL;
 	}
 }
 
@@ -1070,13 +1070,13 @@ int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog,
 	pb_msg_t *pb_conrsp = NULL;
 	char identity_str[256] = {0};
 
-	if (!rserver || !dialog || !data || (size <= 0) ||
+	if (!rserver || !/*dialog ||*/ !data || (size <= 0) ||
 	    (identity_idx < 0 || IDENTITY_MAX <= identity_idx))
 	{
 		pb_log (rserver, PBYTE_ERR,
 		        "Message send failed. "
 		        "Arg error: <%d> <%p> <%p> [%d]",
-		        identity_idx, dialog, data, size);
+		        identity_idx, /*dialog, */data, size);
 
 		return rserver_proc_error (rserver, TRANSFER, identity_idx, dialog, data, size);
 	}
@@ -1097,10 +1097,18 @@ int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog,
 		} else {
 			pb_pb_identity_to_str(p_identity, 1, identity_str, sizeof (identity_str));
 
-			pb_log (rserver, PBYTE_INFO,
-			        "New message for %s: %.*s",
-			        identity_str,
-			        (int)dialog->dialog_len, dialog->dialog_id);
+			if (dialog)
+			{
+				pb_log (rserver, PBYTE_INFO,
+				        "New message for %s: '%.*s'",
+				        identity_str,
+				        (int)dialog->dialog_len, dialog->dialog_id);
+			}
+			else
+			{
+				pb_log (rserver, PBYTE_WARN,
+				        "New message for %s: '%p'", identity_str, dialog);
+			}
 		}
 
 		if (pb_msg_init (&pb_conrsp, size) != 0)
@@ -1118,9 +1126,12 @@ int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog,
 
 		pb_msg_set_identity (pb_conrsp, p_identity);
 
-		pb_msg_set_dialog (&pb_conrsp->identity,
-		                  dialog->dialog_id,
-		                  dialog->dialog_len);
+		if (dialog)
+		{
+			pb_msg_set_dialog (&pb_conrsp->identity,
+			                  dialog->dialog_id,
+			                  dialog->dialog_len);
+		}
 
 		pb_msg_set_types (pb_conrsp, TRANSFER, CONTROLCHANNEL);
 	}

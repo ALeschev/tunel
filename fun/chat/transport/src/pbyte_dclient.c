@@ -43,6 +43,8 @@ void pb_print_buff (pb_logger_t *logger, int lvl, const char *descript, const ch
 void pb_msg_print(pb_logger_t *logger, int lvl, const char *desc, const pb_msg_t *pb_msg);
 const char *pb_pb_msg_type_to_str(pb_msg_type_t type);
 
+static int dclient_msg_send (pb_dclient_t *dclient, pb_msg_t *pb_msg);
+
 /*----------------------------------------------------------------------------*/
 
 static char *pb_dclient_statate_str (int state)
@@ -172,6 +174,7 @@ dclient_reconnect_timeout_update (pb_dclient_t *dclient)
 int dclient_stop (pb_dclient_t *dclient)
 {
 	int rc = 0;
+	pb_msg_t *pb_msg = NULL;
 
 	if (!dclient || dclient->state == eNOT_INITED)
 		return 0;
@@ -179,6 +182,23 @@ int dclient_stop (pb_dclient_t *dclient)
 	pb_log (dclient, PBYTE_WARN,
 	        "%s: Stop detected",
 	        dclient_info_str(dclient));
+
+	if (dclient->state == eCONNECTED)
+	{
+		if (pb_msg_init (&pb_msg, 0) != 0)
+		{
+			pb_log (dclient, PBYTE_WARN,
+			          "%s: Send message failed",
+			          dclient_info_str(dclient));
+			return -3;
+		}
+
+		pb_msg_set_identity (pb_msg, &dclient->identity);
+
+		pb_msg_set_types (pb_msg, CONCLOSE, CONTROLCHANNEL);
+
+		dclient_msg_send (dclient, pb_msg);
+	}
 
 	dclient_statate_set (dclient, eDISCONNECTED);
 	dclient_statate_set (dclient, eNOT_INITED);
@@ -691,12 +711,13 @@ int dclient_send (pb_dclient_t *dclient, pb_dialog_t *dialog, char *data, int si
 {
 	pb_msg_t *pb_msg = NULL;
 
-	if (!dclient || !dialog || !data || (size <= 0))
+	if (!dclient || /*!dialog ||*/ !data || (size <= 0))
 	{
 		pb_log (dclient, PBYTE_ERR,
 		        "Message send failed. "
-		        "Arg error: <%p> <%p> [%d]",
-		        data, dialog, size);
+		        // "Arg error: <%p> <%p> [%d]",
+		        "Arg error: <%p> [%d]",
+		        data, /*dialog, */size);
 
 		if (dclient)
 			dclient_proc_error (dclient, TRANSFER, dialog, data, size);
@@ -704,12 +725,21 @@ int dclient_send (pb_dclient_t *dclient, pb_dialog_t *dialog, char *data, int si
 		return -1;
 	}
 
-	pb_log (dclient, PBYTE_INFO,
-	        "%s: New message. Dialog '%.*s'",
-	        dclient_info_str(dclient),
-	        (int)dialog->dialog_len, dialog->dialog_id);
+	if (dialog)
+	{
+		pb_log (dclient, PBYTE_INFO,
+		        "%s: New message. Dialog '%.*s'",
+		        dclient_info_str(dclient),
+		        (int)dialog->dialog_len, dialog->dialog_id);
+	}
+	else
+	{
+		pb_log (dclient, PBYTE_WARN,
+		        "%s: New message. Dialog '%p'",
+		        dclient_info_str(dclient), dialog);
+	}
 
-	if (dclient->state != eCONNECTED)
+	if (dclient->state <= eDISCONNECTED)
 	{
 		pb_log (dclient, PBYTE_ERR,
 		        "%s: Message send failed. Bad state",
@@ -717,9 +747,12 @@ int dclient_send (pb_dclient_t *dclient, pb_dialog_t *dialog, char *data, int si
 		return -2;
 	}
 
-	pb_msg_set_dialog (&dclient->identity,
-	                   dialog->dialog_id,
-	                   dialog->dialog_len);
+	if (dialog)
+	{
+		pb_msg_set_dialog (&dclient->identity,
+		                   dialog->dialog_id,
+		                   dialog->dialog_len);
+	}
 
 	if (pb_msg_init (&pb_msg, size) != 0)
 	{
@@ -733,9 +766,12 @@ int dclient_send (pb_dclient_t *dclient, pb_dialog_t *dialog, char *data, int si
 
 	pb_msg_set_identity (pb_msg, &dclient->identity);
 
-	pb_msg_set_dialog (&pb_msg->identity,
-	                   dclient->identity.dialog.dialog_id,
-	                   dclient->identity.dialog.dialog_len);
+	if (dialog)
+	{
+		pb_msg_set_dialog (&pb_msg->identity,
+		                   dclient->identity.dialog.dialog_id,
+		                   dclient->identity.dialog.dialog_len);
+	}
 
 	pb_msg_set_types (pb_msg, TRANSFER, CONTROLCHANNEL);
 

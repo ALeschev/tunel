@@ -2,6 +2,10 @@
  * LAV by fun
  */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+ 
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
@@ -9,6 +13,8 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdarg.h>
+#include <unistd.h>
+
 
 #include "logger.h"
 
