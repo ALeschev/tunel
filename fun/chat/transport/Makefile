@@ -1,6 +1,6 @@
 AR=$(CROSS_COMPILE)ar
 
-LIB_DIR = ../lib/$(ARCH)
+LIB_DIR = ./lib/$(ARCH)
 
 all: link
 

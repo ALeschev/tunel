@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "log.h"
+#include "logger.h"
 #include "client_base.h"
 
 #define return_if_invalid(prefix, condition, return_code)        \

@@ -1,6 +1,8 @@
 #ifndef _PBYTE_LOG_H_
 #define _PBYTE_LOG_H_
 
+#include "logger.h"
+
 #define pb_log(base, prio, format, ...) \
               do { \
                 if (base && pb_log_check_enable(&base->logger, prio))\
@@ -17,12 +19,22 @@
                 }\
               }while(0)
 
-enum PBYTE_LOG_PRIOS { PBYTE_CRIT = 0,
-                       PBYTE_ERR,
-                       PBYTE_WARN,
-                       PBYTE_INFO,
-                       PBYTE_CUT,
-                       PBYTE_FULL};
+// enum PBYTE_LOG_PRIOS { PBYTE_CRIT = 0,
+//                        PBYTE_ERR,
+//                        PBYTE_WARN,
+//                        PBYTE_INFO,
+//                        PBYTE_CUT,
+//                        PBYTE_FULL};
+
+enum PBYTE_LOG_PRIOS
+{
+    PBYTE_CRIT = eLOG_CRIT,
+    PBYTE_ERR  = eLOG_ERR,
+    PBYTE_WARN = eLOG_WARN,
+    PBYTE_INFO = eLOG_INFO,
+    PBYTE_CUT  = eLOG_CUT,
+    PBYTE_FULL = eLOG_FULL
+};
 
 typedef struct {
   char prefix[16];

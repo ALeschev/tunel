@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "log.h"
+#include "logger.h"
 #include "message.h"
 
 m_message_t *m_message_init(m_header_t *header, uint8_t *data, size_t len)

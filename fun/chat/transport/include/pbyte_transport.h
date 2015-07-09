@@ -6,8 +6,8 @@
 #define PBYTE_IDENTITY_LEN 32
 #define IDENTITY_MAX 2
 
-#define TIME_DEBUG
-#define QUEUE_DEBUG
+// #define TIME_DEBUG
+// #define QUEUE_DEBUG
 // #define DYNAMIC_IDENTITY
 
 /* protocol structures */

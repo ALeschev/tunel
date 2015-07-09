@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdarg.h>
 
-#include "log.h"
+#include "logger.h"
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -19,7 +19,16 @@
 #define KBLU  "\x1B[34m"
 #define KMAG  "\x1B[35m"
 #define KCYN  "\x1B[36m"
+#define KGRY  "\x1B[0;30m"
 #define KWHT  "\x1B[37m"
+
+#define KLBLU "\x1B[1;34m"
+#define KLGRN "\x1B[1;32m"
+#define KLCYN "\x1B[1;36m"
+#define KLRED "\x1B[1;31m"
+#define KLMAG "\x1B[1;35m"
+#define KBRWN "\x1B[0;33m"
+#define KLYEL "\x1B[1;33m"
 
 void log_print (int level, char *format, ...)
 {
@@ -39,11 +48,13 @@ void log_print (int level, char *format, ...)
 
     switch(level)
     {
-        case eLOG_INFO:  p = "[" KGRN"INFO "KNRM "] "; break;
-        case eLOG_DEBUG: p = "[" KMAG"DEBUG"KNRM "] "; break;
-        case eLOG_WARN:  p = "[" KYEL"WARN "KNRM "] "; break;
-        case eLOG_ERR:   p = "[" KRED"ERR  "KNRM "] "; break;
-        default:         p = "[" KWHT"?????"KNRM "] "; break;
+        case eLOG_CRIT: p = "[" KLRED "CRIT" KNRM "] "; break;
+        case eLOG_ERR:  p = "[" KRED  "ERR " KNRM "] "; break;
+        case eLOG_WARN: p = "[" KLYEL "WARN" KNRM "] "; break;
+        case eLOG_INFO: p = "[" KGRN  "INFO" KNRM "] "; break;
+        case eLOG_CUT:  p = "[" KLCYN "CUT " KNRM "] "; break;
+        case eLOG_FULL: p = "[" KLBLU "FULL" KNRM "] "; break;
+        default:        p = "[" KWHT  "????" KNRM "] "; break;
     }
 
     sprintf(str, "%s %d %s", timestamp, syscall(SYS_gettid), p);

@@ -3,18 +3,26 @@ STRIP = $(CROSS_COMPILER)strip
 OBJ_DIR = build/$(ARCH)/obj
 BIN_DIR = build/$(ARCH)/bin
 
-SRC_DIR = ./source
-HDR_DIR = ./source
+SERVER_SRC_DIR = ./server
+SERVER_HDR_DIR = ./server
 
-INC = -I $(HDR_DIR)
-CFLAGS = -g
-LIBS = -lpthread -lrt
+TRANSPORT_SRC_DIR = ./transport/include
+TRANSPORT_HDR_DIR = ./transport/src
+TRANSPORT_LIB_DIR = ./transport/lib
+
+LOGGER_SRC_DIR = ./logger
+LOGGER_HDR_DIR = ./logger
+
+CFLAGS  = -g
+INC     = -I $(SERVER_HDR_DIR) -I $(TRANSPORT_SRC_DIR) -I $(LOGGER_HDR_DIR)
+LDFLAGS = -L $(TRANSPORT_LIB_DIR)
+LIBS    = -lpthread -lrt -lpbyte
 
 SERVER_TARGET = $(BIN_DIR)/chat_server
 
 SERVER_OBJ += $(OBJ_DIR)/server.o \
               $(OBJ_DIR)/client_base.o \
-              $(OBJ_DIR)/log.o \
+              $(OBJ_DIR)/logger.o \
               $(OBJ_DIR)/message.o \
               $(OBJ_DIR)/transport.o
 
@@ -22,20 +30,20 @@ SERVER_OBJ += $(OBJ_DIR)/server.o \
 # Dependence
 #
 
-LOG_DEPS         = $(SRC_DIR)/log.c \
-                   $(HDR_DIR)/log.h
+LOGGER_DEPS      = $(LOGGER_SRC_DIR)/logger.c \
+                   $(LOGGER_HDR_DIR)/logger.h
 
-MESSAGE_DEPS     = $(SRC_DIR)/message.c \
-                   $(HDR_DIR)/message.h
+MESSAGE_DEPS     = $(SERVER_SRC_DIR)/message.c \
+                   $(SERVER_HDR_DIR)/message.h
 
-TRANSPORT_DEPS   = $(SRC_DIR)/transport.c \
-                   $(HDR_DIR)/transport.h
+TRANSPORT_DEPS   = $(SERVER_SRC_DIR)/transport.c \
+                   $(SERVER_HDR_DIR)/transport.h
 
-CLIENT_BASE_DEPS = $(SRC_DIR)/client_base.c \
-                   $(HDR_DIR)/client_base.h
+CLIENT_BASE_DEPS = $(SERVER_SRC_DIR)/client_base.c \
+                   $(SERVER_HDR_DIR)/client_base.h
 
-SERVER_DEPS      = $(SRC_DIR)/server.c \
-                   $(LOG_DEPS) \
+SERVER_DEPS      = $(SERVER_SRC_DIR)/server.c \
+                   $(LOGGER_DEPS) \
                    $(MESSAGE_DEPS) \
                    $(TRANSPORT_DEPS) \
                    $(CLIENT_BASE_DEPS)
@@ -51,7 +59,7 @@ check_dir:
 #
 
 $(SERVER_TARGET): $(SERVER_OBJ) check_dir
-	$(CC) $(CFLAGS) -o $@ $(SERVER_OBJ) $(LIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(SERVER_OBJ) $(LIBS)
 	cp $(SERVER_TARGET) $(SERVER_TARGET)_uns
 	$(STRIP) $(SERVER_TARGET)
 
@@ -65,7 +73,7 @@ $(OBJ_DIR)/server.o : $(SERVER_DEPS) check_dir
 $(OBJ_DIR)/client_base.o : $(CLIENT_BASE_DEPS) check_dir
 	$(CC) $(CFLAGS) $(INC) -c -o $@  $<
 
-$(OBJ_DIR)/log.o : $(LOG_DEPS) check_dir
+$(OBJ_DIR)/logger.o : $(LOGGER_DEPS) check_dir
 	$(CC) $(CFLAGS) $(INC) -c -o $@  $<
 
 $(OBJ_DIR)/message.o : $(MESSAGE_DEPS) check_dir

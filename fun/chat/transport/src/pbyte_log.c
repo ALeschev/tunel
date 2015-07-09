@@ -50,7 +50,7 @@ void pb_trace (pb_logger_t *p_logger, int level, char *format, ...)
 
 	if (!p_logger)
 		return;
-
+#if 1
 	// switch(level)
 	// {
 	// 	case PBYTE_CRIT: p = "[CRIT] "; break;
@@ -76,6 +76,7 @@ void pb_trace (pb_logger_t *p_logger, int level, char *format, ...)
 	//str[size++] = '\r';
 	// str[size++] = '\n';
 	str[size++] = 0;
+#endif
 
 	if (p_logger->logger)
 		p_logger->logger(level, "%s", str);
