@@ -1070,12 +1070,13 @@ int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog,
 	pb_msg_t *pb_conrsp = NULL;
 	char identity_str[256] = {0};
 
-	if (!rserver || !/*dialog ||*/ !data || (size <= 0) ||
+	if (!rserver || /*!dialog ||*/ !data || (size <= 0) ||
 	    (identity_idx < 0 || IDENTITY_MAX <= identity_idx))
 	{
 		pb_log (rserver, PBYTE_ERR,
 		        "Message send failed. "
-		        "Arg error: <%d> <%p> <%p> [%d]",
+		        // "Arg error: <%d> <%p> <%p> [%d]",
+		        "Arg error: <%d> <%p> [%d]",
 		        identity_idx, /*dialog, */data, size);
 
 		return rserver_proc_error (rserver, TRANSFER, identity_idx, dialog, data, size);

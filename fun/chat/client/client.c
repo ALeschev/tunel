@@ -29,7 +29,7 @@ int main(void)
 
 	client_params.mode = ePBYTE_CLIENT;
 	client_params.io_threads = 1;
-	client_params.addr = "192.168.23.51";
+	client_params.addr = "5.128.41.70";
 	client_params.port = 1234;
 	client_params.logger_prio = 99;
 

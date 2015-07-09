@@ -21,7 +21,7 @@ static int message_handler(int identity_idx, pb_dialog_t *dialog, char *data, in
 {
 	log_info("recv new message from %d", identity_idx);
 
-	pb_transport_send(&transport, identity_idx, dialog, NULL, 0);
+	pb_transport_send(&transport, identity_idx, dialog, data, size);
 
 	return 0;
 }
@@ -46,7 +46,7 @@ int main(void)
 
 	params.mode = ePBYTE_SERVER;
 	params.io_threads = 1;
-	params.addr = "192.168.23.51";
+	params.addr = "192.168.1.34";
 	params.port = 1234;
 	params.logger_prio = 99;
 	params.ack_timeout = 1;

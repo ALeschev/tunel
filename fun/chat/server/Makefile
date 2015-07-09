@@ -25,7 +25,7 @@ LOGGER_HDR_DIR = $(PROJ_DIR)/logger
 CFLAGS  = -g -Wno-write-strings
 INC     = -I $(SERVER_HDR_DIR) -I $(TRANSPORT_SRC_DIR) -I $(LOGGER_HDR_DIR)
 LDFLAGS = -L $(TRANSPORT_LIB_DIR) -L $(TRANSPORT_ZMQ_LIB)
-LIBS    = -lpthread -lrt -lpbyte -lzmq -lpthread
+LIBS    = -lpthread -lpbyte -lzmq -lpthread
 
 SERVER_TARGET = $(BIN_DIR)/chat_server
 

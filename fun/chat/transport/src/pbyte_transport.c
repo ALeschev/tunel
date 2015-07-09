@@ -68,8 +68,8 @@ int pb_transport_send (pb_transport_t *transport,
 {
 	int rc = -1;
 
-	if (!transport || !data || (size <= 0))
-		return -99;
+	// if (!transport || !data || (size <= 0))
+	// 	return -99;
 
 	if (transport->mode == ePBYTE_SERVER)
 	{

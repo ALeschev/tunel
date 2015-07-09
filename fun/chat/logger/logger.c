@@ -65,7 +65,7 @@ void log_print (int level, char *format, ...)
         default:        p = "[" KWHT  "????" KNRM "] "; break;
     }
 
-    sprintf(str, "%s %d %s", timestamp, syscall(SYS_gettid), p);
+    sprintf(str, "%s %ld %s", timestamp, syscall(SYS_gettid), p);
 
     length = strlen(str);
     size = sizeof(str) - length - 10;
