@@ -98,3 +98,19 @@ int pb_transport_broadcast (pb_transport_t *transport,
 
 	return rc;
 }
+
+void pb_transport_show_connections(pb_transport_t *transport)
+{
+	if (!transport)
+		return;
+
+	if (transport->mode == ePBYTE_SERVER)
+	{
+		rserver_show_connections ((pb_rserver_t *)transport->choise.rserver);
+	}
+}
+
+void pb_transport_server_set_log_prio(pb_transport_t *transport, int prio)
+{
+	rserver_set_log_prio((pb_rserver_t *)transport->choise.rserver, prio);
+}

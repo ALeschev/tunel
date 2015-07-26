@@ -37,16 +37,12 @@ CLIENT_OBJ += $(OBJ_DIR)/client.o \
 LOGGER_DEPS      = $(LOGGER_SRC_DIR)/logger.c \
                    $(LOGGER_HDR_DIR)/logger.h
 
-# TRANSPORT_DEPS   = $(CLIENT_SRC_DIR)/transport.c \
-#                    $(CLIENT_HDR_DIR)/transport.h
-
-# CLIENT_BASE_DEPS = $(CLIENT_SRC_DIR)/client_base.c \
-#                    $(CLIENT_HDR_DIR)/client_base.h
+# MESSAGE_DEPS     = $(SERVER_SRC_DIR)/message.c \
+#                    $(SERVER_SRC_DIR)/message.h
 
 CLIENT_DEPS      = $(CLIENT_SRC_DIR)/client.c \
                    $(LOGGER_DEPS)
-                   # $(TRANSPORT_DEPS) \
-                   # $(CLIENT_BASE_DEPS)
+                   # $(MESSAGE_DEPS)
 
 all: check_dir $(CLIENT_TARGET)
 
@@ -70,14 +66,11 @@ $(CLIENT_TARGET): $(CLIENT_OBJ) check_dir
 $(OBJ_DIR)/client.o : $(CLIENT_DEPS) check_dir
 	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
 
-# $(OBJ_DIR)/client_base.o : $(CLIENT_BASE_DEPS) check_dir
+# $(OBJ_DIR)/message.o : $(MESSAGE_DEPS) check_dir
 # 	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
 
 $(OBJ_DIR)/logger.o : $(LOGGER_DEPS) check_dir
 	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
-
-# $(OBJ_DIR)/transport.o : $(TRANSPORT_DEPS) check_dir
-# 	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)

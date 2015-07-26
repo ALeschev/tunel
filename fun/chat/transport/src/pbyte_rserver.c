@@ -463,7 +463,7 @@ rserver_identity_control_check(pb_rserver_t *rserver, int delta_check)
 					return;
 				}
 
-				pb_log (rserver, PBYTE_WARN,
+				pb_log (rserver, PBYTE_INFO,
 				        "%s: %d seconds of silence. "
 				        "Send CONUPD",
 				       identity_str, CONNECTION_TIMEOUT/SEC_1);
@@ -1107,7 +1107,7 @@ int rserver_send (pb_rserver_t *rserver, int identity_idx, pb_dialog_t *dialog,
 			}
 			else
 			{
-				pb_log (rserver, PBYTE_WARN,
+				pb_log (rserver, PBYTE_INFO,
 				        "New message for %s: '%p'", identity_str, dialog);
 			}
 		}
@@ -1170,4 +1170,40 @@ int rserver_send_broadcast (pb_rserver_t *rserver, pb_dialog_t *dialog,
 	pb_identity_unlock();
 
 	return 0;
+}
+
+void rserver_show_connections(pb_rserver_t *rserver)
+{
+	int i;
+	char identity_str[256] = {0};
+	pb_identity_t *p_identity = NULL;
+
+	if (!rserver)
+		return;
+
+	pb_identity_lock();
+	{
+		for(i = 0; i < IDENTITY_MAX; i++)
+		{
+			// if (!rserver->pb_identity_table.identity[i].active)
+			// 	continue;
+
+			p_identity = &rserver->pb_identity_table.identity[i];
+
+			pb_pb_identity_to_str(p_identity, 1, identity_str, sizeof (identity_str));
+
+			pb_trace (&rserver->logger, PBYTE_INFO,
+			          "active '%s'; idx %d; identity '%s'[%d];",
+			          p_identity->active? "yes":"no ", p_identity->idx, identity_str, p_identity->identity_len);
+		}
+	}
+	pb_identity_unlock();
+}
+
+void rserver_set_log_prio(pb_rserver_t *rserver, int prio)
+{
+	if (rserver)
+	{
+		pb_log_set_prio(&rserver->logger, prio);
+	}
 }

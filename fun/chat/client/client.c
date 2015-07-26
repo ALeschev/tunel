@@ -33,7 +33,7 @@ int main(void)
 	client_params.io_threads = 1;
 	client_params.addr = "127.0.0.1";
 	client_params.port = 1230;
-	client_params.logger_prio = eLOG_ERR;
+	client_params.logger_prio = eLOG_WARN;
 
 	client_params.logger = &log_print;
 	client_params.thread_init = &init_thread_test;

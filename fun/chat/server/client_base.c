@@ -76,11 +76,12 @@ int c_base_close(c_client_base_t *base)
 	}
 
 	free(base->clients);
+	base->clients = NULL;
 
 	return 0;
 }
 
-c_client_t *c_client_add(c_client_base_t *base, int fd, char *nickname, size_t len)
+c_client_t *c_client_add(c_client_base_t *base, int trid, char *nickname, size_t len)
 {
 	int i;
 	size_t nick_len = MAX_STR_LEN - 1;
@@ -99,7 +100,7 @@ c_client_t *c_client_add(c_client_base_t *base, int fd, char *nickname, size_t l
 	{
 		if (base->clients[i].state == eCSTATE_INITED)
 		{
-			base->clients[i].fd = fd;
+			base->clients[i].trid = trid;
 			base->clients[i].id = i;
 			base->clients[i].nick_len = nick_len;
 			strncpy(base->clients[i].nickname, nickname, nick_len);
@@ -143,7 +144,7 @@ c_client_t *c_client_get_by_id(c_client_base_t *base, uint16_t id)
 	return NULL;
 }
 
-c_client_t *c_client_get_by_fd(c_client_base_t *base, int fd)
+c_client_t *c_client_get_by_trid(c_client_base_t *base, int trid)
 {
 	int i;
 
@@ -152,9 +153,9 @@ c_client_t *c_client_get_by_fd(c_client_base_t *base, int fd)
 	for(i = 0; i < base->writes; i++)
 	{
 		if ((base->clients[i].state == eCSTATE_CONNECTED)
-			&& (base->clients[i].fd == fd))
+			&& (base->clients[i].trid == trid))
 		{
-			return &base->clients[i];
+				return &base->clients[i];
 		}
 	}
 
@@ -181,4 +182,33 @@ c_client_t *c_client_get_by_nick(c_client_base_t *base, char *nickname, size_t l
 	}
 
 	return NULL;
+}
+
+void c_base_show(c_client_base_t *base, int connected_only)
+{
+	int i, print = 1;
+
+	return_if_base_invalid(base, );
+
+	for (i = 0; i < base->writes; i++)
+	{
+		if (connected_only)
+		{
+			if (base->clients[i].state != eCSTATE_CONNECTED)
+			{
+				print = 0;
+			}
+		}
+
+
+		if (print)
+		{
+			log_info("id %d; trid %d; nick '%s'; state '%s';",
+			         base->clients[i].id, base->clients[i].trid,
+			         base->clients[i].nickname,
+			         client_state_to_str(base->clients[i].state));
+		}
+
+		print = 1;
+	}
 }

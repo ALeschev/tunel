@@ -17,21 +17,28 @@ SERVER_HDR_DIR = ./
 TRANSPORT_SRC_DIR = $(PROJ_DIR)/transport/include
 TRANSPORT_HDR_DIR = $(PROJ_DIR)/transport/src
 TRANSPORT_LIB_DIR = $(PROJ_DIR)/transport/.build/$(HOST)/.pbyte
-TRANSPORT_ZMQ_LIB =$(PROJ_DIR)/transport/.build/$(HOST)/usr/local/lib
+TRANSPORT_ZMQ_LIB = $(PROJ_DIR)/transport/.build/$(HOST)/usr/local/lib
+CONSOLE_LIB       = $(PROJ_DIR)/libcli/x86_64
+CONSOLE_HDR       = $(PROJ_DIR)/libcli/_core
 
 LOGGER_SRC_DIR = $(PROJ_DIR)/logger
 LOGGER_HDR_DIR = $(PROJ_DIR)/logger
 
 CFLAGS  = -g -Wno-write-strings
-INC     = -I $(SERVER_HDR_DIR) -I $(TRANSPORT_SRC_DIR) -I $(LOGGER_HDR_DIR)
-LDFLAGS = -L $(TRANSPORT_LIB_DIR) -L $(TRANSPORT_ZMQ_LIB)
-LIBS    = -lpthread -lpbyte -lzmq -lpthread
+
+INC     = -I $(SERVER_HDR_DIR) -I $(TRANSPORT_SRC_DIR) -I $(LOGGER_HDR_DIR) \
+          -I $(CONSOLE_HDR)
+
+LDFLAGS = -L $(TRANSPORT_LIB_DIR) -L $(TRANSPORT_ZMQ_LIB) -L $(CONSOLE_LIB)
+
+LIBS    = -lpthread -lpbyte -lzmq -lpthread -lcli -lcrypt
 
 SERVER_TARGET = $(BIN_DIR)/chat_server
 
 SERVER_OBJ += $(OBJ_DIR)/server.o \
               $(OBJ_DIR)/client_base.o \
-              $(OBJ_DIR)/logger.o
+              $(OBJ_DIR)/logger.o \
+              $(OBJ_DIR)/message.o
 
 #
 # Dependence
@@ -40,12 +47,16 @@ SERVER_OBJ += $(OBJ_DIR)/server.o \
 LOGGER_DEPS      = $(LOGGER_SRC_DIR)/logger.c \
                    $(LOGGER_HDR_DIR)/logger.h
 
+MESSAGE_DEPS     = $(SERVER_SRC_DIR)/message.c \
+                   $(SERVER_SRC_DIR)/message.h
+
 CLIENT_BASE_DEPS = $(SERVER_SRC_DIR)/client_base.c \
                    $(SERVER_HDR_DIR)/client_base.h
 
 SERVER_DEPS      = $(SERVER_SRC_DIR)/server.c \
                    $(LOGGER_DEPS) \
-                   $(CLIENT_BASE_DEPS)
+                   $(CLIENT_BASE_DEPS) \
+                   $(MESSAGE_DEPS)
 
 all: check_dir $(SERVER_TARGET)
 
@@ -70,6 +81,9 @@ $(OBJ_DIR)/server.o : $(SERVER_DEPS) check_dir
 	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
 
 $(OBJ_DIR)/client_base.o : $(CLIENT_BASE_DEPS) check_dir
+	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
+
+$(OBJ_DIR)/message.o : $(MESSAGE_DEPS) check_dir
 	$(CXX) $(CFLAGS) $(INC) -c -o $@  $<
 
 $(OBJ_DIR)/logger.o : $(LOGGER_DEPS) check_dir

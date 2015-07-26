@@ -112,6 +112,10 @@ int pb_transport_broadcast (pb_transport_t *transport,
                             pb_dialog_t *dialog,
                             char *data, int size);
 
+void pb_transport_show_connections(pb_transport_t *transport);
+
+void pb_transport_server_set_log_prio(pb_transport_t *transport, int prio);
+
 #if defined (__cplusplus)
 }
 #endif

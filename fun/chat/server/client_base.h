@@ -25,22 +25,13 @@ typedef enum e_client_state
 	eCSTATE_MAX,
 } e_state_t;
 
-/* remove this shit to...emm..otherwhere */
 typedef struct
 {
-	uint32_t ip;
-	size_t ip_len;
-	char ipaddr[MAX_STR_LEN];
-} s_addr_t;
-
-typedef struct
-{
-	int fd;
+	int trid; /* identity index */
 	uint16_t id;
 	e_state_t state;
 	size_t nick_len;
 	char nickname[MAX_STR_LEN];
-	s_addr_t ip_addr;
 } c_client_t;
 
 typedef struct
@@ -69,8 +60,8 @@ int c_base_close(c_client_base_t *base);
 c_client_t *c_client_add(c_client_base_t *base, int fd, char *nickname, size_t len);
 int c_client_rem(c_client_base_t *base, c_client_t *client);
 c_client_t *c_client_get_by_id(c_client_base_t *base, uint16_t id);
-c_client_t *c_client_get_by_fd(c_client_base_t *base, int fd);
+c_client_t *c_client_get_by_trid(c_client_base_t *base, int trid);
 c_client_t *c_client_get_by_nick(c_client_base_t *base, char *nickname, size_t len);
-c_client_t *c_client_get_by_ip(c_client_base_t *base, s_addr_t *ip_addr);
+void c_base_show(c_client_base_t *base, int connected_only);
 
 #endif /* __CLIENT_BASE_H__ */

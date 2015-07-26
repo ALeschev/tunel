@@ -1,6 +1,7 @@
 CLIENT_DIR    = ./client
 SERVER_DIR    = ./server
 TRANSPORT_DIR = ./transport
+CONSOLE_DIR   = ./libcli
 
 HOST = x86_64
 CROSS_COMPILE = x86_64-linux-gnu-
@@ -19,7 +20,7 @@ TARGET_DIR = $(BUILD_DIR)/$(HOST)
 # HOST=x86_64-linux-gnu
 # endif
 
-all: check_dir stransport sclient sserver
+all: check_dir slibcli stransport sclient sserver
 
 check_dir:
 	mkdir -p $(BUILD_DIR)
@@ -33,6 +34,9 @@ sserver: check_dir
 stransport: check_dir
 	#make -C $(TRANSPORT_DIR) platform=$(PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) HOST=$(HOST) build_zmq
 	make -C $(TRANSPORT_DIR) platform=$(PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) HOST=$(HOST)
+
+slibcli: check_dir
+	make -C $(CONSOLE_DIR) platform=$(PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) HOST=$(HOST)
 
 clean:
 	rm -rf $(BUILD_DIR)

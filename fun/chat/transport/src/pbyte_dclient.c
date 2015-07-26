@@ -734,7 +734,7 @@ int dclient_send (pb_dclient_t *dclient, pb_dialog_t *dialog, char *data, int si
 	}
 	else
 	{
-		pb_log (dclient, PBYTE_WARN,
+		pb_log (dclient, PBYTE_INFO,
 		        "%s: New message. Dialog '%p'",
 		        dclient_info_str(dclient), dialog);
 	}

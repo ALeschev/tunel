@@ -38,6 +38,19 @@
 
 #define KBLINK "\x1B[5m"
 
+con_out_func con_func = NULL;
+
+const char *e_log_level_str[eLOG_MAX] = 
+{
+    "CRIT",
+    "ERR ",
+    "WARN",
+    "INFO",
+    "CUT ",
+    "FULL"
+};
+
+
 void log_print (int level, char *format, ...)
 {
     va_list ap;
@@ -79,5 +92,18 @@ void log_print (int level, char *format, ...)
     str[size++] = '\n';
     str[size++] = 0;
 
+    if (con_func)
+        con_func (str);
+
     printf ("%s", str);
+}
+
+void log_register_logger(con_out_func logger)
+{
+    con_func = logger;
+}
+
+void log_deregister_logger(void)
+{
+    con_func = NULL;
 }

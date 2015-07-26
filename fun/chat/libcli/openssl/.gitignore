@@ -1,0 +1,11 @@
+mv
+2016
+ppc
+smg4
+x86_64
+
+*.o
+
+#everything already added. ignore compile-time files
+openssl-1.0.1c
+openssl-1.0.1e
