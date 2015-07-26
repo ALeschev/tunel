@@ -10,6 +10,8 @@
 #include "pbyte_log.h"
 #include "pbyte_msg_api.h"
 
+const char *pb_pb_msg_type_to_str(pb_msg_type_t type);
+
 inline void pb_log_set_logger (pb_logger_t *p_logger,
                            void (*logger)(int prio, char *format, ...))
 {
@@ -34,8 +36,9 @@ inline int pb_log_check_enable (pb_logger_t *p_logger, int level)
 	if (!p_logger || !p_logger->logger)
 		return 0;
 
-	if (p_logger->logger_prio >= level)
-		return 1;
+	/* level checked in logger-subsystem */
+	// if (p_logger->logger_prio >= level)
+	// 	return 1;
 
 	return 0;
 }
@@ -50,18 +53,6 @@ void pb_trace (pb_logger_t *p_logger, int level, char *format, ...)
 
 	if (!p_logger)
 		return;
-#if 1
-	// switch(level)
-	// {
-	// 	case PBYTE_CRIT: p = "[CRIT] "; break;
-	// 	case PBYTE_ERR:  p = "[ERR ] "; break;
-	// 	case PBYTE_WARN: p = "[WARN] "; break;
-	// 	case PBYTE_INFO: p = "[INFO] "; break;
-	// 	case PBYTE_CUT:  p = "[CUT ] "; break;
-	// 	case PBYTE_FULL: p = "[FULL] "; break;
-
-	// 	default:         p = ""; break;
-	// }
 
 	sprintf(str, "%s %s", p_logger->prefix, p);
 
@@ -72,15 +63,14 @@ void pb_trace (pb_logger_t *p_logger, int level, char *format, ...)
 	va_end(ap);
 
 	size = strlen(str);
-	while(size && (str[size-1] == '\n')) size--;
-	//str[size++] = '\r';
-	// str[size++] = '\n';
+
+	while(size && (str[size-1] == '\n'))
+		size--;
+
 	str[size++] = 0;
-#endif
 
 	if (p_logger->logger)
 		p_logger->logger(level, "%s", str);
-	// printf ("%s", str);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -114,8 +104,6 @@ int pb_clockgettime(struct timeval* tv)
 
 	return ret;
 }
-
-const char *pb_pb_msg_type_to_str(pb_msg_type_t type);
 
 void pb_print_msg_time(pb_logger_t *p_logger, char *descript, pb_msg_t *pb_msg)
 {

@@ -200,7 +200,6 @@ void c_base_show(c_client_base_t *base, int connected_only)
 			}
 		}
 
-
 		if (print)
 		{
 			log_info("id %d; trid %d; nick '%s'; state '%s';",

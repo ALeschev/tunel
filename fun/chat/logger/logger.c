@@ -15,7 +15,6 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-
 #include "logger.h"
 
 #define KNRM  "\x1B[0m"
@@ -38,20 +37,41 @@
 
 #define KBLINK "\x1B[5m"
 
-con_out_func con_func = NULL;
+static int log_level = eLOG_FULL;
+static con_out_func con_func = NULL;
 
-const char *e_log_level_str[eLOG_MAX] = 
+void log_print (int level, char *format, ...);
+
+int log_check_enable(int level)
 {
-    "CRIT",
-    "ERR ",
-    "WARN",
-    "INFO",
-    "CUT ",
-    "FULL"
-};
+    if (log_level < level)
+        return 0;
 
+    return 1;
+}
 
-void log_print (int level, char *format, ...)
+void log_set_prio(int level)
+{
+    if ((eLOG_CRIT <= level) && (level < eLOG_MAX))
+    {
+        log_print(eLOG_INFO, "Set trace level '%s'", e_log_level_str[level]);
+
+        log_level = level;
+
+        return;
+    }
+
+    if (level < eLOG_CRIT)
+        log_level = eLOG_CRIT;
+
+    if (level >= eLOG_MAX)
+        log_level = eLOG_FULL;
+
+    log_print(eLOG_ERR, "Set trace level error: unknown level '%d' set '%s'",
+              level, e_log_level_str[log_level]);
+}
+
+void log_print(int level, char *format, ...)
 {
     va_list ap;
     int length, size;
@@ -93,9 +113,13 @@ void log_print (int level, char *format, ...)
     str[size++] = 0;
 
     if (con_func)
+    {
         con_func (str);
-
-    printf ("%s", str);
+    }
+    else
+    {
+        printf ("%s", str);
+    }
 }
 
 void log_register_logger(con_out_func logger)
