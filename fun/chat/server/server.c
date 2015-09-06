@@ -73,15 +73,15 @@ int set_trace_level(struct cli_def *cli, char *command, char *argv[], int argc)
 		return CLI_OK;
 	}
 
-	for (i = 0; i < eLOG_MAX; i++)
+	for (i = eLOG_CRIT; i < eLOG_MAX; i++)
 	{
-		if ((offset + strlen(e_log_level_str[i])) > sizeof(level_str))
+		if ((offset + strlen(log_get_level_str(i))) > sizeof(level_str))
 		{
 			log_error("Argument error. Short string len");
 			break;
 		}
 
-		offset += sprintf(&level_str[offset], "%s(%d) ", e_log_level_str[i], i);
+		offset += sprintf(&level_str[offset], "%s(%d) ", log_get_level_str(i), i);
 	}
 
 	log_error("Argument error. Usage: %s %s", command, level_str);

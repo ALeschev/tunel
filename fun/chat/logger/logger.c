@@ -40,6 +40,16 @@
 static int log_level = eLOG_FULL;
 static con_out_func con_func = NULL;
 
+static const char *e_log_level_str[eLOG_MAX] = 
+{
+    "CRIT",
+    "ERR",
+    "WARN",
+    "INFO",
+    "CUT",
+    "FULL"
+};
+
 void log_print (int level, char *format, ...);
 
 int log_check_enable(int level)
@@ -69,6 +79,14 @@ void log_set_prio(int level)
 
     log_print(eLOG_ERR, "Set trace level error: unknown level '%d' set '%s'",
               level, e_log_level_str[log_level]);
+}
+
+const char *log_get_level_str(int level)
+{
+    if (eLOG_CRIT <= level && level < eLOG_MAX)
+        return e_log_level_str[level];
+
+    return "unknown";
 }
 
 void log_print(int level, char *format, ...)

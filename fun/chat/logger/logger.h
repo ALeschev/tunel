@@ -33,21 +33,12 @@ enum e_log_level
     eLOG_MAX
 };
 
-static const char *e_log_level_str[eLOG_MAX] = 
-{
-    "CRIT",
-    "ERR",
-    "WARN",
-    "INFO",
-    "CUT",
-    "FULL"
-};
-
 int log_check_enable(int level);
 void log_set_prio(int level);
 
 void log_print(int level, char *format, ...);
 void log_register_logger(con_out_func logger);
 void log_deregister_logger(void);
+const char *log_get_level_str(int level);
 
 #endif /* __LOG_H__ */
