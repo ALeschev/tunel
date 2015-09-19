@@ -31,7 +31,7 @@ void castom_hander (ttimer_t *timer, void *data)
     ttimer_update (timer, 0, 100);
 }
 
-int main(void)
+int main (void)
 {
     ttimer_t timer[MAX_TIMER_COUNT];
     struct hander_data h_data[MAX_TIMER_COUNT];

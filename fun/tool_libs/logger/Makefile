@@ -19,7 +19,7 @@ LIB_DIR = $(BUILD_DIR)/$(HOST)/lib
 BIN_DIR = $(BUILD_DIR)/$(HOST)/bin
 
 CFLAGS  = -g -Wno-write-strings -Wall -Werror
-CFLAGS += -I$(SOURCE_DIR)
+CFLAGS += -I$(SOURCE_DIR)/include
 
 LDFLAGS = -L$(LIB_DIR)
 
