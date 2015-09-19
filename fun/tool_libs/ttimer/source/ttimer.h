@@ -7,13 +7,7 @@
 
 typedef struct ttimer
 {
-    pthread_t id;
-    pthread_mutex_t lock;
-    struct timeval timeset;
-    uint8_t inited;
-    uint8_t running;
-    void (*handler) (struct ttimer *, void *);
-    uint8_t *data;
+    void *timer;
 } ttimer_t;
 
 typedef void (*ttimer_handler_t) (ttimer_t *, void *);
