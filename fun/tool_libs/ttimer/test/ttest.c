@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <unistd.h>
+
 #include "ttimer.h"
 
 #define MAX_TIMER_COUNT 1

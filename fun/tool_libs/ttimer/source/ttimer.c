@@ -15,8 +15,6 @@ typedef struct inttimer
     uint8_t *data;
 } inttimer_t;
 
-#include <stdio.h>
-
 static void *ttimer_proc (void *data)
 {
     ttimer_t *timer = (ttimer_t *)data;
@@ -63,12 +61,6 @@ static void *ttimer_proc (void *data)
     return NULL;
 }
 
-/**
- * ttimer_init - update timer timing
- * @timer - pointer to clear timer
- *
- * init timer insides
- */
 int ttimer_init (ttimer_t *timer, uint32_t sec, uint32_t msec)
 {
     inttimer_t *p_timer;
@@ -93,14 +85,10 @@ int ttimer_init (ttimer_t *timer, uint32_t sec, uint32_t msec)
     p_timer->timeset.tv_sec= sec;
     p_timer->timeset.tv_usec = msec * 1000;
     p_timer->inited = 1;
+
+    return 0;
 }
 
-/**
- * ttimer_start - start timer processing
- * @timer - pointer to initialized timer
- *
- * run timer processing 
- */
 int ttimer_start (ttimer_t *timer, ttimer_handler_t handler, uint8_t *data)
 {
     int res = -1;
@@ -127,12 +115,6 @@ int ttimer_start (ttimer_t *timer, ttimer_handler_t handler, uint8_t *data)
     return res;
 }
 
-/**
- * ttimer_stop - stop the timer processing
- * @timer - pointer to initialized and running timer
- *
- * stop the timer and wait for the completion of a custom processing
- */
 int ttimer_stop (ttimer_t *timer)
 {
     int res;
@@ -160,16 +142,6 @@ int ttimer_stop (ttimer_t *timer)
     return res;
 }
 
-/**
- * ttimer_update - update timer timing
- * @timer - pointer to initialized and running timer
- * @sec - updated seconds value
- * @msec - updated milliseconds value
- *
- * update timing on a timer
- *
- * NOTE: function must be called only from user timer hander
- */
 int ttimer_update (ttimer_t *timer, uint32_t sec, uint32_t msec)
 {
     inttimer_t *p_timer;
@@ -187,4 +159,6 @@ int ttimer_update (ttimer_t *timer, uint32_t sec, uint32_t msec)
 
     p_timer->timeset.tv_sec= sec;
     p_timer->timeset.tv_usec = msec * 1000;
+
+    return 0;
 }

@@ -18,7 +18,7 @@ OBJ_DIR = $(BUILD_DIR)/$(HOST)/obj
 LIB_DIR = $(BUILD_DIR)/$(HOST)/lib
 BIN_DIR = $(BUILD_DIR)/$(HOST)/bin
 
-CFLAGS  = -g -Wno-write-strings
+CFLAGS  = -g -Wno-write-strings -Wall -Werror
 CFLAGS += -I$(SOURCE_DIR)
 
 LDFLAGS = -L$(LIB_DIR)
