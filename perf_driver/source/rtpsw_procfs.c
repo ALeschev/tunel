@@ -2,25 +2,51 @@
 
 struct proc_dir_entry *rtpsw_proc_entry;
 
-int rtpsw_proc_open(struct inode *inode, struct file *file)
+static ssize_t rtpsw_proc_print_help(char *buff, ssize_t len)
+{
+	ssize_t result = 0;
+
+	result = snprintf(buff, len,
+	                   "rps - reset packets statistics\n");
+
+	return result;
+}
+
+static int rtpsw_proc_open(struct inode *inode, struct file *file)
 {
 	return 0;
 }
 
-int rtpsw_proc_release(struct inode *inode, struct file *file)
+static int rtpsw_proc_release(struct inode *inode, struct file *file)
 {
 	return 0;
 }
 
-ssize_t rtpsw_proc_read(struct file *file, char __user *buf,
-                        size_t len, loff_t *ppos)
+static ssize_t rtpsw_proc_read(struct file *file, char __user *buf,
+                               size_t len, loff_t *ppos)
 {
-	return 0;
+	static ssize_t result = 0;
+
+	if (result == 0)
+	{
+		if (result < len)
+			result += st_pkt_print_to_buff(&buf[result], len - result);
+
+		if (result < len)
+			result += rtpsw_proc_print_help(&buf[result], len - result);
+	}
+	else
+	{
+		result = 0;
+	}
+
+	return result;
 }
 
-ssize_t rtpsw_proc_write(struct file *file, const char __user *buf,
-                         size_t len, loff_t *ppos)
+static ssize_t rtpsw_proc_write(struct file *file, const char __user *buf,
+                                size_t len, loff_t *ppos)
 {
+	rtpsw_info("write: buff '%s'", buf);
 	return len;
 }
 
