@@ -116,7 +116,7 @@ void log_print(int level, char *format, ...)
         default:        p = "[" KWHT  "????" KNRM "] "; break;
     }
 
-    sprintf(str, "%s %ld %s", timestamp, syscall(SYS_gettid), p);
+    sprintf(str, "%s th0x%ld %s", timestamp, syscall(SYS_gettid), p);
 
     length = strlen(str);
     size = sizeof(str) - length - 10;
@@ -125,7 +125,10 @@ void log_print(int level, char *format, ...)
     va_end(ap);
 
     size = strlen(str);
-    while(size && (str[size-1] == '\n')) size--;
+
+    while(size && (str[size-1] == '\n'))
+        size--;
+
     //str[size++] = '\r';
     str[size++] = '\n';
     str[size++] = 0;

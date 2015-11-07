@@ -1,9 +1,5 @@
-/*
- * LAV by fun
- */
-
-#ifndef __LOG_H__
-#define __LOG_H__
+#ifndef __LOGGER_H__
+#define __LOGGER_H__
 
 #define log_logger(prio, frm, ...)                       \
             do {                                         \
@@ -41,4 +37,4 @@ void log_register_logger(con_out_func logger);
 void log_deregister_logger(void);
 const char *log_get_level_str(int level);
 
-#endif /* __LOG_H__ */
+#endif /* __LOGGER_H__ */
