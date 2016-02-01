@@ -200,7 +200,7 @@ int stop_server(struct cli_def *cli, char *command, char *argv[], int argc)
 	return CLI_OK; /* all fine c: */
 }
 
-static int init_subsystems(void)
+static int init_subsystems(int with_cli)
 {
 	int res;
 	pb_params_t params;
@@ -254,7 +254,7 @@ int restart_server(struct cli_def *cli, char *command, char *argv[], int argc)
 	pb_transport_stop(&transport);
 	c_base_close(&client_base);
 
-	res = init_subsystems();
+	res = init_subsystems(0);
 	if (res != 0)
 	{
 		stop_server(cli, command, argv, argc);
@@ -278,7 +278,7 @@ int main(void)
 
 	log_set_prio(eLOG_FULL);
 
-	res = init_subsystems();
+	res = init_subsystems(1);
 	if (res != 0)
 	{
 		return res;
