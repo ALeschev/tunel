@@ -1,4 +1,4 @@
 lz78
 obj/
-*.in
-*.lz78
+*.lz78_enc
+*.lz78_dec
