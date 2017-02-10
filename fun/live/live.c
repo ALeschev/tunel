@@ -6,6 +6,11 @@
 #define MAIN_FIELD_HEIGHT 40 /* высота */
 #define GENOM_SIZE 4
 
+#define TTL_DEF 50
+#define TTL_IS_GOOD 1
+#define TTL_IS_NORMAL 2
+#define TTL_IS_BAD 3
+
 typedef enum
 {
 	GEN_NONE,
@@ -16,6 +21,7 @@ typedef enum
 	GEN_RIGHT,
 
 	GEN_REPROD,
+	GEN_DIE,
 
 	GEN_MAX
 } gen_t;
@@ -23,10 +29,9 @@ typedef enum
 typedef struct
 {
 	gen_t genom[GENOM_SIZE];
-	int gen_step;
+	int gen;
 	int step_is_done;
 	int ttl;
-	// color
 	int view;
 } cell_t;
 
@@ -39,11 +44,13 @@ char *gen_strings[GEN_MAX+1] =
 	"RIGHT",
 
 	"REPROD",
+	"DEI",
 
 	"UNKN"
 };
 
 static cell_t main_field[MAIN_FIELD_HEIGHT][MAIN_FIELD_WIDTH] = {{0}, {0}};
+static int population = 0;
 
 static char *genom_str(gen_t gen)
 {
@@ -55,26 +62,33 @@ static char *genom_str(gen_t gen)
 		case GEN_LEFT:
 		case GEN_RIGHT:
 		case GEN_REPROD:
+		case GEN_DIE:
 			return gen_strings[gen];
 	}
 
 	return gen_strings[GEN_MAX];
 }
 
-static void cell_generate_cell(cell_t *cell)
+
+static void cell_generate_cell(int initial, cell_t *cell)
 {
 	int i;
 
 	// srand(time(NULL));
 
-	cell->view = (rand()%50)? 0:ACS_DIAMOND;
+	if (initial)
+		cell->view = (rand()%20)? 0:ACS_DIAMOND;
+	else
+		cell->view = ACS_DIAMOND;
+
 	if (cell->view)
 	{
-		cell->ttl = 50;
+		cell->ttl = rand()%TTL_DEF + 10;
 		for (i = 0; i < GENOM_SIZE; i++)
 		{
 			cell->genom[i] = rand()%GEN_MAX;
 		}
+		population++;
 	}
 }
 
@@ -90,7 +104,7 @@ static void main_field_init(void)
 		memset(main_field[i], 0, sizeof(main_field[i]));
 		for (j = 0; j < MAIN_FIELD_WIDTH; j++)
 		{
-			cell_generate_cell(&main_field[i][j]);
+			cell_generate_cell(1, &main_field[i][j]);
 		}
 	}
 }
@@ -115,6 +129,19 @@ static gen_t *key_proc_right(void)
 	// mvprintw(0, 0, "RIGHT");
 }
 
+static void proc_cell_ttl(cell_t *cell)
+{
+	if (++cell->gen >= GENOM_SIZE)
+		cell->gen = 0;
+
+	if (--cell->ttl < 0)
+	{
+		// memset(cell, 0, sizeof(cell_t));
+		// cell->gen = 0;
+		// continue;
+	}
+}
+
 static void key_proc_enter(int x, int y)
 {
 	int i, j;
@@ -128,18 +155,24 @@ static void key_proc_enter(int x, int y)
 			if (!main_field[i][j].view)
 				continue;
 
-			if (main_field[i][j].step_is_done)
+			if (main_field[i][j].ttl <= 0)
 			{
-				main_field[i][j].step_is_done = 0;
-				continue;
+				memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
 			}
 
-			if (++main_field[i][j].gen_step >= GENOM_SIZE)
-				main_field[i][j].gen_step = 0;
+			// if (main_field[i][j].step_is_done)
+			// {
+			// 	main_field[i][j].step_is_done = 0;
+			// 	continue;
+			// }
 
-			ig = main_field[i][j].gen_step;
+			// if (--main_field[i][j].ttl < 0)
+			// {
+			// 	memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
+			// 	continue;
+			// }
 
-
+			ig = main_field[i][j].gen;
 
 			// mvprintw(10, MAIN_FIELD_WIDTH + 5, "(%d, %d) %s", i,j,genom_str(main_field[i][j].genom[ig]));
 
@@ -147,8 +180,10 @@ static void key_proc_enter(int x, int y)
 			{
 				case GEN_NONE:
 					main_field[i][j].step_is_done++;
+					proc_cell_ttl(&main_field[i][j]);
 					break;
 				case GEN_UP:
+					proc_cell_ttl(&main_field[i][j]);
 					if (i && !main_field[i-1][j].view)
 					{
 						main_field[i][j].step_is_done++;
@@ -157,6 +192,7 @@ static void key_proc_enter(int x, int y)
 					}
 					break;
 				case GEN_DOWN:
+					proc_cell_ttl(&main_field[i][j]);
 					if ((i < MAIN_FIELD_HEIGHT-1) && !main_field[i+1][j].view)
 					{
 						main_field[i][j].step_is_done++;
@@ -165,6 +201,7 @@ static void key_proc_enter(int x, int y)
 					}
 					break;
 				case GEN_LEFT:
+					proc_cell_ttl(&main_field[i][j]);
 					if (j && !main_field[i][j-1].view)
 					{
 						main_field[i][j].step_is_done++;
@@ -173,6 +210,7 @@ static void key_proc_enter(int x, int y)
 					}
 					break;
 				case GEN_RIGHT:
+					proc_cell_ttl(&main_field[i][j]);
 					if ((j < MAIN_FIELD_WIDTH-1) && !main_field[i][j+1].view)
 					{
 						main_field[i][j].step_is_done++;
@@ -181,6 +219,7 @@ static void key_proc_enter(int x, int y)
 					}
 					break;
 				case GEN_REPROD:
+					proc_cell_ttl(&main_field[i][j]);
 					if (i & j && (i < MAIN_FIELD_HEIGHT-1 && j < MAIN_FIELD_WIDTH-1))
 					{
 						neigh = 0;
@@ -188,47 +227,97 @@ static void key_proc_enter(int x, int y)
 							neigh++;
 						else
 							cell = &main_field[i-1][j];
-						if (main_field[i][j-1].view)
-							neigh++;
-						else
-							cell = &main_field[i][j-1];
+
 						if (main_field[i+1][j].view)
 							neigh++;
 						else
 							cell = &main_field[i+1][j];
+
+						if (main_field[i][j-1].view)
+							neigh++;
+						else
+							cell = &main_field[i][j-1];
+
 						if (main_field[i][j+1].view)
 							neigh++;
 						else
 							cell = &main_field[i][j+1];
 
-						if (neigh < 1 || neigh > 3)
-							memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
+						if (main_field[i-1][j-1].view)
+							neigh++;
 						else
-							cell_generate_cell(cell);
+							cell = &main_field[i-1][j-1];
+
+						if (main_field[i+1][j+1].view)
+							neigh++;
+						else
+							cell = &main_field[i+1][j+1];
+
+						if (main_field[i+1][j-1].view)
+							neigh++;
+						else
+							cell = &main_field[i+1][j-1];
+
+						if (main_field[i-1][j+1].view)
+							neigh++;
+						else
+							cell = &main_field[i-1][j+1];
+
+						if (neigh < 1 || neigh > 4)
+						{
+							memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
+							continue;
+						}
+						else
+						{
+							cell_generate_cell(0, cell);
+							main_field[i][j].ttl++;
+						}
 					}
 					break;
+				case GEN_DIE:
+					memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
+					break;
 			}
-
-			if (--main_field[i][j].ttl <= 0)
-				memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
 		}
 	}
 
+	population = 0;
 	for (i = 0; i < MAIN_FIELD_HEIGHT; i++)
 		for (j = 0; j < MAIN_FIELD_WIDTH; j++)
+		{
 			main_field[i][j].step_is_done = 0;
+			if (main_field[i][j].view)
+				population++;
+		}
 }
 
 static void field_print(void)
 {
 	int i, j;
+	int color;
 
 	for (i = 0; i < MAIN_FIELD_HEIGHT; i++)
 	{
 		for (j = 0; j < MAIN_FIELD_WIDTH; j++)
 		{
 			if (main_field[i][j].view)
+			{
+				color = TTL_IS_GOOD;
+
+				if (main_field[i][j].ttl <= (int)(TTL_DEF/3))
+				{
+					color = TTL_IS_BAD;
+				} else
+				if ((main_field[i][j].ttl > (int)(TTL_DEF/3)) && (main_field[i][j].ttl <= (int)(TTL_DEF/3)*2))
+				{
+					color = TTL_IS_NORMAL;
+				}
+
+				attron (COLOR_PAIR (color));
 				mvaddch(i, j, main_field[i][j].view);
+				attroff (COLOR_PAIR (color));
+			}
 		}
 	}
 }
@@ -238,13 +327,15 @@ static void field_print_genom(int x, int y)
 	int i, j, step = 0;
 	char *gstr;
 
-	mvprintw(3, MAIN_FIELD_WIDTH + 5, "ttl = %d", main_field[y][x].ttl);
-
-	for (i = 0; i < GENOM_SIZE; i++)
+	if (main_field[y][x].view)
 	{
-		step = main_field[y][x].gen_step == i;
-		gstr = genom_str(main_field[y][x].genom[i]);
-		mvprintw(4 + i%GENOM_SIZE, MAIN_FIELD_WIDTH + 5, "%s %s", gstr, step? "<---":"");
+		mvprintw(3, MAIN_FIELD_WIDTH + 5, "ttl = %d", main_field[y][x].ttl);
+		for (i = 0; i < GENOM_SIZE; i++)
+		{
+			step = main_field[y][x].gen == i;
+			gstr = genom_str(main_field[y][x].genom[i]);
+			mvprintw(4 + i%GENOM_SIZE, MAIN_FIELD_WIDTH + 5, "%s %s", gstr, step? "<---":"");
+		}
 	}
 }
 
@@ -257,16 +348,20 @@ int main(int argc, char *argv[])
 	noecho();
 	curs_set(FALSE);
 	keypad(stdscr, TRUE);
+	start_color();
 	clear();
 	main_field_init();
 
-	while(!quit)
+	init_pair(TTL_IS_GOOD, COLOR_GREEN, COLOR_BLACK);
+	init_pair(TTL_IS_NORMAL, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(TTL_IS_BAD, COLOR_RED, COLOR_BLACK);
+
+	while(!quit && population)
 	{
 		field_print();
+		mvprintw(0, MAIN_FIELD_WIDTH + 5, "iteration %d", enter);
+		mvprintw(1, MAIN_FIELD_WIDTH + 5, "population %d", population);
 		mvaddch(y, x, ACS_CKBOARD);
-		mvprintw(0, MAIN_FIELD_WIDTH + 5, "x = %d", x);
-		mvprintw(1, MAIN_FIELD_WIDTH + 5, "y = %d", y);
-		mvprintw(2, MAIN_FIELD_WIDTH + 5, "e = %d", enter);
 		field_print_genom(x, y);
 
 		refresh();
@@ -300,6 +395,9 @@ int main(int argc, char *argv[])
 			default:
 				break;
 		}
+
+		// usleep(50000);
+		// fseek(stdin,0,SEEK_END);
 	}
 
 	endwin();
