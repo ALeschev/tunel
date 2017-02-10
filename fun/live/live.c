@@ -111,7 +111,6 @@ static void key_proc_enter(int x, int y)
 			if (!main_field[i][j].view)
 				continue;
 
-#warning "Сгенерируй вручную геном чтобы проверить это дерьмо"
 			if (main_field[i][j].step_is_done)
 			{
 				main_field[i][j].step_is_done = 0;
@@ -133,33 +132,33 @@ static void key_proc_enter(int x, int y)
 				case GEN_UP:
 					if (i && !main_field[i-1][j].view)
 					{
+						main_field[i][j].step_is_done++;
 						memcpy(&main_field[i-1][j], &main_field[i][j], sizeof(main_field[i][j]));
 						memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
-						main_field[i][j].step_is_done++;
 					}
 					break;
 				case GEN_DOWN:
 					if ((i < MAIN_FIELD_HEIGHT-1) && !main_field[i+1][j].view)
 					{
+						main_field[i][j].step_is_done++;
 						memcpy(&main_field[i+1][j], &main_field[i][j], sizeof(main_field[i][j]));
 						memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
-						main_field[i][j].step_is_done++;
 					}
 					break;
 				case GEN_LEFT:
 					if (j && !main_field[i][j-1].view)
 					{
+						main_field[i][j].step_is_done++;
 						memcpy(&main_field[i][j-1], &main_field[i][j], sizeof(main_field[i][j]));
 						memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
-						main_field[i][j].step_is_done++;
 					}
 					break;
 				case GEN_RIGHT:
 					if ((j < MAIN_FIELD_WIDTH-1) && !main_field[i][j+1].view)
 					{
+						main_field[i][j].step_is_done++;
 						memcpy(&main_field[i][j+1], &main_field[i][j], sizeof(main_field[i][j]));
 						memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
-						main_field[i][j].step_is_done++;
 					}
 					break;
 			}
