@@ -15,6 +15,8 @@ typedef enum
 	GEN_LEFT,
 	GEN_RIGHT,
 
+	GEN_REPROD,
+
 	GEN_MAX
 } gen_t;
 
@@ -23,6 +25,7 @@ typedef struct
 	gen_t genom[GENOM_SIZE];
 	int gen_step;
 	int step_is_done;
+	int ttl;
 	// color
 	int view;
 } cell_t;
@@ -34,6 +37,8 @@ char *gen_strings[GEN_MAX+1] =
 	"DOWN",
 	"LEFT",
 	"RIGHT",
+
+	"REPROD",
 
 	"UNKN"
 };
@@ -49,10 +54,28 @@ static char *genom_str(gen_t gen)
 		case GEN_DOWN:
 		case GEN_LEFT:
 		case GEN_RIGHT:
+		case GEN_REPROD:
 			return gen_strings[gen];
 	}
 
 	return gen_strings[GEN_MAX];
+}
+
+static void cell_generate_cell(cell_t *cell)
+{
+	int i;
+
+	// srand(time(NULL));
+
+	cell->view = (rand()%50)? 0:ACS_DIAMOND;
+	if (cell->view)
+	{
+		cell->ttl = 50;
+		for (i = 0; i < GENOM_SIZE; i++)
+		{
+			cell->genom[i] = rand()%GEN_MAX;
+		}
+	}
 }
 
 static void main_field_init(void)
@@ -67,14 +90,7 @@ static void main_field_init(void)
 		memset(main_field[i], 0, sizeof(main_field[i]));
 		for (j = 0; j < MAIN_FIELD_WIDTH; j++)
 		{
-			main_field[i][j].view = (rand()%50)? 0:ACS_DIAMOND;
-			if (main_field[i][j].view)
-			{
-				for (ig = 0; ig < GENOM_SIZE; ig++)
-				{
-					main_field[i][j].genom[ig] = rand()%GEN_MAX;
-				}
-			}
+			cell_generate_cell(&main_field[i][j]);
 		}
 	}
 }
@@ -102,7 +118,8 @@ static gen_t *key_proc_right(void)
 static void key_proc_enter(int x, int y)
 {
 	int i, j;
-	int ig;
+	int ig, neigh;
+	cell_t *cell;
 
 	for (i = 0; i < MAIN_FIELD_HEIGHT; i++)
 	{
@@ -121,6 +138,8 @@ static void key_proc_enter(int x, int y)
 				main_field[i][j].gen_step = 0;
 
 			ig = main_field[i][j].gen_step;
+
+
 
 			// mvprintw(10, MAIN_FIELD_WIDTH + 5, "(%d, %d) %s", i,j,genom_str(main_field[i][j].genom[ig]));
 
@@ -161,7 +180,37 @@ static void key_proc_enter(int x, int y)
 						memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
 					}
 					break;
+				case GEN_REPROD:
+					if (i & j && (i < MAIN_FIELD_HEIGHT-1 && j < MAIN_FIELD_WIDTH-1))
+					{
+						neigh = 0;
+						if (main_field[i-1][j].view)
+							neigh++;
+						else
+							cell = &main_field[i-1][j];
+						if (main_field[i][j-1].view)
+							neigh++;
+						else
+							cell = &main_field[i][j-1];
+						if (main_field[i+1][j].view)
+							neigh++;
+						else
+							cell = &main_field[i+1][j];
+						if (main_field[i][j+1].view)
+							neigh++;
+						else
+							cell = &main_field[i][j+1];
+
+						if (neigh < 1 || neigh > 3)
+							memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
+						else
+							cell_generate_cell(cell);
+					}
+					break;
 			}
+
+			if (--main_field[i][j].ttl <= 0)
+				memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
 		}
 	}
 
@@ -189,11 +238,13 @@ static void field_print_genom(int x, int y)
 	int i, j, step = 0;
 	char *gstr;
 
+	mvprintw(3, MAIN_FIELD_WIDTH + 5, "ttl = %d", main_field[y][x].ttl);
+
 	for (i = 0; i < GENOM_SIZE; i++)
 	{
 		step = main_field[y][x].gen_step == i;
 		gstr = genom_str(main_field[y][x].genom[i]);
-		mvprintw(3 + i%GENOM_SIZE, MAIN_FIELD_WIDTH + 5, "%s %s", gstr, step? "<---":"");
+		mvprintw(4 + i%GENOM_SIZE, MAIN_FIELD_WIDTH + 5, "%s %s", gstr, step? "<---":"");
 	}
 }
 
