@@ -160,22 +160,8 @@ static void key_proc_enter(int x, int y)
 				memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
 			}
 
-			// if (main_field[i][j].step_is_done)
-			// {
-			// 	main_field[i][j].step_is_done = 0;
-			// 	continue;
-			// }
-
-			// if (--main_field[i][j].ttl < 0)
-			// {
-			// 	memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
-			// 	continue;
-			// }
-
 			ig = main_field[i][j].gen;
 			proc_cell_ttl(&main_field[i][j]);
-
-			// mvprintw(10, MAIN_FIELD_WIDTH + 5, "(%d, %d) %s", i,j,genom_str(main_field[i][j].genom[ig]));
 
 			switch(main_field[i][j].genom[ig])
 			{
@@ -257,17 +243,17 @@ static void key_proc_enter(int x, int y)
 							neigh++;
 						else
 							cell = &main_field[i-1][j+1];
+					}
 
-						if (neigh < 1 || neigh > 4)
-						{
-							memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
-							continue;
-						}
-						else
-						{
-							cell_generate_cell(0, cell);
-							main_field[i][j].ttl++;
-						}
+					if (neigh < 1 || neigh > 4)
+					{
+						memset(&main_field[i][j], 0, sizeof(main_field[i][j]));
+						continue;
+					}
+					else
+					{
+						cell_generate_cell(0, cell);
+						main_field[i][j].ttl++;
 					}
 					break;
 				case GEN_DIE:
@@ -363,7 +349,7 @@ int main(int argc, char *argv[])
 		field_print_genom(x, y);
 
 		refresh();
-		// c = getch();
+#if 0
 		if (population <= 200)
 			delay = 25000;
 		else if (population > 200 && population <= 500)
@@ -378,37 +364,38 @@ int main(int argc, char *argv[])
 		key_proc_enter(x, y);
 		enter++;
 		clear();
-		// switch(c)
-		// {
-		// 	case KEY_UP:
-		// 		if (--y <= 0)
-		// 			y = 0;
-		// 		break;
-		// 	case KEY_DOWN:
-		// 		if (++y >= MAIN_FIELD_HEIGHT)
-		// 			y = MAIN_FIELD_HEIGHT;
-		// 		break;
-		// 	case KEY_LEFT:
-		// 		if (--x <= 0)
-		// 			x = 0;
-		// 		break;
-		// 	case KEY_RIGHT:
-		// 		if (++x >= MAIN_FIELD_WIDTH)
-		// 			x = MAIN_FIELD_WIDTH;
-		// 		break;
-		// 	case ' ':
-		// 		key_proc_enter(x, y);
-		// 		enter++;
-		// 		break;
-		// 	case 'q':
-		// 		quit++;
-		// 		break;
-		// 	default:
-		// 		break;
-		// }
-
-		// usleep(50000);
-		// fseek(stdin,0,SEEK_END);
+#else
+		c = getch();
+		clear();
+		switch(c)
+		{
+			case KEY_UP:
+				if (--y <= 0)
+					y = 0;
+				break;
+			case KEY_DOWN:
+				if (++y >= MAIN_FIELD_HEIGHT)
+					y = MAIN_FIELD_HEIGHT;
+				break;
+			case KEY_LEFT:
+				if (--x <= 0)
+					x = 0;
+				break;
+			case KEY_RIGHT:
+				if (++x >= MAIN_FIELD_WIDTH)
+					x = MAIN_FIELD_WIDTH;
+				break;
+			case ' ':
+				key_proc_enter(x, y);
+				enter++;
+				break;
+			case 'q':
+				quit++;
+				break;
+			default:
+				break;
+		}
+#endif
 	}
 
 	endwin();
