@@ -5,8 +5,10 @@
 #include <linux/input.h>
 #include <errno.h>
 
-#define KEYBOARDFILE "/dev/input/event4"
-#define MOUSEFILE "/dev/input/event5"
+// /proc/bus/input/devices
+
+#define KEYBOARDFILE "/dev/input/event3"
+#define MOUSEFILE "/dev/input/event2"
 
 int main(int argc, char **argv)
 {
@@ -14,6 +16,7 @@ int main(int argc, char **argv)
     int mouse_fd, keyboard_fd, max_fd;
     struct input_event ie;
     fd_set readfds;
+    struct timeval timeout;
 
     if((mouse_fd = open(MOUSEFILE, O_RDONLY)) == -1)
     {
@@ -27,40 +30,47 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    max_fd = (mouse_fd > keyboard_fd)? mouse_fd:keyboard_fd;
+    max_fd = keyboard_fd;
 
-    КАРОЧ
-    МЫШКУ ЧИТАЕМ ТОЛЬКО ПРИ НАЖАТИИ КЛАВИШИ ИЛИ ПО ТАЙМАУТУ СЕЛЕКТА
-    ИНАЧЕ ПОЕЗДА. СЛИШКОМ МНОГО ЭВЕНТОВ
+    int flags = fcntl(mouse_fd, F_GETFL, 0);
+    fcntl(mouse_fd, F_SETFL, flags | O_NONBLOCK);
 
-    // while(1)
-    // {
-    //     FD_ZERO(&readfds);
-    //     FD_SET(mouse_fd, &readfds);
-    //     FD_SET(keyboard_fd, &readfds);
+    while(1)
+    {
+        FD_ZERO(&readfds);
+        // FD_SET(mouse_fd, &readfds);
+        FD_SET(keyboard_fd, &readfds);
 
-    //     activity = select(max_fd + 1 , &readfds , NULL , NULL , NULL);
-    //     if ((activity < 0) && (errno != EINTR)) 
-    //     {
-    //         printf("select error\n");
-    //         continue;
-    //     }
+        timeout.tv_sec = 1;
+        timeout.tv_usec = 0;
 
-    //     if (FD_ISSET(mouse_fd, &readfds)) 
-    //     {
-            if (read(mouse_fd, &ie, sizeof(struct input_event)))
+        activity = select(max_fd + 1 , &readfds , NULL , NULL , &timeout);
+
+        if ((activity < 0) && (errno != EINTR))
+        {
+            printf("select error\n");
+            continue;
+        }
+
+        if (!activity /*timeout*/)
+        {
+            if (read(mouse_fd, &ie, sizeof(struct input_event)) > 0)
             {
                 printf("MOUSE: %d, %d, %d\n", ie.type, ie.value, ie.code);
             }
-        // } else
-        // if (FD_ISSET(keyboard_fd, &readfds)) 
-        // {
-        //     if (read(keyboard_fd, &ie, sizeof(struct input_event)))
-        //     {
-        //         // printf("KEY: %d, %d, %d\n", ie.type, ie.value, ie.code);
-        //     }
-        // }
-    // }
+        } else
+        if (FD_ISSET(keyboard_fd, &readfds)) 
+        {
+            if (read(keyboard_fd, &ie, sizeof(struct input_event)) > 0)
+            {
+                printf("KEY: %d, %d, %d\n", ie.type, ie.value, ie.code);
+            }
+            if (read(mouse_fd, &ie, sizeof(struct input_event)) > 0)
+            {
+                printf("MOUSE: %d, %d, %d\n", ie.type, ie.value, ie.code);
+            }
+        }
+    }
 
     close(mouse_fd);
     close(keyboard_fd);
