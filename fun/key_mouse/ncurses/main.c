@@ -6,7 +6,7 @@
 #define NUMPAD_FIELD_X 0
 #define NUMPAD_FIELD_Y 0
 
-#define NUMPAD_WIDTH 100
+#define NUMPAD_WIDTH 50
 #define NUMPAD_HEIGHT 20
 
 #define BUTTON_WIDTH 4
@@ -15,7 +15,10 @@
 #define LOG_WINDOW_X NUMPAD_WIDTH + 1
 #define LOG_WINDOW_Y 1
 #define LOG_WIDTH 100
-#define LOG_HEIGHT 60
+#define LOG_HEIGHT 20
+
+#define LCD_HEIGHT 2
+#define LCD_WIDTH 16
 
 typedef enum
 {
@@ -40,6 +43,18 @@ typedef enum
     eBCODE_LINE,
     eBCODE_SPKR,
 
+    eBCODE_EXT_0,
+    eBCODE_EXT_1,
+    eBCODE_EXT_2,
+    eBCODE_EXT_3,
+    eBCODE_EXT_4,
+    eBCODE_EXT_5,
+    eBCODE_EXT_6,
+    eBCODE_EXT_7,
+    eBCODE_EXT_8,
+
+    eBCODE_LCD,
+
     eBCODE_MAX
 } btn_code_t;
 
@@ -57,8 +72,8 @@ typedef struct
 
 typedef struct
 {
-    char name[64];
-    int name_len;
+    char text[32];
+    int text_len;
 
     btn_code_t code;
 
@@ -78,9 +93,13 @@ typedef struct
 
 typedef struct
 {
+    point_t point;
+    form_t form;
+
     btn_t numpad[eBCODE_MAX];
+    btn_t lcd;
     // log_t log;
-} filed_t;
+} field_t;
 
 static log_t log;
 
@@ -112,9 +131,6 @@ void log_rotate(log_t *log)
 void log_clear(log_t *log)
 {
     int y;
-
-    // memset(log->area, 0, LOG_HEIGHT * LOG_WIDTH);
-    // log->position = LOG_WINDOW_Y;
 
     log_init(log);
 
@@ -179,7 +195,7 @@ void btn_get_center(btn_t *box, int content_len, point_t *point)
 
     if (x_center < box->point.x)
     {
-        memcpy(point, &box->center, sizeof(point_t));
+        memcpy(point, &box->point, sizeof(point_t));
     }
     else
     {
@@ -211,13 +227,11 @@ void btn_draw(point_t *point, form_t *form, bool clear)
     }
 }
 
-void btn_init(btn_t *numpad)
+void btn_numbers_init(btn_t *numpad)
 {
     int i;
     int x_border_offset = 1, y_border_offset = 1;
-    int x = NUMPAD_FIELD_X + 1, y = NUMPAD_FIELD_Y + 1;
-
-    memset(numpad, 0, sizeof(*numpad) * eBCODE_MAX);
+    int x = NUMPAD_FIELD_X + x_border_offset, y = NUMPAD_FIELD_Y + y_border_offset;
 
     for (i = eBCODE_0; i <= eBCODE_HASH; i++)
     {
@@ -225,7 +239,7 @@ void btn_init(btn_t *numpad)
         {
             numpad[i].form.height = BUTTON_HEIGHT;
             numpad[i].form.width = BUTTON_WIDTH;
-            numpad[i].name_len = 1;
+            numpad[i].text_len = 1;
             continue;
         }
 
@@ -235,10 +249,10 @@ void btn_init(btn_t *numpad)
         numpad[i].form.height = BUTTON_HEIGHT;
         numpad[i].form.width = BUTTON_WIDTH;
         numpad[i].code = i;
-        numpad[i].name[0] = i + 0x30;
-        numpad[i].name_len = 1;
+        numpad[i].text[0] = i + 0x30;
+        numpad[i].text_len = 1;
 
-        btn_get_center(&numpad[i], numpad[i].name_len, &numpad[i].center);
+        btn_get_center(&numpad[i], numpad[i].text_len, &numpad[i].center);
 
         if (!(i % 3))
         {
@@ -255,63 +269,191 @@ void btn_init(btn_t *numpad)
 
     numpad[eBCODE_STAR].point.x = x_border_offset;
     numpad[eBCODE_STAR].point.y = y_border_offset + BUTTON_HEIGHT * 3;
-    numpad[eBCODE_STAR].name[0] = '*';
-    btn_get_center(&numpad[eBCODE_STAR], numpad[eBCODE_STAR].name_len, &numpad[eBCODE_STAR].center);
+    numpad[eBCODE_STAR].text[0] = '*';
+    btn_get_center(&numpad[eBCODE_STAR], numpad[eBCODE_STAR].text_len, &numpad[eBCODE_STAR].center);
     btn_draw(&numpad[eBCODE_STAR].point, &numpad[eBCODE_STAR].form, 0);
-
-    numpad[eBCODE_HASH].point.x = x_border_offset + BUTTON_WIDTH * 2;
-    numpad[eBCODE_HASH].point.y = y_border_offset + BUTTON_HEIGHT * 3;
-    numpad[eBCODE_HASH].name[0] = '#';
-    btn_get_center(&numpad[eBCODE_HASH], numpad[eBCODE_HASH].name_len, &numpad[eBCODE_HASH].center);
-    btn_draw(&numpad[eBCODE_HASH].point, &numpad[eBCODE_HASH].form, 0);
 
     numpad[eBCODE_0].point.x = x_border_offset + BUTTON_WIDTH;
     numpad[eBCODE_0].point.y = y_border_offset + BUTTON_HEIGHT * 3;
-    numpad[eBCODE_0].name[0] = '0';
-    btn_get_center(&numpad[eBCODE_0], numpad[eBCODE_0].name_len, &numpad[eBCODE_0].center);
+    numpad[eBCODE_0].text[0] = '0';
+    btn_get_center(&numpad[eBCODE_0], numpad[eBCODE_0].text_len, &numpad[eBCODE_0].center);
     btn_draw(&numpad[eBCODE_0].point, &numpad[eBCODE_0].form, 0);
+
+    numpad[eBCODE_HASH].point.x = x_border_offset + BUTTON_WIDTH * 2;
+    numpad[eBCODE_HASH].point.y = y_border_offset + BUTTON_HEIGHT * 3;
+    numpad[eBCODE_HASH].text[0] = '#';
+    btn_get_center(&numpad[eBCODE_HASH], numpad[eBCODE_HASH].text_len, &numpad[eBCODE_HASH].center);
+    btn_draw(&numpad[eBCODE_HASH].point, &numpad[eBCODE_HASH].form, 0);
 }
 
-void numpad_print(btn_t *numpad)
+void btn_sys_init(btn_t *numpad)
 {
     int i;
+    int x  = NUMPAD_FIELD_X + (BUTTON_WIDTH * 4);
+    int y = NUMPAD_FIELD_Y + 1;
+    char *text[] = {"HOLD", "XPER", "LINE", "SPKR"};
+
+    for (i = eBCODE_HOLD; i <= eBCODE_SPKR; i++)
+    {
+        numpad[i].point.x = x;
+        numpad[i].point.y = y;
+        numpad[i].form.height = BUTTON_HEIGHT;
+        numpad[i].form.width = BUTTON_WIDTH;
+        numpad[i].code = i;
+        numpad[i].text_len = sprintf(numpad[i].text, "%s", text[i - eBCODE_HOLD]);
+        btn_get_center(&numpad[i], numpad[i].text_len, &numpad[i].center);
+        btn_draw(&numpad[i].point, &numpad[i].form, 0);
+
+        y += BUTTON_HEIGHT;
+    }
+}
+
+void btn_updown_init(btn_t *numpad)
+{
+    int i;
+    int x  = NUMPAD_FIELD_X + 1;
+    int y = NUMPAD_FIELD_Y + (BUTTON_HEIGHT * 5);
+    char *text[] = {"-", "+"};
+
+    for (i = eBCODE_PLUS; i <= eBCODE_MINUS; i++)
+    {
+        numpad[i].point.x = x;
+        numpad[i].point.y = y;
+        numpad[i].form.height = BUTTON_HEIGHT;
+        numpad[i].form.width = BUTTON_WIDTH;
+        numpad[i].code = i;
+        numpad[i].text_len = sprintf(numpad[i].text, "%s", text[i - eBCODE_PLUS]);
+        btn_get_center(&numpad[i], numpad[i].text_len, &numpad[i].center);
+        btn_draw(&numpad[i].point, &numpad[i].form, 0);
+
+        x += BUTTON_WIDTH;
+    }
+}
+
+void btn_ext_init(btn_t *numpad)
+{
+    int i;
+    int x  = NUMPAD_FIELD_X + (BUTTON_WIDTH * 6);
+    int y = NUMPAD_FIELD_Y + 1;
+    char *text[] = {"ext0", "ext1", "ext2", "ext3", "ext4",
+                    "ext5", "ext6", "ext7", "ext8"};
+
+    for (i = eBCODE_EXT_0; i <= eBCODE_EXT_8; i++)
+    {
+        numpad[i].point.x = x;
+        numpad[i].point.y = y;
+        numpad[i].form.height = BUTTON_HEIGHT;
+        numpad[i].form.width = BUTTON_WIDTH;
+        numpad[i].code = i;
+        numpad[i].text_len = sprintf(numpad[i].text, "%s", text[i - eBCODE_EXT_0]);
+        btn_get_center(&numpad[i], numpad[i].text_len, &numpad[i].center);
+        btn_draw(&numpad[i].point, &numpad[i].form, 0);
+
+        y += BUTTON_HEIGHT;
+    }
+}
+
+int lcd_clear(btn_t *lcd, int line_num)
+{
+    int i;
+
+    if (line_num >= LCD_HEIGHT)
+        return -1;
+
+    for (i = 0; i < LCD_WIDTH; i++)
+        mvprintw(lcd->point.y + line_num + 1, lcd->point.x + i + 1, " ");
+}
+
+int lcd_print(btn_t *lcd, int line_num, char *text, int len)
+{
+    if (line_num >= LCD_HEIGHT)
+        return -1;
+
+    lcd_clear(lcd, line_num);
+
+    lcd->text_len = sizeof(lcd->text) / LCD_HEIGHT;
+    strncpy(lcd->text, text, lcd->text_len);
+    mvprintw(lcd->point.y + line_num + 1, lcd->point.x + 1, "%.*s", lcd->text_len, lcd->text);
+}
+
+void lcd_init(btn_t *lcd)
+{
+    int i;
+    int x  = NUMPAD_FIELD_X + (BUTTON_WIDTH * 8);
+    int y = NUMPAD_FIELD_Y + 1;
+
+    memset(lcd, 0, sizeof(*lcd));
+
+    lcd->point.x = x;
+    lcd->point.y = y;
+    lcd->form.height = LCD_HEIGHT + 1;
+    lcd->form.width = LCD_WIDTH + 1;
+    lcd->code = eBCODE_LCD;
+    btn_draw(&lcd->point, &lcd->form, 0);
+
+    mvprintw(lcd->point.y, lcd->point.x + LCD_WIDTH/2, "LCD");
+}
+
+void field_init(field_t *field)
+{
+    memset(field->numpad, 0, sizeof(field->numpad));
+
+    btn_numbers_init(field->numpad);
+    btn_sys_init(field->numpad);
+    btn_updown_init(field->numpad);
+    btn_ext_init(field->numpad);
+    lcd_init(&field->lcd);
+
+    field->point.x = NUMPAD_FIELD_X;
+    field->point.y = NUMPAD_FIELD_Y;
+    field->form.height= NUMPAD_HEIGHT;
+    field->form.width = NUMPAD_WIDTH;
+
+    btn_draw(&field->point, &field->form, 0);
+}
+
+void field_print(field_t *field)
+{
+    int i;
+    btn_t *numpad = field->numpad;
 
     for (i = eBCODE_0; i < eBCODE_MAX; i++)
     {
         if (numpad[i].highlight)
         {
             attron(COLOR_PAIR(1));
-            mvprintw(numpad[i].center.y, numpad[i].center.x, "%.*s", numpad[i].name_len, numpad[i].name);
+            mvprintw(numpad[i].center.y, numpad[i].center.x, "%.*s", numpad[i].text_len, numpad[i].text);
             attroff(COLOR_PAIR(1));
         }
         else
-            mvprintw(numpad[i].center.y, numpad[i].center.x, "%.*s", numpad[i].name_len, numpad[i].name);
+            mvprintw(numpad[i].center.y, numpad[i].center.x, "%.*s", numpad[i].text_len, numpad[i].text);
     }
 }
 
-void numpad_init(btn_t *numpad)
-{
-    btn_init(numpad);
-
-}
-
-void proc_numpad_click(btn_t *numpad, int mouse_x, int mouse_y)
+int proc_numpad_click(btn_t *numpad, int mouse_x, int mouse_y)
 {
     int i;
+    int num_code = -1;
 
     for (i = 0; i < eBCODE_MAX; i++)
     {
+        if (i == eBCODE_LCD)
+            continue;
+
         if (((mouse_x >= numpad[i].point.x) && (numpad[i].point.x + numpad[i].form.width) > mouse_x) &&
             ((mouse_y >= numpad[i].point.y) && (numpad[i].point.y + numpad[i].form.height) > mouse_y))
         {
             numpad[i].highlight = 1;
-            numlog(&log, "Pressed '%.*s'", numpad[i].name_len, numpad[i].name);
+            num_code = i;
+            numlog(&log, "Pressed '%.*s'", numpad[i].text_len, numpad[i].text);
         }
         else
         {
             numpad[i].highlight = 0;
         }
     }
+
+    return num_code;
 }
 
 int main()
@@ -320,7 +462,8 @@ int main()
     int startx = 0, starty = 0;
     WINDOW *menu_win;
     MEVENT event;
-    filed_t filed;
+    field_t field;
+    int prev_b = -1, cur_b = -1;
 
     /* Initialize curses */
     initscr();
@@ -336,13 +479,13 @@ int main()
 
     mousemask(ALL_MOUSE_EVENTS, NULL);
 
-    box(menu_win, 0, 0);
+    // box(menu_win, 0, 0);
     wrefresh(menu_win);
 
     log_init(&log);
 
-    numpad_init(filed.numpad);
-    numpad_print(filed.numpad);
+    field_init(&field);
+    field_print(&field);
 
     refresh();
 
@@ -357,17 +500,31 @@ int main()
                     /* When the user clicks left mouse button */
                     if(event.bstate & BUTTON1_CLICKED)
                     {
-                        proc_numpad_click(filed.numpad, event.x, event.y);
-                        numpad_print(filed.numpad);
+                        if ((cur_b = proc_numpad_click(field.numpad, event.x, event.y)) > 0)
+                        {
+                            char logstr[64] = {0};
+
+                            sprintf(logstr, "Cur:  %s", (cur_b >= 0)? field.numpad[cur_b].text:"none");
+                            lcd_print(&field.lcd, 1, logstr, strlen(logstr));
+
+                            sprintf(logstr, "Prev: %s", (prev_b >= 0)? field.numpad[prev_b].text:"none");
+                            lcd_print(&field.lcd, 0, logstr, strlen(logstr));
+
+                            prev_b = cur_b;
+                        }
+
+                        field_print(&field);
                     }
                 }
             break;
 
             default:
+            {
                 numlog(&log, "Pressed key %d (%s)", c, keyname(c));
+            }
         }
 
-        refresh(); 
+        refresh();
     }
 
 end:
