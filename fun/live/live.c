@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <time.h>
+#include <sys/time.h>
+#include <signal.h>
 
 // #define MAIN_FIELD_WIDTH 100 /* ширина */
 // #define MAIN_FIELD_HEIGHT 40 /* высота */
-#define MAIN_FIELD_WIDTH 40 /* ширина */
-#define MAIN_FIELD_HEIGHT 20 /* высота */
+#define MAIN_FIELD_WIDTH 80 /* ширина */
+#define MAIN_FIELD_HEIGHT 40 /* высота */
 
 #define GENOM_SIZE 4
 
@@ -57,6 +59,7 @@ char *gen_strings[GEN_MAX+1] =
 
 static cell_t main_field[MAIN_FIELD_HEIGHT][MAIN_FIELD_WIDTH];
 static int population = 0;
+static int quit = 0;
 
 static void print_cell(int i, int j);
 
@@ -190,68 +193,101 @@ static void proc_gen_reprod(int x, int y)
 	cell_t *cell = NULL;
 	int neigh = 0;
 	int i = 0, j = 0;
+	int mmin_reprod_ttl = 10;
+
+	if (main_field[x][y].ttl < mmin_reprod_ttl)
+		return;
 
 	if (x & y && (x < MAIN_FIELD_HEIGHT-1 && y < MAIN_FIELD_WIDTH-1))
 	{
-		if (main_field[x-1][y].view)
+		// if (main_field[x-1][y].view && (main_field[x][y].ttl >= mmin_reprod_ttl))
+		// {
+		// 	neigh++;
+		// }
+		// else
+		// {
+		// 	if (!main_field[x-1][y].view)
+		// 	{
+		// 		cell = &main_field[x-1][y];
+		// 		i = x-1; j = y;
+		// 	}
+		// }
+
+		if ((main_field[x-1][y].view) && (main_field[x-1][y].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x-1][y].view)
 		{
 			cell = &main_field[x-1][y];
 			i = x-1; j = y;
 		}
 
-		if (main_field[x+1][y].view)
+		if ((main_field[x+1][y].view) && (main_field[x+1][y].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x+1][y].view)
 		{
 			cell = &main_field[x+1][y];
 			i = x+1; j = y;
 		}
 
-		if (main_field[x][y-1].view)
+		if ((main_field[x][y-1].view) && (main_field[x][y-1].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x][y-1].view)
 		{
 			cell = &main_field[x][y-1];
 			i = x; j = y-1;
 		}
 
-		if (main_field[x][y+1].view)
+		if ((main_field[x][y+1].view) && (main_field[x][y+1].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x][y+1].view)
 		{
 			cell = &main_field[x][y+1];
 			i = x; j = y+1;
 		}
 
-		if (main_field[x-1][y-1].view)
+		if ((main_field[x-1][y-1].view) && (main_field[x-1][y-1].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x-1][y-1].view)
 		{
 			cell = &main_field[x-1][y-1];
 			i = x-1; j = y-1;
 		}
 
-		if (main_field[x+1][y+1].view)
+		if ((main_field[x+1][y+1].view) && (main_field[x+1][y+1].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x+1][y+1].view)
 		{
 			cell = &main_field[x+1][y+1];
 			i = x+1; j = y+1;
 		}
 
-		if (main_field[x+1][y-1].view)
+		if ((main_field[x+1][y-1].view) && (main_field[x+1][y-1].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x+1][y-1].view)
 		{
 			cell = &main_field[x+1][y-1];
 			i = x+1; j = y-1;
 		}
 
-		if (main_field[x-1][y+1].view)
+		if ((main_field[x-1][y+1].view) && (main_field[x-1][y+1].ttl >= mmin_reprod_ttl))
+		{
 			neigh++;
-		else
+		}
+		else if (!main_field[x-1][y+1].view)
 		{
 			cell = &main_field[x-1][y+1];
 			i = x-1; j = y+1;
@@ -292,7 +328,10 @@ static void key_proc_enter(int x, int y)
 				continue;
 
 			if (main_field[i][j].step_is_done)
+			{
+				// main_field[i][j].step_is_done = 0;
 				continue;
+			}
 
 			if (main_field[i][j].ttl <= 0)
 			{
@@ -393,6 +432,7 @@ static void field_print_genom(int x, int y)
 		{
 			step = main_field[y][x].gen == i;
 			gstr = genom_str(main_field[y][x].genom[i]);
+			mvprintw(11 + i%GENOM_SIZE, MAIN_FIELD_WIDTH + 5, "                   ");
 			mvprintw(11 + i%GENOM_SIZE, MAIN_FIELD_WIDTH + 5, "%s %s", gstr, step? "<---":"");
 		}
 	}
@@ -405,12 +445,46 @@ static void field_print_genom(int x, int y)
 	}
 }
 
+static inline void time_start(struct timeval *tv1)
+{
+	gettimeofday(tv1, NULL);
+}
+
+static inline unsigned long time_stop(struct timeval *tv1)
+{ 
+	struct timeval tv2;
+	struct timeval dtv;
+
+	gettimeofday(&tv2, NULL);
+
+	dtv.tv_sec= tv2.tv_sec -tv1->tv_sec;
+
+	dtv.tv_usec=tv2.tv_usec-tv1->tv_usec;
+
+	if(dtv.tv_usec < 0)
+	{
+		dtv.tv_sec--;
+		dtv.tv_usec+=1000000;
+	}
+
+	return dtv.tv_sec*1000000+dtv.tv_usec;
+}
+
+void signal_handler(int sig)
+{
+	quit++;
+}
+
+
 int main(int argc, char *argv[])
 {
-	int c = 0, quit = 0, enter = 0;
+	int c = 0, enter = 0;
 	int x = 0, y = 0;
 	int delay = 50000;
 	int max_population = 0;
+	struct timeval tv1;
+
+	signal(SIGINT, signal_handler);
 
 	initscr();
 	noecho();
@@ -427,31 +501,42 @@ int main(int argc, char *argv[])
 	field_print();
 	mvaddch(y, x, ACS_CKBOARD);
 
+	delay = 100000;
+
+	mvprintw(0, MAIN_FIELD_WIDTH + 5, "field %dx%d (%d cells)", MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, MAIN_FIELD_HEIGHT*MAIN_FIELD_WIDTH);
+
+	time_start(&tv1);
+
 	while(!quit && population)
 	{
-		mvprintw(0, MAIN_FIELD_WIDTH + 5, "iteration %d", enter);
-		mvprintw(1, MAIN_FIELD_WIDTH + 5, "population %d", population);
-		mvprintw(2, MAIN_FIELD_WIDTH + 5, "fps %d (%d)", 1000000/delay, delay);
-		field_print_genom(x, y);
+		mvprintw(1, MAIN_FIELD_WIDTH + 5, "iteration %d", enter);
+		mvprintw(2, MAIN_FIELD_WIDTH + 5, "population %d      ", population);
+		mvprintw(3, MAIN_FIELD_WIDTH + 5, "fps %d (%dms)   ", 1000000/delay, delay);
+		// field_print_genom(x, y);
 		// mvaddch(y, x, ACS_CKBOARD);
 
 		refresh();
-#if 0
-		if (population <= 200)
-			delay = 25000;
-		else if (population > 200 && population <= 500)
-			delay = 50000;
-		else
-			delay = 100000;
+#if 1
+		// if (population <= 200)
+		// 	delay = 25000;
+		// else if (population > 200 && population <= 500)
+		// 	delay = 50000;
+		// else
+		// 	delay = 100000;
 
 		if (population > max_population)
 			max_population = population;
 
+#if 1
+		delay = ((double)population / (double)(MAIN_FIELD_HEIGHT*MAIN_FIELD_WIDTH)) * 50000 + 10000;
+#endif
+
 		usleep(delay);
 		key_proc_enter(x, y);
 		enter++;
-		clear();
+		// clear();
 #else
+		
 		c = getch();
 
 		// field_print();
@@ -504,6 +589,7 @@ int main(int argc, char *argv[])
 
 	printf("--> iteration %d <--\n", enter);
 	printf("--> max population %d <--\n", max_population);
+	printf("--> live time is ~%lus <--\n", time_stop(&tv1)/1000000);
 
 	return 0;
 }
