@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ncurses.h>
@@ -482,6 +483,7 @@ int main(int argc, char *argv[])
 	int x = 0, y = 0;
 	int delay = 50000;
 	int max_population = 0;
+	int debug_mode = 0;
 	struct timeval tv1;
 
 	signal(SIGINT, signal_handler);
@@ -503,93 +505,86 @@ int main(int argc, char *argv[])
 
 	delay = 100000;
 
-	mvprintw(0, MAIN_FIELD_WIDTH + 5, "field %dx%d (%d cells)", MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, MAIN_FIELD_HEIGHT*MAIN_FIELD_WIDTH);
+	if (argc >= 2 && !strcmp(argv[1], "d"))
+		debug_mode++;
 
-	time_start(&tv1);
+	if (debug_mode)
+		mvprintw(0, MAIN_FIELD_WIDTH + 5, "field %dx%d (%d cells)", MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, MAIN_FIELD_HEIGHT*MAIN_FIELD_WIDTH);
 
 	while(!quit && population)
 	{
-		mvprintw(1, MAIN_FIELD_WIDTH + 5, "iteration %d", enter);
-		mvprintw(2, MAIN_FIELD_WIDTH + 5, "population %d      ", population);
-		mvprintw(3, MAIN_FIELD_WIDTH + 5, "fps %d (%dms)   ", 1000000/delay, delay);
-		// field_print_genom(x, y);
+		if (debug_mode)
+		{
+			mvprintw(1, MAIN_FIELD_WIDTH + 5, "iteration %d", enter);
+			mvprintw(2, MAIN_FIELD_WIDTH + 5, "population %d      ", population);
+			mvprintw(3, MAIN_FIELD_WIDTH + 5, "fps %d (%dms)   ", 1000/delay, delay);
+			field_print_genom(x, y);
+		}
 		// mvaddch(y, x, ACS_CKBOARD);
 
 		refresh();
-#if 1
-		// if (population <= 200)
-		// 	delay = 25000;
-		// else if (population > 200 && population <= 500)
-		// 	delay = 50000;
-		// else
-		// 	delay = 100000;
 
 		if (population > max_population)
 			max_population = population;
 
-#if 1
-		delay = ((double)population / (double)(MAIN_FIELD_HEIGHT*MAIN_FIELD_WIDTH)) * 50000 + 10000;
-#endif
-
-		usleep(delay);
-		key_proc_enter(x, y);
-		enter++;
-		// clear();
-#else
-		
-		c = getch();
-
-		// field_print();
-		// mvprintw(0, MAIN_FIELD_WIDTH + 5, "iteration %d", enter);
-		// mvprintw(1, MAIN_FIELD_WIDTH + 5, "population %d", population);
-		// mvprintw(2, MAIN_FIELD_WIDTH + 5, "fps %d (%d)", 1000000/delay, delay);
-		// field_print_genom(x, y);
-
-		switch(c)
+		if (!debug_mode)
 		{
-			case KEY_UP:
-				print_cell(y, x);
-				if (--y <= 0)
-					y = 0;
-				mvaddch(y, x, ACS_CKBOARD);
-				break;
-			case KEY_DOWN:
-				print_cell(y, x);
-				if (++y >= MAIN_FIELD_HEIGHT)
-					y = MAIN_FIELD_HEIGHT - 1;
-				mvaddch(y, x, ACS_CKBOARD);
-				break;
-			case KEY_LEFT:
-				print_cell(y, x);
-				if (--x <= 0)
-					x = 0;
-				mvaddch(y, x, ACS_CKBOARD);
-				break;
-			case KEY_RIGHT:
-				print_cell(y, x);
-				if (++x >= MAIN_FIELD_WIDTH)
-					x = MAIN_FIELD_WIDTH - 1;
-				mvaddch(y, x, ACS_CKBOARD);
-				break;
-			case ' ':
-				key_proc_enter(x, y);
-				enter++;
-				break;
-			case 'q':
-				quit++;
-				break;
-			default:
-				break;
+			delay = ((double)population / (double)(MAIN_FIELD_HEIGHT*MAIN_FIELD_WIDTH)) * 50000 + 10000;
+			usleep(delay);
+			key_proc_enter(x, y);
+			enter++;
 		}
-		// clear();
-#endif
+		else
+		{
+			time_start(&tv1);
+			c = getch();
+			delay = time_stop(&tv1)/1000 + 1;
+
+			switch(c)
+			{
+				case KEY_UP:
+					print_cell(y, x);
+					if (--y <= 0)
+						y = 0;
+					mvaddch(y, x, ACS_CKBOARD);
+					break;
+				case KEY_DOWN:
+					print_cell(y, x);
+					if (++y >= MAIN_FIELD_HEIGHT)
+						y = MAIN_FIELD_HEIGHT - 1;
+					mvaddch(y, x, ACS_CKBOARD);
+					break;
+				case KEY_LEFT:
+					print_cell(y, x);
+					if (--x <= 0)
+						x = 0;
+					mvaddch(y, x, ACS_CKBOARD);
+					break;
+				case KEY_RIGHT:
+					print_cell(y, x);
+					if (++x >= MAIN_FIELD_WIDTH)
+						x = MAIN_FIELD_WIDTH - 1;
+					mvaddch(y, x, ACS_CKBOARD);
+					break;
+				case ' ':
+					key_proc_enter(x, y);
+					enter++;
+					break;
+				case 'q':
+					quit++;
+					break;
+				default:
+					break;
+			}
+		}
+
 	}
 
 	endwin();
 
 	printf("--> iteration %d <--\n", enter);
 	printf("--> max population %d <--\n", max_population);
-	printf("--> live time is ~%lus <--\n", time_stop(&tv1)/1000000);
+	// printf("--> live time is ~%lus <--\n", time_stop(&tv1)/1000000);
 
 	return 0;
 }
