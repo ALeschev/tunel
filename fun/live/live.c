@@ -18,6 +18,8 @@
 #define TTL_IS_NORMAL 2
 #define TTL_IS_BAD 3
 
+#define PREDATOR 4
+
 typedef enum
 {
 	GEN_NONE,
@@ -29,6 +31,8 @@ typedef enum
 
 	GEN_REPROD,
 	GEN_DIE,
+
+	GEN_EAT,
 
 	GEN_MAX
 } gen_t;
@@ -55,6 +59,8 @@ char *gen_strings[GEN_MAX+1] =
 	"REPROD",
 	"DEI",
 
+	"EAT",
+
 	"UNKN"
 };
 
@@ -75,6 +81,7 @@ static char *genom_str(gen_t gen)
 		case GEN_RIGHT:
 		case GEN_REPROD:
 		case GEN_DIE:
+		case GEN_EAT:
 			return gen_strings[gen];
 		default:
 			break;
@@ -189,31 +196,23 @@ static void proc_gen_right(int x, int y)
 	print_cell(x, y);
 }
 
+// static int field_get_cell_neigh(int x, int y, cell_t cell[3][3])
+// {
+	
+// }
+
 static void proc_gen_reprod(int x, int y)
 {
 	cell_t *cell = NULL;
 	int neigh = 0;
 	int i = 0, j = 0;
-	int mmin_reprod_ttl = 10;
+	int mmin_reprod_ttl = (int)(TTL_DEF/3);
 
 	if (main_field[x][y].ttl < mmin_reprod_ttl)
 		return;
 
-	if (x & y && (x < MAIN_FIELD_HEIGHT-1 && y < MAIN_FIELD_WIDTH-1))
+	if (x & y && (x < MAIN_FIELD_HEIGHT-1 && y < MAIN_FIELD_WIDTH-1))	
 	{
-		// if (main_field[x-1][y].view && (main_field[x][y].ttl >= mmin_reprod_ttl))
-		// {
-		// 	neigh++;
-		// }
-		// else
-		// {
-		// 	if (!main_field[x-1][y].view)
-		// 	{
-		// 		cell = &main_field[x-1][y];
-		// 		i = x-1; j = y;
-		// 	}
-		// }
-
 		if ((main_field[x-1][y].view) && (main_field[x-1][y].ttl >= mmin_reprod_ttl))
 		{
 			neigh++;
@@ -314,6 +313,7 @@ static void proc_gen_reprod(int x, int y)
 static void proc_gen_die(int x, int y)
 {
 	memset(&main_field[x][y], 0, sizeof(main_field[x][y]));
+	print_cell(x, y);
 }
 
 static void key_proc_enter(int x, int y)
@@ -386,6 +386,7 @@ static void key_proc_enter(int x, int y)
 
 static void print_cell(int i, int j)
 {
+	int k;
 	int color;
 
 	if (main_field[i][j].view)
@@ -395,10 +396,19 @@ static void print_cell(int i, int j)
 		if (main_field[i][j].ttl <= (int)(TTL_DEF/3))
 		{
 			color = TTL_IS_BAD;
-		} else
-		if ((main_field[i][j].ttl > (int)(TTL_DEF/3)) && (main_field[i][j].ttl <= (int)(TTL_DEF/3)*2))
+		}
+		// else if ((main_field[i][j].ttl > (int)(TTL_DEF/3)) && (main_field[i][j].ttl <= (int)(TTL_DEF/3)*2))
+		// {
+		// 	color = TTL_IS_NORMAL;
+		// }
+
+		if (color != TTL_IS_BAD)
 		{
-			color = TTL_IS_NORMAL;
+			for (k = 0; k < GENOM_SIZE; k++)
+			{
+				if (main_field[i][j].genom[k] == GEN_DIE)
+					color = TTL_IS_BAD;
+			}
 		}
 
 		attron (COLOR_PAIR (color));
@@ -498,7 +508,9 @@ int main(int argc, char *argv[])
 
 	init_pair(TTL_IS_GOOD, COLOR_GREEN, COLOR_BLACK);
 	init_pair(TTL_IS_NORMAL, COLOR_YELLOW, COLOR_BLACK);
-	init_pair(TTL_IS_BAD, COLOR_RED, COLOR_BLACK);
+	init_pair(TTL_IS_BAD, COLOR_MAGENTA, COLOR_BLACK);
+
+	init_pair(PREDATOR, COLOR_RED, COLOR_BLACK);
 
 	field_print();
 	mvaddch(y, x, ACS_CKBOARD);
@@ -536,9 +548,9 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			time_start(&tv1);
+			// time_start(&tv1);
 			c = getch();
-			delay = time_stop(&tv1)/1000 + 1;
+			// delay = time_stop(&tv1)/1000 + 1;
 
 			switch(c)
 			{
