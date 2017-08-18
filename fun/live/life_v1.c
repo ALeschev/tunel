@@ -24,7 +24,7 @@ static cell_t main_field[FIELD_HEIGHT][FIELD_WIDTH];
 
 static int debug_mode = 0;
 static int quit = 0;
-static int population = 10;
+static int population = 0;
 
 static inline void print_cell(int y, int x);
 
@@ -404,7 +404,7 @@ int main(int argc, char *argv[])
     start_color();
     clear();
 
-    // if (!debug_mode)
+    if (!debug_mode)
         main_field_init();
 
     init_pair(TTL_IS_GOOD, COLOR_GREEN, COLOR_BLACK);
