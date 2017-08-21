@@ -9,6 +9,7 @@
 #define FIELD_WIDTH 80 /* ширина */
 #define FIELD_HEIGHT 40 /* высота */
 
+#define TTL_DEF 50
 #define TTL_IS_GOOD 1
 #define TTL_IS_NORMAL 2
 #define TTL_IS_BAD 3
@@ -18,6 +19,7 @@ typedef struct
 {
     int new;
     int view;
+    int ttl;
 } cell_t;
 
 static cell_t main_field[FIELD_HEIGHT][FIELD_WIDTH];
@@ -38,6 +40,8 @@ static inline void cell_generate(int initial, int y, int x)
     if (main_field[y][x].view)
     {
         population++;
+
+        main_field[y][x].ttl = rand()%TTL_DEF + 10;
 
         if (!initial)
             main_field[y][x].new++;
@@ -82,12 +86,12 @@ static void main_field_init(void)
     }
 }
 
-static inline int cell_die_new(int y, int x)
+static inline int cell_new_die(int y, int x)
 {
     return !main_field[y][x].view && main_field[y][x].new;
 }
 
-static inline int cell_life_new(int y, int x)
+static inline int cell_new_life(int y, int x)
 {
     return main_field[y][x].view && !main_field[y][x].new;
 }
@@ -110,7 +114,7 @@ static int get_neighbours(int y, int x)
          * #|@|#
          * #|#|#
          */
-        if (cell_life_new(y-1, x-1) || cell_die_new(y-1, x-1))
+        if (cell_new_life(y-1, x-1) || cell_new_die(y-1, x-1))
             neighbours++;
 
         /**
@@ -118,7 +122,7 @@ static int get_neighbours(int y, int x)
          * #|@|#
          * #|#|#
          */
-        if (cell_life_new(y-1, x) || cell_die_new(y-1, x))
+        if (cell_new_life(y-1, x) || cell_new_die(y-1, x))
             neighbours++;
 
         /**
@@ -126,7 +130,7 @@ static int get_neighbours(int y, int x)
          * #|@|#
          * #|#|#
          */
-        if (cell_life_new(y-1, x+1) || cell_die_new(y-1, x+1))
+        if (cell_new_life(y-1, x+1) || cell_new_die(y-1, x+1))
             neighbours++;
 
         /**
@@ -134,7 +138,7 @@ static int get_neighbours(int y, int x)
          * *|@|#
          * #|#|#
          */
-        if (cell_life_new(y, x-1) || cell_die_new(y, x-1))
+        if (cell_new_life(y, x-1) || cell_new_die(y, x-1))
             neighbours++;
 
         /**
@@ -142,7 +146,7 @@ static int get_neighbours(int y, int x)
          * #|@|*
          * #|#|#
          */
-        if (cell_life_new(y, x+1) || cell_die_new(y, x+1))
+        if (cell_new_life(y, x+1) || cell_new_die(y, x+1))
             neighbours++;
 
         /**
@@ -150,7 +154,7 @@ static int get_neighbours(int y, int x)
          * #|@|#
          * *|#|#
          */
-        if (cell_life_new(y+1, x-1) || cell_die_new(y+1, x-1))
+        if (cell_new_life(y+1, x-1) || cell_new_die(y+1, x-1))
             neighbours++;
 
         /**
@@ -158,7 +162,7 @@ static int get_neighbours(int y, int x)
          * #|@|#
          * #|*|#
          */
-        if (cell_life_new(y+1, x) || cell_die_new(y+1, x))
+        if (cell_new_life(y+1, x) || cell_new_die(y+1, x))
             neighbours++;
 
         /**
@@ -166,7 +170,7 @@ static int get_neighbours(int y, int x)
          * #|@|#
          * #|#|*
          */
-        if (cell_life_new(y+1, x+1) || cell_die_new(y+1, x+1))
+        if (cell_new_life(y+1, x+1) || cell_new_die(y+1, x+1))
             neighbours++;
 
     } else
@@ -179,23 +183,23 @@ static int get_neighbours(int y, int x)
 
         if (x)
         {
-            if (cell_life_new(y, x-1) || cell_die_new(y, x-1))
+            if (cell_new_life(y, x-1) || cell_new_die(y, x-1))
                 neighbours++;
 
-            if (cell_life_new(y+1, x-1) || cell_die_new(y+1, x-1))
+            if (cell_new_life(y+1, x-1) || cell_new_die(y+1, x-1))
                 neighbours++;
         }
 
         if (x != FIELD_WIDTH-1)
         {
-            if (cell_life_new(y, x+1) || cell_die_new(y, x+1))
+            if (cell_new_life(y, x+1) || cell_new_die(y, x+1))
                 neighbours++;
 
-            if (cell_life_new(y+1, x+1) || cell_die_new(y+1, x+1))
+            if (cell_new_life(y+1, x+1) || cell_new_die(y+1, x+1))
                 neighbours++;
         }
 
-        if (cell_life_new(y+1, x) || cell_die_new(y+1, x))
+        if (cell_new_life(y+1, x) || cell_new_die(y+1, x))
             neighbours++;
     } else
     if (!x)
@@ -206,21 +210,21 @@ static int get_neighbours(int y, int x)
          * #|#
          */
 
-        if (cell_life_new(y-1, x) || cell_die_new(y-1, x))
+        if (cell_new_life(y-1, x) || cell_new_die(y-1, x))
             neighbours++;
 
-        if (cell_life_new(y-1, x+1) || cell_die_new(y-1, x+1))
+        if (cell_new_life(y-1, x+1) || cell_new_die(y-1, x+1))
             neighbours++;
 
-        if (cell_life_new(y, x+1) || cell_die_new(y, x+1))
+        if (cell_new_life(y, x+1) || cell_new_die(y, x+1))
             neighbours++;
 
         if (y != FIELD_HEIGHT-1)
         {
-            if (cell_life_new(y+1, x) || cell_die_new(y+1, x))
+            if (cell_new_life(y+1, x) || cell_new_die(y+1, x))
                 neighbours++;
 
-            if (cell_life_new(y+1, x+1) || cell_die_new(y+1, x+1))
+            if (cell_new_life(y+1, x+1) || cell_new_die(y+1, x+1))
                 neighbours++;
         }
     } else
@@ -232,21 +236,21 @@ static int get_neighbours(int y, int x)
          * #|#
          */
 
-        if (cell_life_new(y-1, x) || cell_die_new(y-1, x))
+        if (cell_new_life(y-1, x) || cell_new_die(y-1, x))
             neighbours++;
 
-        if (cell_life_new(y-1, x-1) || cell_die_new(y-1, x-1))
+        if (cell_new_life(y-1, x-1) || cell_new_die(y-1, x-1))
             neighbours++;
 
-        if (cell_life_new(y, x-1) || cell_die_new(y, x-1))
+        if (cell_new_life(y, x-1) || cell_new_die(y, x-1))
             neighbours++;
 
         if (y != FIELD_HEIGHT-1)
         {
-            if (cell_life_new(y+1, x-1) || cell_die_new(y+1, x-1))
+            if (cell_new_life(y+1, x-1) || cell_new_die(y+1, x-1))
                 neighbours++;
 
-            if (cell_life_new(y+1, x) || cell_die_new(y+1, x))
+            if (cell_new_life(y+1, x) || cell_new_die(y+1, x))
                 neighbours++;
         }
     } else
@@ -257,19 +261,19 @@ static int get_neighbours(int y, int x)
          * #|@|#
          */
 
-        if (cell_life_new(y-1, x-1) || cell_die_new(y-1, x-1))
+        if (cell_new_life(y-1, x-1) || cell_new_die(y-1, x-1))
             neighbours++;
 
-        if (cell_life_new(y-1, x) || cell_die_new(y-1, x))
+        if (cell_new_life(y-1, x) || cell_new_die(y-1, x))
             neighbours++;
 
-        if (cell_life_new(y-1, x+1) || cell_die_new(y-1, x+1))
+        if (cell_new_life(y-1, x+1) || cell_new_die(y-1, x+1))
             neighbours++;
 
-        if (cell_life_new(y, x-1) || cell_die_new(y, x-1))
+        if (cell_new_life(y, x-1) || cell_new_die(y, x-1))
             neighbours++;
 
-        if (cell_life_new(y, x+1) || cell_die_new(y, x+1))
+        if (cell_new_life(y, x+1) || cell_new_die(y, x+1))
             neighbours++;
     }
 
@@ -290,10 +294,13 @@ static void key_proc_enter(void)
         for (x = 0; x < FIELD_WIDTH; x++)
         {
             neighbours = get_neighbours(y, x);
-
             if (main_field[y][x].view)
             {
-                if (neighbours < 2 || 3 < neighbours)
+                if ((neighbours < 2 || 3 < neighbours)
+#if 0
+                    || (--main_field[y][x].ttl <= 0)
+#endif
+                    )
                 {
                     cell_die(y, x);
                 }
@@ -341,11 +348,13 @@ static void field_dbg_info(int y, int x)
 
     mvprintw(15, FIELD_WIDTH + 5, "                     ");
     mvprintw(16, FIELD_WIDTH + 5, "                     ");
+    mvprintw(17, FIELD_WIDTH + 5, "                     ");
 
     // if (main_field[y][x].view)
     {
-        mvprintw(15, FIELD_WIDTH + 5, "neighbours %d", get_neighbours(y, x));
-        mvprintw(16, FIELD_WIDTH + 5, "new %d", main_field[y][x].new);
+        mvprintw(15, FIELD_WIDTH + 5, "new        %s", main_field[y][x].new? "yes":"no");
+        mvprintw(16, FIELD_WIDTH + 5, "neighbours %d", get_neighbours(y, x));
+        mvprintw(17, FIELD_WIDTH + 5, "ttl        %d", main_field[y][x].ttl);
     }
     // else
     // {
@@ -406,6 +415,8 @@ int main(int argc, char *argv[])
 
     // if (!debug_mode)
         main_field_init();
+    else
+        population++;
 
     init_pair(TTL_IS_GOOD, COLOR_GREEN, COLOR_BLACK);
     init_pair(TTL_IS_NORMAL, COLOR_YELLOW, COLOR_BLACK);
@@ -490,11 +501,13 @@ int main(int argc, char *argv[])
                     break;
 
                 case '+':
-                    cell_debug_put(y, x);
+                    if (!main_field[y][x].view)
+                        cell_debug_put(y, x);
                     break;
 
                 case '-':
-                    cell_debug_die(y, x);
+                    if (main_field[y][x].view)
+                        cell_debug_die(y, x);
                     break;
 
                 case 'o':
