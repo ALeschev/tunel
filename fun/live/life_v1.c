@@ -340,7 +340,7 @@ static void field_dbg_info(int y, int x)
     mvprintw(13, FIELD_WIDTH + 5, "q  quit");
 
     mvprintw(15, FIELD_WIDTH + 5, "                     ");
-    mvprintw(16, FIELD_WIDTH + 5, "                    ");
+    mvprintw(16, FIELD_WIDTH + 5, "                     ");
 
     // if (main_field[y][x].view)
     {
@@ -404,7 +404,7 @@ int main(int argc, char *argv[])
     start_color();
     clear();
 
-    if (!debug_mode)
+    // if (!debug_mode)
         main_field_init();
 
     init_pair(TTL_IS_GOOD, COLOR_GREEN, COLOR_BLACK);
@@ -499,6 +499,8 @@ int main(int argc, char *argv[])
 
                 case 'o':
                     debug_mode = 0;
+                    mvprintw(15, FIELD_WIDTH + 5, "                     ");
+                    mvprintw(16, FIELD_WIDTH + 5, "                     ");
                     break;
 
                 case 'q':
